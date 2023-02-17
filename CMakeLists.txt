@@ -1,0 +1,31 @@
+cmake_minimum_required(VERSION 3.19)
+project(itch)
+include(FetchContent)
+
+find_program(7zip 7z REQUIRED)
+
+message("fetching sfml...")
+FetchContent_Declare(
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)
+message("finished fetching sfml")
+
+message("fetching json...")
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.2)
+FetchContent_MakeAvailable(json)
+message("finished fetching json")
+
+file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
+add_executable(${PROJECT_NAME} ${SOURCES})
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
+target_link_libraries(${PROJECT_NAME} PUBLIC sfml-system sfml-graphics nlohmann_json::nlohmann_json)
+
+if (WIN32 AND BUILD_SHARED_LIBS)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}> COMMAND_EXPAND_LISTS)
+endif()
