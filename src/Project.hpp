@@ -8,6 +8,7 @@
 
 #include "scratch/ScratchTarget.hpp"
 #include "scratch/ScratchMeta.hpp"
+#include "scratch/ScratchMonitor.hpp"
 
 using json = nlohmann::json;
 
@@ -16,12 +17,13 @@ public:
     Project();
     Project(std::string pjf);
 
-    std::string project_file_name;
+    std::string temp_dir;
     json project_json;
 
     void load_from_project_json();
 
     std::vector<ScratchTarget> targets;
+    std::vector<ScratchMonitor> monitors;
     std::vector<std::string> extensions;
     ScratchMeta meta;
 };

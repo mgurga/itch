@@ -12,7 +12,7 @@ Itch::Itch(std::string sb3_file) {
     sb3.init([&] () {
         std::cout << "finished unzipping sb3" << std::endl;
 
-        project = Project(temp_dir + "project.json");
+        project = Project(temp_dir);
         project.load_from_project_json();
     });
 }

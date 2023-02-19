@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.19)
-project(itch)
+project(itch LANGUAGES CXX)
 include(FetchContent)
 
 find_program(7zip 7z REQUIRED)
+find_program(imagemagick magick REQUIRED)
+message(${imagemagick})
 
 message("fetching sfml...")
 FetchContent_Declare(
@@ -23,9 +25,10 @@ message("finished fetching json")
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
-target_link_libraries(${PROJECT_NAME} PUBLIC sfml-system sfml-graphics nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} sfml-system sfml-audio sfml-graphics nlohmann_json::nlohmann_json)
 
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}> COMMAND_EXPAND_LISTS)
+    file(COPY ${SFML_SOURCE_DIR}/extlibs/bin/x64/openal32.dll DESTINATION Debug)
 endif()
