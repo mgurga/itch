@@ -1,7 +1,7 @@
 #include "Player.hpp"
 
 Player::Player() {
-    sf::Window window(sf::VideoMode(800, 600), "Itch");
+    sf::Window window(sf::VideoMode(514, 386), "Itch");
     this->window = &window;
 }
 

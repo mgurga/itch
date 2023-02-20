@@ -1,0 +1,24 @@
+#pragma once
+
+#include <string>
+#include <vector>
+#include <nlohmann/json.hpp>
+
+#include "ScratchTarget.hpp"
+
+enum VideoState {
+    ON,
+    OFF,
+    ON_FLIPPED
+};
+
+class ScratchStage : public ScratchTarget {
+public:
+    ScratchStage();
+    ScratchStage(json ss, std::string temp_dir, bool heavyload = true);
+
+    int tempo;
+    VideoState videoState;
+    int videoTransparency;
+    std::string textToSpeechLanguage;
+};

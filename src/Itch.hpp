@@ -10,7 +10,7 @@ public:
     Project project;
     bool running = true;
 
-    const std::string temp_dir = "temp/";
+    std::string temp_dir = "temp/";
 
     Itch(std::string sb3_file);
     void draw();

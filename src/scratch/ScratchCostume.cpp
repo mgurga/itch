@@ -2,10 +2,11 @@
 
 ScratchCostume::ScratchCostume(json sc):
     ScratchAsset(sc),
-    bitmapResolution(sc["bitmapResolution"]),
     rotationCenterX(sc["rotationCenterX"]),
     rotationCenterY(sc["rotationCenterY"])
-{}
+{
+    bitmapResolution = sc.contains("bitmapResolution") ? int(sc["bitmapResolution"]) : -1;
+}
 
 void ScratchCostume::load_image(std::string tempdir) {
     if (this->dataFormat == "svg") {

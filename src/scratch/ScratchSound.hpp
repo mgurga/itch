@@ -9,7 +9,7 @@
 
 using json = nlohmann::json;
 
-class ScratchSound : ScratchAsset {
+class ScratchSound : public ScratchAsset {
 public:
     ScratchSound(json ss);
     void load_sound(std::string tempdir);

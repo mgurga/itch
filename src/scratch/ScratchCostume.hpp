@@ -9,7 +9,7 @@
 
 using json = nlohmann::json;
 
-class ScratchCostume : ScratchAsset {
+class ScratchCostume : public ScratchAsset {
 public:
     ScratchCostume(json sc);
     void load_image(std::string tempdir);

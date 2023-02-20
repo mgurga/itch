@@ -6,9 +6,11 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 
-#include "scratch/ScratchTarget.hpp"
+#include "scratch/ScratchStage.hpp"
+#include "scratch/ScratchSprite.hpp"
 #include "scratch/ScratchMeta.hpp"
 #include "scratch/ScratchMonitor.hpp"
+
 
 using json = nlohmann::json;
 
@@ -20,9 +22,10 @@ public:
     std::string temp_dir;
     json project_json;
 
-    void load_from_project_json();
+    void load_from_project_json(bool heavyload = true);
 
-    std::vector<ScratchTarget> targets;
+    ScratchStage stage;
+    std::vector<ScratchSprite> sprites;
     std::vector<ScratchMonitor> monitors;
     std::vector<std::string> extensions;
     ScratchMeta meta;

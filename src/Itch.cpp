@@ -8,7 +8,7 @@ Itch::Itch(std::string sb3_file) {
 
     std::cout << "got sb3 file: " << sb3_file << std::endl;
 
-    FileHandler sb3 = FileHandler(sb3_file, *this);
+    FileHandler sb3 = FileHandler(sb3_file, temp_dir);
     sb3.init([&] () {
         std::cout << "finished unzipping sb3" << std::endl;
 

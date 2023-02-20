@@ -4,7 +4,6 @@ include(FetchContent)
 
 find_program(7zip 7z REQUIRED)
 find_program(imagemagick magick REQUIRED)
-message(${imagemagick})
 
 message("fetching sfml...")
 FetchContent_Declare(
@@ -26,6 +25,11 @@ file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 target_link_libraries(${PROJECT_NAME} sfml-system sfml-audio sfml-graphics nlohmann_json::nlohmann_json)
+
+set (BUILD_TESTING TRUE)
+if (BUILD_TESTING)
+    add_subdirectory(test)
+endif()
 
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

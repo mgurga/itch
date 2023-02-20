@@ -13,7 +13,8 @@ using json = nlohmann::json;
 class ScratchTarget
 {
 public:
-    ScratchTarget(json st, std::string temp_dir);
+    ScratchTarget();
+    ScratchTarget(json st, std::string temp_dir, bool heavyload = true);
 
     bool isStage;
     std::string name;
