@@ -11,7 +11,6 @@
 #include "scratch/ScratchMeta.hpp"
 #include "scratch/ScratchMonitor.hpp"
 
-
 using json = nlohmann::json;
 
 class Project {

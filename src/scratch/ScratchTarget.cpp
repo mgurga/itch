@@ -26,4 +26,9 @@ ScratchTarget::ScratchTarget(json st, std::string temp_dir, bool heavyload):
         if (heavyload)
             sounds.back().load_sound(temp_dir);
     }
+
+    std::cout << "loading blocks..." << std::endl;
+    for (auto sb : st["blocks"].items()) {
+        blocks.push_back(ScratchBlock(sb.value(), sb.key()));
+    }
 }

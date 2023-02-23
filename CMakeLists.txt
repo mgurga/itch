@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.19)
-project(itch LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.25)
+project(itch)
 include(FetchContent)
 
-find_program(7zip 7z REQUIRED)
-find_program(imagemagick magick REQUIRED)
+find_program(7zip 7z REQUIRED) # install with `sudo scoop install 7zip` on windows
+find_program(imagemagick magick REQUIRED) # install with `sudo scoop install imagemagick` on windows
 
 message("fetching sfml...")
 FetchContent_Declare(
@@ -24,7 +24,7 @@ message("finished fetching json")
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
-target_link_libraries(${PROJECT_NAME} sfml-system sfml-audio sfml-graphics nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PUBLIC sfml-system sfml-audio sfml-graphics nlohmann_json::nlohmann_json)
 
 set (BUILD_TESTING TRUE)
 if (BUILD_TESTING)

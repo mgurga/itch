@@ -7,6 +7,7 @@
 #include "ScratchVariable.hpp"
 #include "ScratchCostume.hpp"
 #include "ScratchSound.hpp"
+#include "ScratchBlock.hpp"
 
 using json = nlohmann::json;
 
@@ -21,6 +22,7 @@ public:
     std::vector<ScratchVariable> variables;
     std::vector<ScratchCostume> costumes;
     std::vector<ScratchSound> sounds;
+    std::vector<ScratchBlock> blocks;
     int volume;
     int layerOrder;
     int currentCostume;
