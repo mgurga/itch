@@ -24,4 +24,5 @@ void Project::load_from_project_json(bool heavyload) {
     this->meta = ScratchMeta(project_json["meta"]);
 
     std::cout << "finished loading project" << std::endl;
+    std::cout << "creating block chains..." << std::endl;
 }

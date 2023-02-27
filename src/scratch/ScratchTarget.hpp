@@ -8,6 +8,7 @@
 #include "ScratchCostume.hpp"
 #include "ScratchSound.hpp"
 #include "ScratchBlock.hpp"
+#include "../blocks/Chain.hpp"
 
 using json = nlohmann::json;
 
@@ -26,4 +27,6 @@ public:
     int volume;
     int layerOrder;
     int currentCostume;
+
+    std::vector<Chain> chains;
 };

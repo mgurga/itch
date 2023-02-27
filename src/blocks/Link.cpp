@@ -1,7 +1,5 @@
 #include "Link.hpp"
 
-Link::Link(std::string opcode, std::string next, std::string parent):
-    opcode(opcode),
-    next(next),
-    parent(parent)
-{}
+Link::Link(ScratchBlock b): block(b) {
+    opcode = Block::opcode_to_enum(block.opcode);
+}

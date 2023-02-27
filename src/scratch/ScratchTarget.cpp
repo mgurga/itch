@@ -31,4 +31,7 @@ ScratchTarget::ScratchTarget(json st, std::string temp_dir, bool heavyload):
     for (auto sb : st["blocks"].items()) {
         blocks.push_back(ScratchBlock(sb.value(), sb.key()));
     }
+    chains = Chain::create_chains(blocks);
+
+    std::cout << "finished loading target: " << name << std::endl;
 }
