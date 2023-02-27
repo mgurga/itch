@@ -1,14 +1,22 @@
 #include "ScratchBlock.hpp"
 
 ScratchBlock::ScratchBlock(json sb, std::string id):
-    id(id),
-    opcode(sb["opcode"]),
-    next(sb["next"].is_null() ? "" : sb["next"]),
-    parent(sb["parent"].is_null() ? "" : sb["parent"]),
-    inputs(sb["inputs"]),
-    fields(sb["fields"]),
-    shadow(sb["shadow"]),
-    topLevel(sb["topLevel"]),
-    x(sb["x"].is_null() ? 0 : sb["x"]),
-    y(sb["y"].is_null() ? 0 : sb["y"])
-{}
+    array_block(ScratchArrayBlock())
+{
+    if (sb.is_array()) {
+        this->is_array_block = true;
+        this->array_block = ScratchArrayBlock(sb, id);
+    } else {
+        this->is_array_block = false;
+        this->id = id;
+        this->opcode = sb["opcode"];
+        this->next = sb["next"].is_null() ? "" : sb["next"];
+        this->parent = sb["parent"].is_null() ? "" : sb["parent"];
+        this->inputs = sb["inputs"];
+        this->fields = sb["fields"];
+        this->shadow = sb["shadow"];
+        this->topLevel = sb["topLevel"];
+        this->x = sb["x"].is_null() ? 0 : sb["x"];
+        this->y = sb["y"].is_null() ? 0 : sb["y"];
+    }
+}

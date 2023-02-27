@@ -2,6 +2,7 @@
 
 #include <string>
 #include <nlohmann/json.hpp>
+#include "ScratchArrayBlock.hpp"
 
 using json = nlohmann::json;
 
@@ -19,4 +20,7 @@ public:
     json fields;
     bool shadow, topLevel;
     int x, y;
+
+    bool is_array_block;
+    ScratchArrayBlock array_block;
 };
