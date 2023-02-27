@@ -3,7 +3,7 @@
 ScratchMonitor::ScratchMonitor(json sm):
     id(sm["id"]),
     opcode(sm["opcode"]),
-    variable(sm["params"]["VARIABLE"]),
+    variable(sm["params"]["VARIABLE"].is_null() ? sm["params"]["LIST"] : sm["params"]["VARIABLE"]),
     spriteName(sm["spriteName"].is_null() ? "" : sm["spriteName"]),
     value(sm["value"].dump()),
     width(sm["width"]),
