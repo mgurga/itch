@@ -9,7 +9,7 @@ class ScratchMeta
 {
 public:
     ScratchMeta();
-    ScratchMeta(json sm);
+    ScratchMeta(json sm): semver(sm["semver"]), vm(sm["vm"]), agent(sm["agent"]) {};
 
     std::string semver;
     std::string vm;

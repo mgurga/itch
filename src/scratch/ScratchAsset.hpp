@@ -9,7 +9,12 @@ using json = nlohmann::json;
 
 class ScratchAsset {
 public:
-    ScratchAsset(json sa);
+    ScratchAsset(json sa): 
+        name(sa["name"]),
+        dataFormat(sa["dataFormat"]),
+        assetId(sa["assetId"]),
+        md5ext(sa["md5ext"])
+    {};
 
     std::string name;
     std::string dataFormat;

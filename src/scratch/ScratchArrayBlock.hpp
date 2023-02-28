@@ -19,8 +19,7 @@ enum BlockType {
     List = 13
 };
 
-class ScratchArrayBlock
-{
+class ScratchArrayBlock {
 public:
     ScratchArrayBlock() { type = Uninitialized; }
     ScratchArrayBlock(json sb, std::string id) {
@@ -28,17 +27,17 @@ public:
         block_id = id;
 
         switch (type) {
-        case Number, Positive_Integer, Positive_Number, Integer, Angle:
+        case Number: case Positive_Integer: case Positive_Number: case Integer: case Angle:
             num_val = sb[1];
             break;
-        case Color, String:
+        case Color: case String:
             str_value = sb[1];
             break;
         case Broadcast:
             str_value = sb[1];
             element_id = sb[2];
             break;
-        case Variable, List:
+        case Variable: case List:
             str_value = sb[1];
             element_id = sb[2];
             x = sb[3];
