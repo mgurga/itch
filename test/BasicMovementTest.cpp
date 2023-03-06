@@ -1,6 +1,10 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include "../src/Project.hpp"
 #include "../src/FileHandler.hpp"
+#include "../src/blocks/Opcodes.hpp"
+
+using ::testing::AnyOf;
 
 class BasicMovementTest : public ::testing::Test {
 protected:
@@ -48,4 +52,19 @@ TEST_F(BasicMovementTest, SoundTest) {
     ASSERT_EQ(project->stage.sounds[0].name, "pop");
     ASSERT_EQ(project->stage.sounds[0].rate, 44100);
     ASSERT_EQ(project->stage.sounds[0].sampleCount, 1032);
+}
+
+TEST_F(BasicMovementTest, ChainTest) {
+    ASSERT_EQ(project->sprites[0].chains.size(), 4);
+
+    ASSERT_EQ(project->sprites[0].chains[0].activatable, true);
+    ASSERT_EQ(project->sprites[0].chains[1].activatable, true);
+    ASSERT_EQ(project->sprites[0].chains[2].activatable, true);
+    ASSERT_EQ(project->sprites[0].chains[3].activatable, true);
+
+    ASSERT_EQ(project->sprites[0].chains[0].links[0].opcode, WHEN_KEY_PRESSED);
+    ASSERT_THAT(project->sprites[0].chains[0].links[1].opcode, AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
+
+    ASSERT_EQ(project->sprites[0].chains[1].links[0].opcode, WHEN_KEY_PRESSED);
+    ASSERT_THAT(project->sprites[0].chains[1].links[1].opcode, AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
 }
