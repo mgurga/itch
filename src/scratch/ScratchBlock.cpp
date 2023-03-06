@@ -16,7 +16,7 @@ ScratchBlock::ScratchBlock(json sb, std::string id):
         this->fields = sb["fields"];
         this->shadow = sb["shadow"];
         this->topLevel = sb["topLevel"];
-        this->x = sb["x"].is_null() ? 0 : sb["x"];
-        this->y = sb["y"].is_null() ? 0 : sb["y"];
+        this->x = sb["x"].is_null() ? 0 : sb["x"].get<int>();
+        this->y = sb["y"].is_null() ? 0 : sb["y"].get<int>();
     }
 }

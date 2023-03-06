@@ -5,7 +5,7 @@
 
 enum OPCODE {
     VARIABLE = -2,
-    UNKOWN = -1,
+    UNKNOWN = -1,
 
     // Event Blocks
     WHEN_FLAG_CLICKED = 0, // "event_whenflagclicked"
@@ -59,7 +59,7 @@ enum OPCODE {
     SIZE = 219 // "looks_size"
 };
 
-class Block {
+class Opcodes {
 public:
     static OPCODE opcode_to_enum(std::string opcode) {
         // events
@@ -163,6 +163,6 @@ public:
             return OPCODE::VARIABLE;
 
         std::cout << "unknown opcode detected: '" << opcode << "'" << std::endl;
-        return OPCODE::UNKOWN;
+        return OPCODE::UNKNOWN;
     }
 };

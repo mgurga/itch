@@ -1,14 +1,16 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include "../scratch/ScratchBlock.hpp"
-#include "Block.hpp"
+#include "Opcodes.hpp"
 
 class Link {
 public:
-    Link(ScratchBlock b);
+    Link(ScratchBlock b) {
+        opcode = Opcodes::opcode_to_enum(b.opcode);
+        string_opcode = b.opcode;
+    }
 
     OPCODE opcode;
-    ScratchBlock &block;
+    std::string string_opcode;
 };

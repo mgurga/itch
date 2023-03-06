@@ -9,6 +9,7 @@ using json = nlohmann::json;
 class ScratchBlock
 {
 public:
+    ScratchBlock() {};
     ScratchBlock(json sb, std::string id);
 
     std::string id;
