@@ -1,8 +1,6 @@
 #include <iostream>
 #include <string>
 #include <SFML/Window.hpp>
-#include <cstdlib>
-#include <csignal>
 
 #include "Itch.hpp"
 

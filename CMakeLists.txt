@@ -5,13 +5,17 @@ include(FetchContent)
 find_program(7zip 7z REQUIRED) # install with `sudo scoop install 7zip` on windows
 find_program(imagemagick magick REQUIRED) # install with `sudo scoop install imagemagick` on windows
 
-message("fetching sfml...")
-FetchContent_Declare(
-    SFML
-    GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 2.6.x)
-FetchContent_MakeAvailable(SFML)
-message("finished fetching sfml")
+if(WIN32)
+    message("fetching sfml...")
+    FetchContent_Declare(
+        SFML
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG 2.6.x)
+    FetchContent_MakeAvailable(SFML)
+    message("finished fetching sfml")
+elseif()
+    find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
+endif()
 
 message("fetching json...")
 FetchContent_Declare(
