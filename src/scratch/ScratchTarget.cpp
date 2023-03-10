@@ -9,8 +9,8 @@ ScratchTarget::ScratchTarget(json st, std::string temp_dir, bool heavyload):
     currentCostume(st["currentCostume"])
 {
     std::cout << "loading variables..." << std::endl;
-    for (auto sv : st["variables"]) {
-        variables.push_back(ScratchVariable(sv));
+    for (auto sv : st["variables"].items()) {
+        variables.push_back(ScratchVariable(sv.value(), sv.key()));
     }
 
     std::cout << "loading costumes..." << std::endl;
