@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <optional>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
@@ -15,20 +16,20 @@ enum BlockType {
     Color = 9,
     String = 10,
     Broadcast = 11,
-    Variable = 12,
-    List = 13
+    VariableType = 12,
+    ListType = 13
 };
 
 class ScratchArrayBlock {
 public:
     ScratchArrayBlock() { type = Uninitialized; }
-    ScratchArrayBlock(json sb, std::string id) {
+    ScratchArrayBlock(json sb, std::string id = "") {
         type = static_cast<BlockType>(sb[0]);
         block_id = id;
 
         switch (type) {
         case Number: case Positive_Integer: case Positive_Number: case Integer: case Angle:
-            num_val = sb[1];
+            num_val = std::stoi(sb[1].get<std::string>());
             break;
         case Color: case String:
             str_value = sb[1];
@@ -37,22 +38,31 @@ public:
             str_value = sb[1];
             element_id = sb[2];
             break;
-        case Variable: case List:
+        case VariableType: case ListType:
             str_value = sb[1];
             element_id = sb[2];
-            x = sb[3];
-            y = sb[4];
+            x = std::stoi(sb[3].get<std::string>());
+            y = std::stoi(sb[4].get<std::string>());
             break;
         default:
             break;
         }
     }
 
-    std::string block_id;
+    std::optional<std::string> get_block_id() {
+        if (block_id == "") {
+            return {};
+        } else {
+            return block_id;
+        }
+    }
 
     BlockType type;
     int num_val;
     std::string str_value;
     std::string element_id;
     int x, y;
+
+private:
+    std::string block_id;
 };
