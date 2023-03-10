@@ -1,7 +1,9 @@
 #include <SFML/Window.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <string>
 #include <iostream>
 #include <vector>
+#include "../Project.hpp"
 
 class Player {
 public:
@@ -10,9 +12,10 @@ public:
         delete window;
     }
     void draw();
+    void paint(Project& project);
 
     std::vector<std::string> pressed;
     bool& running;
 private:
-    sf::Window* window;
+    sf::RenderWindow* window;
 };
