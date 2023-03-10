@@ -10,7 +10,7 @@ ScratchCostume::ScratchCostume(json sc):
 
 void ScratchCostume::load_image(std::string tempdir) {
     if (this->dataFormat == "svg") {
-        std::string command = "magick convert " + tempdir + this->md5ext + " " + tempdir + this->assetId + ".png";
+        std::string command = "magick convert -background none" + tempdir + this->md5ext + " " + tempdir + this->assetId + ".png";
         std::cout << "converting " << this->md5ext << " to png" << std::endl;
         system(command.c_str());
         this->texture.loadFromFile(tempdir + this->assetId + ".png");
