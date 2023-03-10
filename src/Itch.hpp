@@ -4,14 +4,18 @@
 #include <filesystem>
 
 #include "Project.hpp"
+#include "player/Player.hpp"
+#include "engine/Engine.hpp"
 
 class Itch {
 public:
-    Project project;
-    bool running = true;
-
-    std::string temp_dir = "temp/";
-
     Itch(std::string sb3_file);
     void draw();
+
+    Project project;
+    EngineFunctions::Engine engine;
+    Player player;
+
+    bool running = true;
+    std::string temp_dir = "temp/";
 };
