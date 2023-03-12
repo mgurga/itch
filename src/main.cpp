@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <filesystem>
 #include <SFML/Window.hpp>
 
 #include "Itch.hpp"
@@ -17,7 +18,13 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    Itch itch = Itch(std::string(argv[1]));
+    std::string filename = argv[1];
+    if (!std::filesystem::exists(filename)) {
+        std::cout << "file '" << filename << "' does not exists." << std::endl;
+        return 1;
+    }
+
+    Itch itch = Itch(filename);
 
     while(itch.running) {
         itch.draw();
