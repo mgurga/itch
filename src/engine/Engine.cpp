@@ -15,20 +15,20 @@ EngineFunctions::Engine::Engine(Project& project) {
 }
 
 void EngineFunctions::Engine::tick(Project& project, std::vector<std::string>& pressed) {
-    for (ScratchSprite& sprite : project.sprites) {
-        for (Chain chain : sprite.chains) {
-            for (int i = 0; i < chain.links.size(); i++) {
-                process_link(chain.links.at(i), sprite, i, pressed);
-                if (i == -1) break;
-            }
-        }
-    }
-
     // hack to treat ScratchStage as a ScratchSprite
     for (Chain chain : project.stage.chains) {
         for (int i = 0; i < chain.links.size(); i++) {
-            process_link(chain.links.at(i), ScratchSprite(project.stage), i, pressed);
+            process_link(chain.links.at(i), dynamic_cast<ScratchSprite*>(&project.stage), i, pressed);
             if (i == -1) break;
+        }
+    }
+
+    for (ScratchSprite& sprite : project.sprites) {
+        for (Chain chain : sprite.chains) {
+            for (int i = 0; i < chain.links.size(); i++) {
+                process_link(chain.links.at(i), &sprite, i, pressed);
+                if (i == -1) break;
+            }
         }
     }
 }
@@ -54,7 +54,7 @@ std::variant<std::string, int> EngineFunctions::Engine::parse_array_block(json b
     }
 }
 
-void EngineFunctions::Engine::process_link(Link link, ScratchSprite& s, int& i, std::vector<std::string>& pressed) {
+void EngineFunctions::Engine::process_link(Link link, ScratchSprite* s, int& i, std::vector<std::string>& pressed) {
     switch (link.opcode) {
     // Events
     case WHEN_FLAG_CLICKED:
@@ -65,10 +65,10 @@ void EngineFunctions::Engine::process_link(Link link, ScratchSprite& s, int& i, 
 
     // Motion
     case CHANGE_Y_BY:
-        s.y += std::get<int>(parse_array_block(link.inputs["DY"][1]));
+        s->y += std::get<int>(parse_array_block(link.inputs["DY"][1]));
         break;
     case POINT_IN_DIRECTION:
-        s.direction = std::get<int>(parse_array_block(link.inputs["DIRECTION"][1]));
+        s->direction = std::get<int>(parse_array_block(link.inputs["DIRECTION"][1]));
         break;
     case MOVE_STEPS:
         EngineFunctions::move_steps(link, s, *this);

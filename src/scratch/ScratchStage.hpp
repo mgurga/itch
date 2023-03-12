@@ -17,6 +17,8 @@ public:
     ScratchStage();
     ScratchStage(json ss, std::string temp_dir, bool heavyload = true);
 
+    virtual ~ScratchStage() = default;
+
     int tempo;
     VideoState videoState;
     int videoTransparency;

@@ -18,12 +18,12 @@ public:
     Engine(Project& project);
 
     void tick(Project& project, std::vector<std::string>& pressed);
-    void process_link(Link link, ScratchSprite& sprite, int& i, std::vector<std::string>& pressed);
+    void process_link(Link link, ScratchSprite* sprite, int& i, std::vector<std::string>& pressed);
     std::variant<std::string, int> parse_array_block(json block);
     Variable& get_variable_by_name(std::string name);
 
     std::vector<Variable> variables;
 };
 
-void move_steps(Link link, ScratchSprite& s, Engine& e);
+void move_steps(Link link, ScratchSprite* s, Engine& e);
 }
