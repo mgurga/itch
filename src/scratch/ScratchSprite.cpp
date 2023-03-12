@@ -6,8 +6,7 @@ ScratchSprite::ScratchSprite(json ss, std::string temp_dir, bool heavyload):
     y(ss["y"]),
     size(ss["size"]),
     direction(ss["direction"]),
-    draggable(ss["draggable"]),
-    DONOTUSE(ScratchStage())
+    draggable(ss["draggable"])
 {
     if (ss["rotationStyle"] == "all around") {
         rotationStyle = ALL_AROUND;
@@ -21,7 +20,6 @@ ScratchSprite::ScratchSprite(json ss, std::string temp_dir, bool heavyload):
 }
 
 ScratchSprite::ScratchSprite(ScratchStage& ss):
-    DONOTUSE(ss),
     ScratchTarget(),
     x(0),
     y(0),

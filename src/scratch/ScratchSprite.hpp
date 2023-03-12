@@ -22,6 +22,4 @@ public:
     int x, y, size, direction;
     bool draggable;
     RotationStyle rotationStyle;
-
-    ScratchStage& DONOTUSE;
 };
