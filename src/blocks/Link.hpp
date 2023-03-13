@@ -1,7 +1,9 @@
 #pragma once
 
 #include <string>
+
 #include "../scratch/ScratchBlock.hpp"
+#include "Chain.hpp"
 #include "Opcodes.hpp"
 
 class Link {
@@ -10,9 +12,13 @@ public:
         string_opcode(b.opcode),
         opcode(Opcodes::opcode_to_enum(b.opcode)),
         inputs(b.inputs),
-        fields(b.fields)
+        fields(b.fields),
+        block_id(b.id),
+        parent(nullptr)
     {}
 
+    Chain* parent;
+    std::string block_id;
     OPCODE opcode;
     std::string string_opcode;
     json inputs;

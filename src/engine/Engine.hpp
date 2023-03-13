@@ -23,7 +23,7 @@ public:
     Variable& get_variable_by_name(std::string name);
 
     std::vector<Variable> variables;
-};
 
-void move_steps(Link link, ScratchSprite* s, Engine& e);
+    void move_steps(Link link, ScratchSprite* s);
+};
 }

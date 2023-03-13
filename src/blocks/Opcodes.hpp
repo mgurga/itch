@@ -56,7 +56,11 @@ enum OPCODE {
     CHANGE_LAYER_BY = 216, // "looks_goforwardbackwardlayers"
     COSTUME_NUM_NAME = 217, // "looks_costumenumbername"
     BACKDROP_NUM_NAME = 218, // "looks_backdropnumbername"
-    SIZE = 219 // "looks_size"
+    SIZE = 219, // "looks_size"
+
+    // Variables
+    SET_VARIABLE_TO = 300, // "data_setvariableto"
+    CHANGE_VARIABLE_BY = 301 // "data_changevariableby"
 };
 
 class Opcodes {
@@ -157,6 +161,11 @@ public:
             return OPCODE::BACKDROP_NUM_NAME;
         if (opcode == "looks_size")
             return OPCODE::SIZE;
+
+        if (opcode == "data_setvariableto")
+            return OPCODE::SET_VARIABLE_TO;
+        if (opcode == "data_changevariableby")
+            return OPCODE::CHANGE_VARIABLE_BY;
 
         // special
         if (opcode == "variable")
