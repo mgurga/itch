@@ -12,6 +12,8 @@ EngineFunctions::Engine::Engine(Project& project) {
             variables.push_back(newvar);
         }
     }
+
+    std::cout << "initalized " << variables.size() << " variable(s)" << std::endl;
 }
 
 void EngineFunctions::Engine::tick(Project& project, std::vector<std::string>& pressed) {
@@ -37,10 +39,10 @@ Variable& EngineFunctions::Engine::get_variable_by_name(std::string name) {
     for (Variable& var : variables)
         if (var.name == name)
             return var;
-    throw std::invalid_argument("sprite '" + name + "' not found");
+    throw std::invalid_argument("variable '" + name + "' not found");
 }
 
-std::variant<std::string, int> EngineFunctions::Engine::parse_array_block(json block) {
+std::variant<std::string, int> EngineFunctions::Engine::compute_input(json block) {
     ScratchArrayBlock sab = ScratchArrayBlock(block);
     switch (sab.type) {
     case Number: case Positive_Integer: case Positive_Number: case Integer: case Angle:
@@ -64,11 +66,26 @@ void EngineFunctions::Engine::process_link(Link link, ScratchSprite* s, int& i, 
         break;
 
     // Motion
+    case SET_X_TO:
+        s->x = std::get<int>(compute_input(link.inputs["X"][1]));
+        break;
+    case SET_Y_TO:
+        s->y = std::get<int>(compute_input(link.inputs["Y"][1]));
+        break;
     case CHANGE_Y_BY:
-        s->y += std::get<int>(parse_array_block(link.inputs["DY"][1]));
+        s->y += std::get<int>(compute_input(link.inputs["DY"][1]));
+        break;
+    case CHANGE_X_BY:
+        s->x += std::get<int>(compute_input(link.inputs["DX"][1]));
         break;
     case POINT_IN_DIRECTION:
-        s->direction = std::get<int>(parse_array_block(link.inputs["DIRECTION"][1]));
+        s->direction = std::get<int>(compute_input(link.inputs["DIRECTION"][1]));
+        break;
+    case TURN_LEFT:
+        s->direction -= std::get<int>(compute_input(link.inputs["DEGREES"][1]));
+        break;
+    case TURN_RIGHT:
+        s->direction += std::get<int>(compute_input(link.inputs["DEGREES"][1]));
         break;
     case MOVE_STEPS:
         EngineFunctions::move_steps(link, s, *this);
