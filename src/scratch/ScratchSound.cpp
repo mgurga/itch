@@ -6,7 +6,7 @@ ScratchSound::ScratchSound(json ss):
     sampleCount(ss["sampleCount"])
 {}
 
-void ScratchSound::load_sound(std::string tempdir) {
-    if (!this->sound.loadFromFile(tempdir + this->md5ext))
+void ScratchSound::load_sound(std::filesystem::path tempdir) {
+    if (!this->sound.loadFromFile((tempdir / this->md5ext).string()))
         std::cout << "could not load sound file: " << this->md5ext << std::endl;
 }

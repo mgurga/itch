@@ -1,6 +1,6 @@
 #include "ScratchSprite.hpp"
 
-ScratchSprite::ScratchSprite(json ss, std::string temp_dir, bool heavyload):
+ScratchSprite::ScratchSprite(json ss, std::filesystem::path temp_dir, bool heavyload):
     ScratchTarget(ss, temp_dir, heavyload),
     x(ss["x"]),
     y(ss["y"]),

@@ -18,13 +18,13 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    std::string filename = argv[1];
-    if (!std::filesystem::exists(filename)) {
-        std::cout << "file '" << filename << "' does not exists." << std::endl;
+    std::filesystem::path filepath = argv[1];
+    if (!std::filesystem::exists(filepath)) {
+        std::cout << "file '" << filepath << "' does not exists." << std::endl;
         return 1;
     }
 
-    Itch itch = Itch(filename);
+    Itch itch = Itch(filepath);
 
     while(itch.running) {
         itch.draw();

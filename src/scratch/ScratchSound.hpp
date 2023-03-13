@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <filesystem>
 #include <nlohmann/json.hpp>
 #include <SFML/Audio.hpp>
 
@@ -12,7 +13,7 @@ using json = nlohmann::json;
 class ScratchSound : public ScratchAsset {
 public:
     ScratchSound(json ss);
-    void load_sound(std::string tempdir);
+    void load_sound(std::filesystem::path tempdir);
 
     double rate;
     double sampleCount;

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <filesystem>
 #include <nlohmann/json.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -12,7 +13,7 @@ using json = nlohmann::json;
 class ScratchCostume : public ScratchAsset {
 public:
     ScratchCostume(json sc);
-    void load_image(std::string tempdir);
+    void load_image(std::filesystem::path tempdir);
 
     int bitmapResolution;
     float rotationCenterX;

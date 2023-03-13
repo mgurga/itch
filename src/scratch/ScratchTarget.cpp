@@ -1,7 +1,7 @@
 #include "ScratchTarget.hpp"
 
 ScratchTarget::ScratchTarget() {}
-ScratchTarget::ScratchTarget(json st, std::string temp_dir, bool heavyload):
+ScratchTarget::ScratchTarget(json st, std::filesystem::path temp_dir, bool heavyload):
     isStage(st["isStage"]),
     name(st["name"]),
     volume(st["volume"]),

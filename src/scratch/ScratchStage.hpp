@@ -15,7 +15,7 @@ enum VideoState {
 class ScratchStage : public ScratchTarget {
 public:
     ScratchStage();
-    ScratchStage(json ss, std::string temp_dir, bool heavyload = true);
+    ScratchStage(json ss, std::filesystem::path temp_dir, bool heavyload = true);
 
     virtual ~ScratchStage() = default;
 

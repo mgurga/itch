@@ -1,10 +1,10 @@
 #include "Project.hpp"
 
 Project::Project(): temp_dir("") {}
-Project::Project(std::string pjf): temp_dir(pjf) {}
+Project::Project(std::filesystem::path pjf): temp_dir(pjf) {}
 
 void Project::load_from_project_json(bool heavyload) {
-    std::ifstream f(temp_dir + "project.json");
+    std::ifstream f(temp_dir / "project.json");
     project_json = json::parse(f);
 
     for (auto target : project_json["targets"]) {

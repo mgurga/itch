@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <filesystem>
 #include <nlohmann/json.hpp>
 
 #include "ScratchVariable.hpp"
@@ -16,7 +17,7 @@ class ScratchTarget
 {
 public:
     ScratchTarget();
-    ScratchTarget(json st, std::string temp_dir, bool heavyload = true);
+    ScratchTarget(json st, std::filesystem::path temp_dir, bool heavyload = true);
 
     bool isStage;
     std::string name;

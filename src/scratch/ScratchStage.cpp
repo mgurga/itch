@@ -1,7 +1,7 @@
 #include "ScratchStage.hpp"
 
 ScratchStage::ScratchStage() {}
-ScratchStage::ScratchStage(json ss, std::string temp_dir, bool heavyload):
+ScratchStage::ScratchStage(json ss, std::filesystem::path temp_dir, bool heavyload):
     ScratchTarget(ss, temp_dir, heavyload),
     tempo(ss["tempo"])
 {

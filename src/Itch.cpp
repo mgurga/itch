@@ -1,13 +1,14 @@
 #include "Itch.hpp"
-#include "FileHandler.hpp"
 
-Itch::Itch(std::string sb3_file):
+Itch::Itch(std::filesystem::path sb3_file):
     player(Player(running))
 {
     std::cout << "initalized itch" << std::endl;
     // cleanup old files
     std::cout << "cleaning up old files" << std::endl;
-    std::filesystem::remove_all(temp_dir);
+    if (std::filesystem::exists(temp_dir))
+        std::filesystem::remove_all(temp_dir);
+    std::filesystem::create_directory(temp_dir);
 
     std::cout << "got sb3 file: " << sb3_file << std::endl;
 

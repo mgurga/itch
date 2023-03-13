@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <filesystem>
 #include <nlohmann/json.hpp>
 
 #include "ScratchTarget.hpp"
@@ -15,7 +16,7 @@ enum RotationStyle {
 
 class ScratchSprite : public ScratchTarget {
 public:
-    ScratchSprite(json ss, std::string temp_dir, bool heavyload = true);
+    ScratchSprite(json ss, std::filesystem::path temp_dir, bool heavyload = true);
     ScratchSprite(ScratchStage& st);
 
     bool visible;

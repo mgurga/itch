@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <filesystem>
 #include <fstream>
 
 #include "scratch/ScratchStage.hpp"
@@ -16,9 +17,9 @@ using json = nlohmann::json;
 class Project {
 public:
     Project();
-    Project(std::string pjf);
+    Project(std::filesystem::path pjf);
 
-    std::string temp_dir;
+    std::filesystem::path temp_dir;
     json project_json;
 
     void load_from_project_json(bool heavyload = true);
