@@ -41,8 +41,8 @@ public:
         case VariableType: case ListType:
             str_value = sb[1];
             element_id = sb[2];
-            x = std::stoi(sb[3].get<std::string>());
-            y = std::stoi(sb[4].get<std::string>());
+            x = sb[3];
+            y = sb[4];
             break;
         default:
             break;
