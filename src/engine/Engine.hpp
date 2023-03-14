@@ -18,7 +18,7 @@ public:
     Engine(Project& project);
 
     void tick(Project& project, std::vector<std::string>& pressed);
-    void process_link(Link link, ScratchSprite* sprite, int& i, std::vector<std::string>& pressed);
+    void process_link(Link& link, Chain& chain, ScratchSprite* sprite, int& i, std::vector<std::string>& pressed);
     std::variant<std::string, int> compute_input(json block);
     Variable& get_variable_by_name(std::string name);
 

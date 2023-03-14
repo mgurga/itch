@@ -60,11 +60,13 @@ public:
     Variable operator=(const std::string& other) {
         type = VariableType::String;
         value = other;
+        return *this;
     }
 
     Variable operator=(const int& other) {
         type = VariableType::Integer;
         value = other;
+        return *this;
     }
 
     Variable operator=(const std::variant<std::string, int>& other) {
@@ -75,16 +77,17 @@ public:
             value = std::get<int>(other);
             type = VariableType::Integer;
         }
+        return *this;
     }
 
     Variable operator+=(const int& other) {
         if (type == VariableType::String) {
             type = VariableType::Integer;
             value = other;
-            return;
         } else {
             value = (std::stoi(value) + other);
         }
+        return *this;
     }
 private:
     std::string id;

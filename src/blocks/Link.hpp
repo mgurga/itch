@@ -13,11 +13,9 @@ public:
         opcode(Opcodes::opcode_to_enum(b.opcode)),
         inputs(b.inputs),
         fields(b.fields),
-        block_id(b.id),
-        parent(nullptr)
+        block_id(b.id)
     {}
 
-    Chain* parent;
     std::string block_id;
     OPCODE opcode;
     std::string string_opcode;

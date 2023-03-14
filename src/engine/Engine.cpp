@@ -21,8 +21,7 @@ void EngineFunctions::Engine::tick(Project& project, std::vector<std::string>& p
     for (Chain& chain : project.stage.chains) {
         if (chain.activatable)
             for (int i = 0; i < chain.links.size(); i++) {
-                chain.links.at(i).parent = &chain;
-                process_link(chain.links.at(i), dynamic_cast<ScratchSprite*>(&project.stage), i, pressed);
+                process_link(chain.links.at(i), chain, dynamic_cast<ScratchSprite*>(&project.stage), i, pressed);
                 if (i == -1) break;
             }
     }
@@ -31,8 +30,7 @@ void EngineFunctions::Engine::tick(Project& project, std::vector<std::string>& p
         for (Chain& chain : sprite.chains) {
             if (chain.activatable)
                 for (int i = 0; i < chain.links.size(); i++) {
-                    chain.links.at(i).parent = &chain;
-                    process_link(chain.links.at(i), &sprite, i, pressed);
+                    process_link(chain.links.at(i), chain, &sprite, i, pressed);
                     if (i == -1) break;
                 }
         }
@@ -60,7 +58,7 @@ std::variant<std::string, int> EngineFunctions::Engine::compute_input(json block
     }
 }
 
-void EngineFunctions::Engine::process_link(Link link, ScratchSprite* s, int& i, std::vector<std::string>& pressed) {
+void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* s, int& i, std::vector<std::string>& pressed) {
     switch (link.opcode) {
     // Variables
     case OPCODE::SET_VARIABLE_TO:
@@ -72,7 +70,7 @@ void EngineFunctions::Engine::process_link(Link link, ScratchSprite* s, int& i, 
 
     // Events
     case OPCODE::WHEN_FLAG_CLICKED:
-        link.parent->activatable = false;
+        c.activatable = false;
         break;
     case OPCODE::WHEN_KEY_PRESSED:
         if (!(std::find(pressed.begin(), pressed.end(), link.fields["KEY_OPTION"][0]) != pressed.end())) i = -1;
