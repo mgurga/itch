@@ -41,8 +41,11 @@ public:
         case VariableType: case ListType:
             str_value = sb[1];
             element_id = sb[2];
-            x = sb[3];
-            y = sb[4];
+            // operators do not have x and y variables
+            if (sb.size() >= 4) {
+                x = sb[3];
+                y = sb[4];
+            }
             break;
         default:
             break;
@@ -50,7 +53,7 @@ public:
     }
 
     std::optional<std::string> get_block_id() {
-        if (block_id == "") {
+        if (block_id.empty()) {
             return {};
         } else {
             return block_id;
@@ -58,7 +61,7 @@ public:
     }
 
     BlockType type;
-    int num_val;
+    double num_val;
     std::string str_value;
     std::string element_id;
     int x, y;

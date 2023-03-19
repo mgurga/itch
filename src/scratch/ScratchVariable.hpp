@@ -9,8 +9,8 @@ using json = nlohmann::json;
 class ScratchVariable {
 public:
     ScratchVariable(json sv, std::string id):
-        name(to_string(sv[0])),
-        value(to_string(sv[1])),
+        name(sv[0].get<std::string>()),
+        value(sv[1].get<std::string>()),
         isCloud(sv.size() == 3),
         id(id)
     {};
