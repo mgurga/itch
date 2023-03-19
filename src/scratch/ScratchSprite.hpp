@@ -20,7 +20,7 @@ public:
     ScratchSprite(ScratchStage& st);
 
     bool visible;
-    int x, y, size, direction;
+    double x, y, size, direction;
     bool draggable;
     RotationStyle rotationStyle;
 };
