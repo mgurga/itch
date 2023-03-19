@@ -60,7 +60,27 @@ enum OPCODE {
 
     // Variables
     SET_VARIABLE_TO = 300, // "data_setvariableto"
-    CHANGE_VARIABLE_BY = 301 // "data_changevariableby"
+    CHANGE_VARIABLE_BY = 301, // "data_changevariableby"
+
+    // Operator Symbols
+    OPERATOR_ADD = 400, // "operator_add"
+    OPERATOR_SUBTRACT = 401, // "operator_subtract"
+    OPERATOR_MULTIPLY = 402, // "operator_multiply"
+    OPERATOR_DIVIDE = 403, // "operator_divide"
+    OPERATOR_RANDOM = 404, // "operator_random"
+    OPERATOR_GREATER_THAN = 405, // "operator_gt"
+    OPERATOR_LESS_THAN = 406, // "operator_lt"
+    OPERATOR_EQUALS = 407, // "operator_equals"
+    OPERATOR_AND = 408, // "operator_and"
+    OPERATOR_OR = 409, // "operator_or"
+    OPERATOR_NOT = 410, // "operator_not"
+    OPERATOR_JOIN = 411, // "operator_join"
+    OPERATOR_LETTER_OF = 412, // "operator_letter_of"
+    OPERATOR_LENGTH = 413, // "operator_length"
+    OPERATOR_CONTAINS = 414, // "operator_contains"
+    OPERATOR_MOD = 415, // "operator_mod"
+    OPERATOR_ROUND = 416, // "operator_round"
+    OPERATOR_MATHOP = 417, // "operator_mathop"
 };
 
 class Opcodes {
@@ -162,10 +182,49 @@ public:
         if (opcode == "looks_size")
             return OPCODE::SIZE;
 
+        // variables
         if (opcode == "data_setvariableto")
             return OPCODE::SET_VARIABLE_TO;
         if (opcode == "data_changevariableby")
             return OPCODE::CHANGE_VARIABLE_BY;
+
+        // operators
+        if (opcode == "operator_add")
+            return OPCODE::OPERATOR_ADD;
+        if (opcode == "operator_subtract")
+            return OPCODE::OPERATOR_SUBTRACT;
+        if (opcode == "operator_multiply")
+            return OPCODE::OPERATOR_MULTIPLY;
+        if (opcode == "operator_divide")
+            return OPCODE::OPERATOR_DIVIDE;
+        if (opcode == "operator_random")
+            return OPCODE::OPERATOR_RANDOM;
+        if (opcode == "operator_gt")
+            return OPCODE::OPERATOR_GREATER_THAN;
+        if (opcode == "operator_lt")
+            return OPCODE::OPERATOR_LESS_THAN;
+        if (opcode == "operator_equals")
+            return OPCODE::OPERATOR_EQUALS;
+        if (opcode == "operator_and")
+            return OPCODE::OPERATOR_AND;
+        if (opcode == "operator_or")
+            return OPCODE::OPERATOR_OR;
+        if (opcode == "operator_not")
+            return OPCODE::OPERATOR_NOT;
+        if (opcode == "operator_join")
+            return OPCODE::OPERATOR_JOIN;
+        if (opcode == "operator_letter_of")
+            return OPCODE::OPERATOR_LETTER_OF;
+        if (opcode == "operator_length")
+            return OPCODE::OPERATOR_LENGTH;
+        if (opcode == "operator_contains")
+            return OPCODE::OPERATOR_CONTAINS;
+        if (opcode == "operator_mod")
+            return OPCODE::OPERATOR_MOD;
+        if (opcode == "operator_round")
+            return OPCODE::OPERATOR_ROUND;
+        if (opcode == "operator_mathop")
+            return OPCODE::OPERATOR_MATHOP;
 
         // special
         if (opcode == "variable")
