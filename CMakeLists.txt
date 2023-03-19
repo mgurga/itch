@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.11)
 project(itch)
 include(FetchContent)
 
@@ -28,7 +28,7 @@ message("finished fetching json")
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
-target_link_libraries(${PROJECT_NAME} PUBLIC sfml-system sfml-audio sfml-graphics nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json::nlohmann_json sfml-system sfml-audio sfml-graphics sfml-window)
 
 set (BUILD_TESTING TRUE)
 if (BUILD_TESTING)
