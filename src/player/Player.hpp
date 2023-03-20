@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include <vector>
+
+#include "PlayerInfo.hpp"
 #include "../Project.hpp"
 
 class Player {
@@ -13,9 +15,11 @@ public:
     }
     void draw();
     void paint(Project& project);
+    PlayerInfo get_player_info();
 
-    std::vector<std::string> pressed;
     bool& running;
 private:
+    std::vector<std::string> pressed;
+    sf::Vector2i mouse_pos;
     sf::RenderWindow* window;
 };

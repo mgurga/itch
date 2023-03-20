@@ -36,15 +36,18 @@ EngineFunctions::Engine::Engine(Project& project) {
     std::cout << "found " << operators.size() << " operator(s)" << std::endl;
 }
 
-void EngineFunctions::Engine::tick(Project& project, std::vector<std::string>& pressed) {
+void EngineFunctions::Engine::tick(Project& project, PlayerInfo* player_info) {
     broadcasts = queued_broadcasts;
     queued_broadcasts.clear();
+
+    prj = &project;
+    pi = player_info;
 
     // hack to treat ScratchStage as a ScratchSprite
     for (Chain& chain : project.stage.chains) {
         if (chain.activatable)
             for (int i = 0; i < chain.links.size(); i++) {
-                process_link(chain.links.at(i), chain, dynamic_cast<ScratchSprite*>(&project.stage), i, pressed);
+                process_link(chain.links.at(i), chain, dynamic_cast<ScratchSprite*>(&project.stage), i, player_info->pressed);
                 if (i == -1) break;
             }
     }
@@ -53,13 +56,26 @@ void EngineFunctions::Engine::tick(Project& project, std::vector<std::string>& p
         for (Chain& chain : sprite.chains) {
             if (chain.activatable)
                 for (int i = 0; i < chain.links.size(); i++) {
-                    process_link(chain.links.at(i), chain, &sprite, i, pressed);
+                    process_link(chain.links.at(i), chain, &sprite, i, player_info->pressed);
                     if (i == -1) break;
                 }
         }
     }
 
     broadcasts.clear();
+}
+
+ScratchBlock EngineFunctions::Engine::get_sb_by_id(std::string id) {
+    for (ScratchBlock sb : prj->stage.blocks)
+        if (sb.id == id)
+            return sb;
+
+    for (ScratchSprite ss : prj->sprites)
+        for (ScratchBlock sb : ss.blocks)
+            if (sb.id == id)
+                return sb;
+
+    throw std::invalid_argument("ScratchBlock with id '" + id + "' not found");
 }
 
 Variable& EngineFunctions::Engine::get_var_by_name(std::string name) {
@@ -166,6 +182,9 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         break;
 
     // Motion
+    case OPCODE::GO_TO:
+        go_to_menu(link, s);
+        break;
     case OPCODE::GO_TO_XY:
         s->x = std::get<double>(compute_input(link.inputs["X"]));
         s->y = std::get<double>(compute_input(link.inputs["Y"]));

@@ -1,4 +1,5 @@
 #include "Player.hpp"
+#include <SFML/Window/Mouse.hpp>
 
 Player::Player(bool& r):
     running(r)
@@ -34,6 +35,8 @@ void Player::draw() {
                     pressed.push_back(std::string(1, static_cast<char>(event.text.unicode)));
                 }
             }
+
+            mouse_pos = sf::Mouse::getPosition(*window);
         }
     }
 }
@@ -69,4 +72,8 @@ void Player::paint(Project& project) {
     }
 
     window->display();
+}
+
+PlayerInfo Player::get_player_info() {
+    return {pressed, mouse_pos};
 }

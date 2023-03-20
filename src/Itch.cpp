@@ -32,8 +32,9 @@ void Itch::draw() {
     //     std::cout << std::endl;
     // }
 
-    engine.tick(project, player.pressed);
-    player.pressed.clear();
+    PlayerInfo pi = player.get_player_info();
+    engine.tick(project, &pi);
+    pi.pressed.clear();
     player.draw();
     player.paint(project);
 }
