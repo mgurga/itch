@@ -37,6 +37,8 @@ void Player::draw() {
             }
 
             mouse_pos = sf::Mouse::getPosition(*window);
+            mouse_pos.x -= 240;
+            mouse_pos.y = -mouse_pos.y + 180;
         }
     }
 }

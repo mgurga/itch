@@ -118,6 +118,8 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std:
                 return std::get<double>(num1) * std::get<double>(num2);
             case OPERATOR_DIVIDE:
                 return std::get<double>(num1) / std::get<double>(num2);
+            default:
+                return 1234.5678;
             }
         } else if (std::holds_alternative<double>(num1)) {
             return std::get<double>(num1);
@@ -130,9 +132,9 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std:
 
     switch (op.opcode) {
     case OPERATOR_JOIN:
-        std::string str1 = variant_str(compute_input(op.inputs["STRING1"]));
-        std::string str2 = variant_str(compute_input(op.inputs["STRING2"]));
-        return str1 + str2;
+        return variant_str(compute_input(op.inputs["STRING1"])) + variant_str(compute_input(op.inputs["STRING2"]));
+    default:
+        return "unknown operator";
     }
 
     return {};

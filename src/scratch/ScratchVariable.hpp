@@ -10,7 +10,7 @@ class ScratchVariable {
 public:
     ScratchVariable(json sv, std::string id):
         name(sv[0].get<std::string>()),
-        value(sv[1].get<std::string>()),
+        value(to_string(sv[1])),
         isCloud(sv.size() == 3),
         id(id)
     {};
