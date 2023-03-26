@@ -167,6 +167,8 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_input(json in
 
 void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* s, int& i, std::vector<std::string>& pressed) {
     // std::cout << "processing link opcode: " << link.string_opcode << std::endl;
+    if (s == nullptr)
+        throw std::invalid_argument("scratch sprite pointer is null when processing link");
 
     switch (link.opcode) {
     // Variables
@@ -244,6 +246,12 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::SAY:
         std::cout << s->name << " says \"";
         std::cout << std::get<std::string>(compute_input(link.inputs["MESSAGE"])) << "\"" << std::endl;
+        break;
+    case OPCODE::SHOW:
+        s->visible = true;
+        break;
+    case OPCODE::HIDE:
+        s->visible = false;
         break;
 
     default:
