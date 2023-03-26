@@ -40,5 +40,8 @@ public:
 
     void move_steps(Link link, ScratchSprite* s);
     void go_to_menu(Link link, ScratchSprite* s);
+
+    void wait(double duration, Chain& c, int& i);
+    void forever_loop(Link link, Chain& c, int& i);
 };
 }

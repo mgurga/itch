@@ -45,20 +45,28 @@ void EngineFunctions::Engine::tick(Project& project, PlayerInfo* player_info) {
 
     // hack to treat ScratchStage as a ScratchSprite
     for (Chain& chain : project.stage.chains) {
-        if (chain.activatable)
-            for (int i = 0; i < chain.links.size(); i++) {
+        if (chain.activatable || chain.continue_at.has_value()) {
+            int start_link = 0;
+            if (chain.continue_at.has_value())
+                start_link = chain.continue_at->link_num;
+            for (int i = start_link; i < chain.links.size(); i++) {
                 process_link(chain.links.at(i), chain, dynamic_cast<ScratchSprite*>(&project.stage), i, player_info->pressed);
                 if (i == -1) break;
             }
+        }
     }
 
     for (ScratchSprite& sprite : project.sprites) {
         for (Chain& chain : sprite.chains) {
-            if (chain.activatable)
-                for (int i = 0; i < chain.links.size(); i++) {
+            if (chain.activatable || chain.continue_at.has_value()) {
+                int start_link = 0;
+                if (chain.continue_at.has_value())
+                    start_link = chain.continue_at->link_num;
+                for (int i = start_link; i < chain.links.size(); i++) {
                     process_link(chain.links.at(i), chain, &sprite, i, player_info->pressed);
                     if (i == -1) break;
                 }
+            }
         }
     }
 
@@ -216,6 +224,14 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         move_steps(link, s);
         break;
 
+    // Control
+    case OPCODE::WAIT:
+        wait(std::get<double>(compute_input(link.inputs["DURATION"])), c, i);
+        break;
+    case OPCODE::FOREVER:
+        forever_loop(link, c, i);
+        break;
+
     // Looks
     case OPCODE::SAY_FOR_SECS:
         std::cout << s->name << " says \"";
@@ -223,6 +239,11 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         std::cout << "\" for ";
         std::cout << std::get<double>(compute_input(link.inputs["SECS"]));
         std::cout << " second(s)" << std::endl;
+        wait(std::get<double>(compute_input(link.inputs["SECS"])), c, i);
+        break;
+    case OPCODE::SAY:
+        std::cout << s->name << " says \"";
+        std::cout << std::get<std::string>(compute_input(link.inputs["MESSAGE"])) << "\"" << std::endl;
         break;
 
     default:
