@@ -81,6 +81,19 @@ enum OPCODE {
     OPERATOR_MOD = 415, // "operator_mod"
     OPERATOR_ROUND = 416, // "operator_round"
     OPERATOR_MATHOP = 417, // "operator_mathop"
+
+    // Control Blocks
+    WAIT = 500, // "control_wait"
+    REPEAT = 501, // "control_repeat"
+    FOREVER = 502, // "control_forever"
+    IF = 503, // "control_if"
+    IF_ELSE = 504, // "control_if_else"
+    WAIT_UNTIL = 505, // "control_wait_until"
+    REPEAT_UNTIL = 506, // "control_repeat_until"
+    STOP = 507, // "control_stop"
+    START_AS_CLONE = 508, // "control_start_as_clone"
+    CREATE_CLONE_OF = 509, // "control_create_clone_of"
+    DELETE_THIS_CLONE = 510, // "control_delete_this_clone"
 };
 
 class Opcodes {
@@ -225,6 +238,30 @@ public:
             return OPCODE::OPERATOR_ROUND;
         if (opcode == "operator_mathop")
             return OPCODE::OPERATOR_MATHOP;
+
+        // control
+        if (opcode == "control_wait")
+            return OPCODE::WAIT;
+        if (opcode == "control_repeat")
+            return OPCODE::REPEAT;
+        if (opcode == "control_forever")
+            return OPCODE::FOREVER;
+        if (opcode == "control_if")
+            return OPCODE::IF;
+        if (opcode == "control_if_else")
+            return OPCODE::IF_ELSE;
+        if (opcode == "control_wait_until")
+            return OPCODE::WAIT_UNTIL;
+        if (opcode == "control_repeat_until")
+            return OPCODE::REPEAT_UNTIL;
+        if (opcode == "control_stop")
+            return OPCODE::STOP;
+        if (opcode == "control_start_as_clone")
+            return OPCODE::START_AS_CLONE;
+        if (opcode == "control_create_clone_of")
+            return OPCODE::CREATE_CLONE_OF;
+        if (opcode == "control_delete_this_clone")
+            return OPCODE::DELETE_THIS_CLONE;
 
         // special
         if (opcode == "variable")
