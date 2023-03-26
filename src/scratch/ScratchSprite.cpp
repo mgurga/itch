@@ -6,14 +6,15 @@ ScratchSprite::ScratchSprite(json ss, std::filesystem::path temp_dir, bool heavy
     y(ss["y"]),
     size(ss["size"]),
     direction(ss["direction"]),
-    draggable(ss["draggable"])
+    draggable(ss["draggable"]),
+    visible(ss["visible"])
 {
     if (ss["rotationStyle"] == "all around") {
-        rotationStyle = ALL_AROUND;
+        rotationStyle = RotationStyle::ALL_AROUND;
     } else if (ss["rotationStyle"] == "left-right") {
-        rotationStyle = LEFT_RIGHT;
+        rotationStyle = RotationStyle::LEFT_RIGHT;
     } else if (ss["rotationStyle"] == "don't rotate") {
-        rotationStyle = DONT_ROTATE;
+        rotationStyle = RotationStyle::DONT_ROTATE;
     } else {
         rotationStyle = ALL_AROUND;
     }
@@ -26,5 +27,6 @@ ScratchSprite::ScratchSprite(ScratchStage& ss):
     size(100),
     direction(90),
     draggable(false),
-    rotationStyle(ALL_AROUND)
+    rotationStyle(ALL_AROUND),
+    visible(true)
 {}

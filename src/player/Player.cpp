@@ -55,22 +55,24 @@ void Player::paint(Project& project) {
     window->draw(stagesprite);
 
     for (ScratchSprite sprite : project.sprites) {
-        sf::Sprite out;
-        sf::Texture& st = sprite.costumes[sprite.currentCostume].texture;
-        sf::Vector2u ss = st.getSize(); // sprite size
+        if (sprite.visible) {
+            sf::Sprite out;
+            sf::Texture& st = sprite.costumes[sprite.currentCostume].texture;
+            sf::Vector2u ss = st.getSize(); // sprite size
 
-        // draw sprite
-        out.setTexture(st, true);
-        out.setPosition(float(sprite.x) + (ww / 2.0), float(-sprite.y) + (wh / 2.0));
-        out.setOrigin(float(ss.x) / 2.0, float(ss.y) / 2.0);
-        out.setRotation(sprite.direction - 90);
-        window->draw(out);
+            // draw sprite
+            out.setTexture(st, true);
+            out.setPosition(float(sprite.x) + (ww / 2.0), float(-sprite.y) + (wh / 2.0));
+            out.setOrigin(float(ss.x) / 2.0, float(ss.y) / 2.0);
+            out.setRotation(sprite.direction - 90);
+            window->draw(out);
 
-        // draw dot at center the center of sprite
-        // sf::CircleShape cs(3);
-        // cs.setPosition(out.getPosition().x, out.getPosition().y);
-        // cs.setFillColor(sf::Color(255, 0, 0));
-        // window->draw(cs);
+            // draw dot at center the center of sprite
+            // sf::CircleShape cs(3);
+            // cs.setPosition(out.getPosition().x, out.getPosition().y);
+            // cs.setFillColor(sf::Color(255, 0, 0));
+            // window->draw(cs);
+        }
     }
 
     window->display();
