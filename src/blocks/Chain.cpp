@@ -10,24 +10,34 @@ std::vector<Chain> Chain::create_chains(std::vector<ScratchBlock> blocks) {
         return ScratchBlock();
     };
 
-    Chain* tempchain;
+    std::vector<std::string> start_ids;
     for (ScratchBlock b : blocks) {
         OPCODE bop = Opcodes::opcode_to_enum(b.opcode);
-        if (WHEN_FLAG_CLICKED <= bop && bop <= WHEN_BROADCAST_RECEIVED) {
-            tempchain = new Chain();
-            tempchain->links.push_back(Link(b));
-            tempchain->activatable = true;
+        bool createchain = false;
 
-            ScratchBlock curBlock = b;
-            while(curBlock.next != "") {
-                curBlock = by_id(curBlock.next);
-                tempchain->links.push_back(Link(curBlock));
-            }
+        if (WHEN_FLAG_CLICKED <= bop && bop <= WHEN_BROADCAST_RECEIVED) createchain = true;
+        if (bop == FOREVER) start_ids.push_back(b.inputs["SUBSTACK"][1]);
 
-            if (curBlock.next == "") {
-                out.push_back(*tempchain);
-                delete tempchain;
-            }
+        if (createchain) start_ids.push_back(b.id);
+    }
+
+    Chain* tempchain;
+    for (std::string sid : start_ids) {
+        ScratchBlock b = by_id(sid);
+        tempchain = new Chain();
+        Link l = Link(b);
+        tempchain->links.push_back(l);
+        tempchain->activatable = (WHEN_FLAG_CLICKED <= l.opcode && l.opcode <= WHEN_BROADCAST_RECEIVED);
+
+        ScratchBlock curBlock = b;
+        while(curBlock.next != "") {
+            curBlock = by_id(curBlock.next);
+            tempchain->links.push_back(Link(curBlock));
+        }
+
+        if (curBlock.next == "") {
+            out.push_back(*tempchain);
+            delete tempchain;
         }
     }
 
