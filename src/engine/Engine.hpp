@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <variant>
 #include <cmath>
+#include <chrono>
 
 #include "../player/PlayerInfo.hpp"
 #include "../Project.hpp"
@@ -17,11 +18,14 @@
 namespace EngineFunctions {
 class Engine {
 public:
-    Engine() {};
+    Engine(): TOTAL_CHAINS(0) {};
     Engine(Project& project);
 
+    unsigned int TOTAL_CHAINS;
+
     void tick(Project& project, PlayerInfo* player_info);
-    void process_link(Link& link, Chain& chain, ScratchSprite* sprite, int& i, std::vector<std::string>& pressed);
+    void process_chain(Chain& c, ScratchSprite* s);
+    void process_link(Link& link, Chain& chain, ScratchSprite* sprite, int& i);
     std::variant<std::string, double> compute_input(json block);
     std::variant<std::string, double> compute_operator(std::string opid);
 
@@ -42,6 +46,10 @@ public:
     void go_to_menu(Link link, ScratchSprite* s);
 
     void wait(double duration, Chain& c, int& i);
-    void forever_loop(Link link, Chain& c, int& i);
+    void forever_loop(Link link, Chain& c, ScratchSprite* s, int& i);
+    void stop_menu(Link link, Chain& c, ScratchSprite* s, int& i);
+
+private:
+    static unsigned int count_chains(Project& project);
 };
 }

@@ -1,6 +1,8 @@
 #include "Engine.hpp"
 
-EngineFunctions::Engine::Engine(Project& project) {
+EngineFunctions::Engine::Engine(Project& project):
+    TOTAL_CHAINS(count_chains(project))
+{
     for (ScratchVariable sv : project.stage.variables) {
         variables.push_back(Variable(sv));
     }
@@ -36,6 +38,16 @@ EngineFunctions::Engine::Engine(Project& project) {
     std::cout << "found " << operators.size() << " operator(s)" << std::endl;
 }
 
+unsigned int EngineFunctions::Engine::count_chains(Project& project) {
+    unsigned int totalchains = 0;
+    totalchains += project.stage.chains.size();
+    for (ScratchSprite& ss : project.sprites) {
+        totalchains += ss.chains.size();
+    }
+    std::cout << "project contains " << totalchains << " chains" << std::endl;
+    return totalchains;
+}
+
 void EngineFunctions::Engine::tick(Project& project, PlayerInfo* player_info) {
     broadcasts = queued_broadcasts;
     queued_broadcasts.clear();
@@ -45,28 +57,12 @@ void EngineFunctions::Engine::tick(Project& project, PlayerInfo* player_info) {
 
     // hack to treat ScratchStage as a ScratchSprite
     for (Chain& chain : project.stage.chains) {
-        if (chain.activatable || chain.continue_at.has_value()) {
-            int start_link = 0;
-            if (chain.continue_at.has_value())
-                start_link = chain.continue_at->link_num;
-            for (int i = start_link; i < chain.links.size(); i++) {
-                process_link(chain.links.at(i), chain, dynamic_cast<ScratchSprite*>(&project.stage), i, player_info->pressed);
-                if (i == -1) break;
-            }
-        }
+        process_chain(chain, dynamic_cast<ScratchSprite*>(&project.stage));
     }
 
     for (ScratchSprite& sprite : project.sprites) {
         for (Chain& chain : sprite.chains) {
-            if (chain.activatable || chain.continue_at.has_value()) {
-                int start_link = 0;
-                if (chain.continue_at.has_value())
-                    start_link = chain.continue_at->link_num;
-                for (int i = start_link; i < chain.links.size(); i++) {
-                    process_link(chain.links.at(i), chain, &sprite, i, player_info->pressed);
-                    if (i == -1) break;
-                }
-            }
+            process_chain(chain, &sprite);
         }
     }
 
@@ -94,10 +90,9 @@ Variable& EngineFunctions::Engine::get_var_by_name(std::string name) {
 }
 
 Link EngineFunctions::Engine::get_operator_by_id(std::string id) {
-    for (Link& op : operators) {
+    for (Link& op : operators)
         if (op.block_id == id)
             return op;
-    }
     throw std::invalid_argument("operator with id '" + id + "' not found");
 }
 
@@ -159,13 +154,25 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_input(json in
     case Color: case String: case Broadcast:
         return sab.str_value;
     case VariableType: case ListType:
-        return get_var_by_name(sab.str_value).val();
+        return variant_str(get_var_by_name(sab.str_value).val());
     default:
         return {};
     }
 }
 
-void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* s, int& i, std::vector<std::string>& pressed) {
+void EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s) {
+    if (chain.activatable || !chain.continue_at.empty()) {
+        int start_link = 0;
+        if (!chain.continue_at.empty())
+            start_link = chain.continue_at.back().link_num;
+        for (int i = start_link; i < chain.links.size(); i++) {
+            process_link(chain.links.at(i), chain, s, i);
+            if (i == -1) break;
+        }
+    }
+}
+
+void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* s, int& i) {
     // std::cout << "processing link opcode: " << link.string_opcode << std::endl;
     if (s == nullptr)
         throw std::invalid_argument("scratch sprite pointer is null when processing link");
@@ -184,7 +191,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         c.activatable = false;
         break;
     case OPCODE::WHEN_KEY_PRESSED:
-        if (!(std::find(pressed.begin(), pressed.end(), link.fields["KEY_OPTION"][0]) != pressed.end())) i = -1;
+        if (!(std::find(pi->pressed.begin(), pi->pressed.end(), link.fields["KEY_OPTION"][0]) != pi->pressed.end())) i = -1;
         break;
     case OPCODE::WHEN_BROADCAST_RECEIVED:
         if (!(std::find(broadcasts.begin(), broadcasts.end(), link.fields["BROADCAST_OPTION"][0]) != broadcasts.end())) i = -1;
@@ -231,7 +238,10 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         wait(std::get<double>(compute_input(link.inputs["DURATION"])), c, i);
         break;
     case OPCODE::FOREVER:
-        forever_loop(link, c, i);
+        forever_loop(link, c, s, i);
+        break;
+    case OPCODE::STOP:
+        stop_menu(link, c, s, i);
         break;
 
     // Looks
@@ -241,7 +251,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         std::cout << "\" for ";
         std::cout << std::get<double>(compute_input(link.inputs["SECS"]));
         std::cout << " second(s)" << std::endl;
-        wait(std::get<double>(compute_input(link.inputs["SECS"])), c, i);
+        // wait(std::get<double>(compute_input(link.inputs["SECS"])), c, i);
         break;
     case OPCODE::SAY:
         std::cout << s->name << " says \"";
