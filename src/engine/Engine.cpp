@@ -49,24 +49,35 @@ unsigned int EngineFunctions::Engine::count_chains(Project& project) {
 }
 
 void EngineFunctions::Engine::tick(Project& project, PlayerInfo* player_info) {
+    if (finished) return;
     broadcasts = queued_broadcasts;
     queued_broadcasts.clear();
 
     prj = &project;
     pi = player_info;
 
+    int processed_chains = 0;
     // hack to treat ScratchStage as a ScratchSprite
     for (Chain& chain : project.stage.chains) {
-        process_chain(chain, dynamic_cast<ScratchSprite*>(&project.stage));
+        if (process_chain(chain, dynamic_cast<ScratchSprite*>(&project.stage))) {
+            processed_chains++;
+        }
     }
 
     for (ScratchSprite& sprite : project.sprites) {
         for (Chain& chain : sprite.chains) {
-            process_chain(chain, &sprite);
+            if(process_chain(chain, &sprite)) {
+                processed_chains++;
+            }
         }
     }
 
     broadcasts.clear();
+
+    if (processed_chains == 0) {
+        std::cout << "project is finished running" << std::endl;
+        finished = true;
+    }
 }
 
 ScratchBlock EngineFunctions::Engine::get_sb_by_id(std::string id) {
@@ -160,7 +171,7 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_input(json in
     }
 }
 
-void EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s) {
+bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s) {
     if (chain.activatable || !chain.continue_at.empty()) {
         int start_link = 0;
         if (!chain.continue_at.empty())
@@ -169,7 +180,9 @@ void EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s) {
             process_link(chain.links.at(i), chain, s, i);
             if (i == -1) break;
         }
+        return true;
     }
+    return false;
 }
 
 void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* s, int& i) {
