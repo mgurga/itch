@@ -13,6 +13,7 @@
 #include "../Project.hpp"
 #include "../blocks/Link.hpp"
 #include "../blocks/Opcodes.hpp"
+#include "SpriteMessage.hpp"
 #include "Variable.hpp"
 
 namespace EngineFunctions {
@@ -39,6 +40,7 @@ public:
     std::vector<Link> operators;
     std::vector<std::string> broadcasts;
     std::vector<std::string> queued_broadcasts;
+    std::vector<SpriteMessage> say_logs;
 
     Project* prj;
     PlayerInfo* pi;
@@ -50,6 +52,8 @@ public:
     void forever_loop(Link link, Chain& c, ScratchSprite* s, int& i);
     void stop_menu(Link link, Chain& c, ScratchSprite* s, int& i);
 
+    void say(Link link, ScratchSprite* s);
+    void say_for_sec(Link link, ScratchSprite* s, Chain& c, int& i);
 private:
     static unsigned int count_chains(Project& project);
 };

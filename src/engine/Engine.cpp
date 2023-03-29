@@ -1,4 +1,8 @@
 #include "Engine.hpp"
+#include "SpriteMessage.hpp"
+#include <algorithm>
+#include <chrono>
+#include <string>
 
 EngineFunctions::Engine::Engine(Project& project):
     TOTAL_CHAINS(count_chains(project))
@@ -56,6 +60,14 @@ void EngineFunctions::Engine::tick(Project& project, PlayerInfo* player_info) {
     prj = &project;
     pi = player_info;
 
+    // delete old messages
+    auto cur = std::chrono::high_resolution_clock::now();
+    for (auto it = say_logs.begin(); it != say_logs.end();) {
+        if ((*it).end_time <= cur)
+            say_logs.erase(it);
+        it++;
+    }
+
     int processed_chains = 0;
     // hack to treat ScratchStage as a ScratchSprite
     for (Chain& chain : project.stage.chains) {
@@ -108,9 +120,13 @@ Link EngineFunctions::Engine::get_operator_by_id(std::string id) {
 }
 
 std::string EngineFunctions::Engine::variant_str(std::variant<std::string, double> varient) {
-    if (std::holds_alternative<double>(varient))
+    if (std::holds_alternative<double>(varient)) {
         return std::to_string(std::get<double>(varient));
-    return std::get<std::string>(varient);
+    } else if (std::holds_alternative<std::string>(varient)) {
+        return std::get<std::string>(varient);
+    } else {
+        return "";
+    }
 }
 
 std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std::string opid) {
@@ -165,7 +181,7 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_input(json in
     case Color: case String: case Broadcast:
         return sab.str_value;
     case VariableType: case ListType:
-        return variant_str(get_var_by_name(sab.str_value).val());
+        return get_var_by_name(sab.str_value).val();
     default:
         return {};
     }
@@ -258,24 +274,10 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         break;
 
     // Looks
-    case OPCODE::SAY_FOR_SECS:
-        std::cout << s->name << " says \"";
-        std::cout << std::get<std::string>(compute_input(link.inputs["MESSAGE"]));
-        std::cout << "\" for ";
-        std::cout << std::get<double>(compute_input(link.inputs["SECS"]));
-        std::cout << " second(s)" << std::endl;
-        // wait(std::get<double>(compute_input(link.inputs["SECS"])), c, i);
-        break;
-    case OPCODE::SAY:
-        std::cout << s->name << " says \"";
-        std::cout << std::get<std::string>(compute_input(link.inputs["MESSAGE"])) << "\"" << std::endl;
-        break;
-    case OPCODE::SHOW:
-        s->visible = true;
-        break;
-    case OPCODE::HIDE:
-        s->visible = false;
-        break;
+    case OPCODE::SAY_FOR_SECS: say_for_sec(link, s, c, i); break;
+    case OPCODE::SAY: say(link, s); break;
+    case OPCODE::SHOW: s->visible = true; break;
+    case OPCODE::HIDE: s->visible = false; break;
 
     default:
         std::cout << "unknown opcode detected in engine: '" << link.string_opcode << "'" << std::endl;
