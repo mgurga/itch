@@ -31,6 +31,7 @@ public:
     std::variant<std::string, double> compute_input(json block);
     std::variant<std::string, double> compute_operator(std::string opid);
 
+    // utility functions
     Variable& get_var_by_name(std::string name);
     Link get_operator_by_id(std::string id);
     ScratchBlock get_sb_by_id(std::string id);
@@ -45,13 +46,16 @@ public:
     Project* prj;
     PlayerInfo* pi;
 
+    // motion helpers
     void move_steps(Link link, ScratchSprite* s);
     void go_to_menu(Link link, ScratchSprite* s);
 
+    // control helpers
     void wait(double duration, Chain& c, int& i);
     void forever_loop(Link link, Chain& c, ScratchSprite* s, int& i);
     void stop_menu(Link link, Chain& c, ScratchSprite* s, int& i);
 
+    // looks helpers
     void say(Link link, ScratchSprite* s);
     void say_for_sec(Link link, ScratchSprite* s, Chain& c, int& i);
 private:

@@ -1,5 +1,4 @@
 #include "Engine.hpp"
-#include "SpriteMessage.hpp"
 
 void EngineFunctions::Engine::say(Link link, ScratchSprite *s) {
     std::string msg = variant_str(compute_input(link.inputs["MESSAGE"]));

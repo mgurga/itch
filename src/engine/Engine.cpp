@@ -1,8 +1,4 @@
 #include "Engine.hpp"
-#include "SpriteMessage.hpp"
-#include <algorithm>
-#include <chrono>
-#include <string>
 
 EngineFunctions::Engine::Engine(Project& project):
     TOTAL_CHAINS(count_chains(project))
@@ -62,11 +58,9 @@ void EngineFunctions::Engine::tick(Project& project, PlayerInfo* player_info) {
 
     // delete old messages
     auto cur = std::chrono::high_resolution_clock::now();
-    for (auto it = say_logs.begin(); it != say_logs.end();) {
-        if ((*it).end_time <= cur)
-            say_logs.erase(it);
-        it++;
-    }
+    say_logs.erase(std::remove_if(say_logs.begin(), say_logs.end(), [&cur](SpriteMessage sm) {
+        return (sm.end_time <= cur);
+    }), say_logs.end());
 
     int processed_chains = 0;
     // hack to treat ScratchStage as a ScratchSprite
@@ -189,9 +183,18 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_input(json in
 
 bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s) {
     if (chain.activatable || !chain.continue_at.empty()) {
+        // used to interrupt continue_at if WHEN_KEY_CLICKED, BROADCAST_RECIEVED, or other special events activate
+        if (chain.links.at(0).opcode >= WHEN_FLAG_CLICKED && chain.links.at(0).opcode <= BROADCAST_AND_WAIT) {
+            int init_link = 0;
+            process_link(chain.links.at(0), chain, s, init_link);
+        }
+
+        // resume i to continue_at if set
         int start_link = 0;
         if (!chain.continue_at.empty())
             start_link = chain.continue_at.back().link_num;
+
+        // process all other links in chain
         for (int i = start_link; i < chain.links.size(); i++) {
             process_link(chain.links.at(i), chain, s, i);
             if (i == -1) break;
@@ -220,10 +223,18 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         c.activatable = false;
         break;
     case OPCODE::WHEN_KEY_PRESSED:
-        if (!(std::find(pi->pressed.begin(), pi->pressed.end(), link.fields["KEY_OPTION"][0]) != pi->pressed.end())) i = -1;
+        if (!(std::find(pi->pressed.begin(), pi->pressed.end(), link.fields["KEY_OPTION"][0]) != pi->pressed.end())) {
+            i = -1;
+        } else {
+            c.continue_at.clear();
+        }
         break;
     case OPCODE::WHEN_BROADCAST_RECEIVED:
-        if (!(std::find(broadcasts.begin(), broadcasts.end(), link.fields["BROADCAST_OPTION"][0]) != broadcasts.end())) i = -1;
+        if (!(std::find(broadcasts.begin(), broadcasts.end(), link.fields["BROADCAST_OPTION"][0]) != broadcasts.end())) {
+            i = -1;
+        } else {
+            c.continue_at.clear();
+        }
         break;
     case OPCODE::BROADCAST:
         queued_broadcasts.push_back(std::get<std::string>(compute_input(link.inputs["BROADCAST_INPUT"])));
