@@ -3,7 +3,6 @@
 #include <string>
 
 #include "../scratch/ScratchBlock.hpp"
-#include "Chain.hpp"
 #include "Opcodes.hpp"
 
 class Link {
