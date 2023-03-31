@@ -23,6 +23,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/nlohmann/json.git
     GIT_TAG v3.11.2)
 FetchContent_MakeAvailable(json)
+set_target_properties(nlohmann_json PROPERTIES INTERFACE_COMPILE_DEFINITIONS "JSON_DIAGNOSTICS=1;JSON_USE_IMPLICIT_CONVERSIONS=1")
 message("finished fetching json")
 
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
