@@ -1,10 +1,10 @@
 #include "Engine.hpp"
 
 void EngineFunctions::Engine::move_steps(Link link, ScratchSprite* s) {
-    double dir = (s->direction + 90) * (3.1415926 / 180);
+    double dir = (s->direction + 90) * (3.141592653589793 / 180);
     double steps = std::get<double>(compute_input(link.inputs["STEPS"]));
-    s->x -= (steps * cos(dir));
-    s->y += (steps * sin(dir));
+    s->x -= std::round((steps * cos(dir)) * 1000.0) / 1000.0;
+    s->y += std::round((steps * sin(dir)) * 1000.0) / 1000.0;
 }
 
 void EngineFunctions::Engine::go_to_menu(Link link, ScratchSprite* s) {
