@@ -3,6 +3,7 @@
 EngineFunctions::Engine::Engine(Project& project):
     TOTAL_CHAINS(count_chains(project))
 {
+    prj = &project;
     for (ScratchVariable sv : project.stage.variables) {
         variables.push_back(Variable(sv));
     }
@@ -48,12 +49,11 @@ unsigned int EngineFunctions::Engine::count_chains(Project& project) {
     return totalchains;
 }
 
-void EngineFunctions::Engine::tick(Project& project, PlayerInfo* player_info) {
+void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     if (finished) return;
     broadcasts = queued_broadcasts;
     queued_broadcasts.clear();
 
-    prj = &project;
     pi = player_info;
 
     // delete old messages
@@ -64,13 +64,13 @@ void EngineFunctions::Engine::tick(Project& project, PlayerInfo* player_info) {
 
     int processed_chains = 0;
     // hack to treat ScratchStage as a ScratchSprite
-    for (Chain& chain : project.stage.chains) {
-        if (process_chain(chain, dynamic_cast<ScratchSprite*>(&project.stage))) {
+    for (Chain& chain : prj->stage.chains) {
+        if (process_chain(chain, dynamic_cast<ScratchSprite*>(&prj->stage))) {
             processed_chains++;
         }
     }
 
-    for (ScratchSprite& sprite : project.sprites) {
+    for (ScratchSprite& sprite : prj->sprites) {
         for (Chain& chain : sprite.chains) {
             if(process_chain(chain, &sprite)) {
                 processed_chains++;

@@ -33,7 +33,7 @@ void Itch::draw() {
     // }
 
     PlayerInfo pi = player.get_player_info();
-    engine.tick(project, &pi);
+    engine.tick(&pi);
     pi.pressed.clear();
     player.draw();
     player.paint(project);

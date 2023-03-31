@@ -25,7 +25,7 @@ public:
     unsigned int TOTAL_CHAINS;
     bool finished = false;
 
-    void tick(Project& project, PlayerInfo* player_info);
+    void tick(PlayerInfo* player_info);
     bool process_chain(Chain& c, ScratchSprite* s);
     void process_link(Link& link, Chain& chain, ScratchSprite* sprite, int& i);
     std::variant<std::string, double> compute_input(json block);
