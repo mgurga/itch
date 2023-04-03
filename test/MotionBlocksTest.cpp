@@ -53,8 +53,7 @@ TEST_F(MotionBlocksTest, OperatorsTest) {
 }
 
 TEST_F(MotionBlocksTest, UpPressTest) {
-    std::vector<std::string> pressed = {};
-    PlayerInfo pi = {pressed, sf::Vector2i(0, 0)};
+    PlayerInfo pi = PlayerInfo::get_empty_player_info();
     engine->tick(&pi);
     pi.pressed.push_back("up arrow");
     engine->tick(&pi);
@@ -67,8 +66,7 @@ TEST_F(MotionBlocksTest, UpPressTest) {
 }
 
 TEST_F(MotionBlocksTest, ResetTest) {
-    std::vector<std::string> pressed = {};
-    PlayerInfo pi = {pressed, sf::Vector2i(0, 0)};
+    PlayerInfo pi = PlayerInfo::get_empty_player_info();
     engine->tick(&pi);
     pi.pressed.push_back("z");
     engine->tick(&pi);
@@ -81,8 +79,7 @@ TEST_F(MotionBlocksTest, ResetTest) {
 }
 
 TEST_F(MotionBlocksTest, ThreeUpPressTest) {
-    std::vector<std::string> pressed = {};
-    PlayerInfo pi = {pressed, sf::Vector2i(0, 0)};
+    PlayerInfo pi = PlayerInfo::get_empty_player_info();
     engine->tick(&pi);
     pi.pressed.push_back("up arrow");
     engine->tick(&pi);
@@ -95,8 +92,7 @@ TEST_F(MotionBlocksTest, ThreeUpPressTest) {
 }
 
 TEST_F(MotionBlocksTest, ResetTest2) {
-    std::vector<std::string> pressed = {};
-    PlayerInfo pi = {pressed, sf::Vector2i(0, 0)};
+    PlayerInfo pi = PlayerInfo::get_empty_player_info();
     engine->tick(&pi);
     pi.pressed.push_back("z");
     engine->tick(&pi);
@@ -109,8 +105,7 @@ TEST_F(MotionBlocksTest, ResetTest2) {
 }
 
 TEST_F(MotionBlocksTest, GoToMouseTest) {
-    std::vector<std::string> pressed = {};
-    PlayerInfo pi = {pressed, sf::Vector2i(25, 25)};
+    PlayerInfo pi = PlayerInfo::get_empty_player_info();
     engine->tick(&pi);
     pi.pressed.push_back("m");
     engine->tick(&pi);
@@ -121,8 +116,8 @@ TEST_F(MotionBlocksTest, GoToMouseTest) {
 }
 
 TEST_F(MotionBlocksTest, ChangeDirectionTest) {
-    std::vector<std::string> pressed = {"m"};
-    PlayerInfo pi = {pressed, sf::Vector2i(0, 0)};
+    PlayerInfo pi = PlayerInfo::get_empty_player_info();
+    pi.pressed.push_back("m");
     engine->tick(&pi);
     pi.pressed.clear();
     engine->tick(&pi);
@@ -139,8 +134,7 @@ TEST_F(MotionBlocksTest, ChangeDirectionTest) {
 }
 
 TEST_F(MotionBlocksTest, MoveStepsTest) {
-    std::vector<std::string> pressed = {};
-    PlayerInfo pi = {pressed, sf::Vector2i(0, 0)};
+    PlayerInfo pi = PlayerInfo::get_empty_player_info();
     engine->tick(&pi);
     pi.pressed.push_back("space");
     engine->tick(&pi);
@@ -150,8 +144,8 @@ TEST_F(MotionBlocksTest, MoveStepsTest) {
 }
 
 TEST_F(MotionBlocksTest, RandomPositionTest) {
-    std::vector<std::string> pressed = {"z"};
-    PlayerInfo pi = {pressed, sf::Vector2i(0, 0)};
+    PlayerInfo pi = PlayerInfo::get_empty_player_info();
+    pi.pressed.push_back("z");
     bool changed = false;
 
     engine->tick(&pi);
