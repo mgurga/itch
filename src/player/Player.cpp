@@ -1,5 +1,4 @@
 #include "Player.hpp"
-#include <SFML/Window/Mouse.hpp>
 
 Player::Player(bool& r):
     running(r)

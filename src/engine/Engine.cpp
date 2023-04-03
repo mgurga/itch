@@ -206,8 +206,11 @@ bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s) {
 
 void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* s, int& i) {
     // std::cout << "processing link opcode: " << link.string_opcode << std::endl;
-    if (s == nullptr)
-        throw std::invalid_argument("scratch sprite pointer is null when processing link");
+    if (s == nullptr) {
+        // throw std::invalid_argument("scratch sprite pointer is null when processing link");
+        std::cout << "scratch sprite pointer is null when processing link with opcode " << link.string_opcode << std::endl;
+        return;
+    }
 
     switch (link.opcode) {
     // Variables
