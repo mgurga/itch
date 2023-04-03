@@ -39,16 +39,6 @@ EngineFunctions::Engine::Engine(Project& project):
     std::cout << "found " << operators.size() << " operator(s)" << std::endl;
 }
 
-unsigned int EngineFunctions::Engine::count_chains(Project& project) {
-    unsigned int totalchains = 0;
-    totalchains += project.stage.chains.size();
-    for (ScratchSprite& ss : project.sprites) {
-        totalchains += ss.chains.size();
-    }
-    std::cout << "project contains " << totalchains << " chains" << std::endl;
-    return totalchains;
-}
-
 void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     if (finished) return;
     broadcasts = queued_broadcasts;
@@ -83,43 +73,6 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     if (processed_chains == 0) {
         std::cout << "project is finished running" << std::endl;
         finished = true;
-    }
-}
-
-ScratchBlock EngineFunctions::Engine::get_sb_by_id(std::string id) {
-    for (ScratchBlock sb : prj->stage.blocks)
-        if (sb.id == id)
-            return sb;
-
-    for (ScratchSprite ss : prj->sprites)
-        for (ScratchBlock sb : ss.blocks)
-            if (sb.id == id)
-                return sb;
-
-    throw std::invalid_argument("ScratchBlock with id '" + id + "' not found");
-}
-
-Variable& EngineFunctions::Engine::get_var_by_name(std::string name) {
-    for (Variable& var : variables)
-        if (var.name == name)
-            return var;
-    throw std::invalid_argument("variable '" + name + "' not found");
-}
-
-Link EngineFunctions::Engine::get_operator_by_id(std::string id) {
-    for (Link& op : operators)
-        if (op.block_id == id)
-            return op;
-    throw std::invalid_argument("operator with id '" + id + "' not found");
-}
-
-std::string EngineFunctions::Engine::variant_str(std::variant<std::string, double> varient) {
-    if (std::holds_alternative<double>(varient)) {
-        return std::to_string(std::get<double>(varient));
-    } else if (std::holds_alternative<std::string>(varient)) {
-        return std::get<std::string>(varient);
-    } else {
-        return "";
     }
 }
 
@@ -222,9 +175,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         break;
 
     // Events
-    case OPCODE::WHEN_FLAG_CLICKED:
-        c.activatable = false;
-        break;
+    case OPCODE::WHEN_FLAG_CLICKED: c.activatable = false; break;
     case OPCODE::WHEN_KEY_PRESSED:
         if (!(std::find(pi->pressed.begin(), pi->pressed.end(), link.fields["KEY_OPTION"][0]) != pi->pressed.end())) {
             i = -1;
@@ -244,24 +195,14 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         break;
 
     // Motion
-    case OPCODE::GO_TO:
-        go_to_menu(link, s);
-        break;
+    case OPCODE::GO_TO: go_to_menu(link, s); break;
+    case OPCODE::SET_X_TO: s->x = std::get<double>(compute_input(link.inputs["X"])); break;
+    case OPCODE::SET_Y_TO: s->y = std::get<double>(compute_input(link.inputs["Y"])); break;
+    case OPCODE::CHANGE_Y_BY: s->y += std::get<double>(compute_input(link.inputs["DY"])); break;
+    case OPCODE::CHANGE_X_BY: s->x += std::get<double>(compute_input(link.inputs["DX"])); break;
     case OPCODE::GO_TO_XY:
         s->x = std::get<double>(compute_input(link.inputs["X"]));
         s->y = std::get<double>(compute_input(link.inputs["Y"]));
-        break;
-    case OPCODE::SET_X_TO:
-        s->x = std::get<double>(compute_input(link.inputs["X"]));
-        break;
-    case OPCODE::SET_Y_TO:
-        s->y = std::get<double>(compute_input(link.inputs["Y"]));
-        break;
-    case OPCODE::CHANGE_Y_BY:
-        s->y += std::get<double>(compute_input(link.inputs["DY"]));
-        break;
-    case OPCODE::CHANGE_X_BY:
-        s->x += std::get<double>(compute_input(link.inputs["DX"]));
         break;
     case OPCODE::POINT_IN_DIRECTION:
         s->direction = std::get<double>(compute_input(link.inputs["DIRECTION"]));
@@ -272,20 +213,12 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::TURN_RIGHT:
         s->direction += std::get<double>(compute_input(link.inputs["DEGREES"]));
         break;
-    case OPCODE::MOVE_STEPS:
-        move_steps(link, s);
-        break;
+    case OPCODE::MOVE_STEPS: move_steps(link, s); break;
 
     // Control
-    case OPCODE::WAIT:
-        wait(std::get<double>(compute_input(link.inputs["DURATION"])), c, i);
-        break;
-    case OPCODE::FOREVER:
-        forever_loop(link, c, s, i);
-        break;
-    case OPCODE::STOP:
-        stop_menu(link, c, s, i);
-        break;
+    case OPCODE::WAIT: wait(std::get<double>(compute_input(link.inputs["DURATION"])), c, i); break;
+    case OPCODE::FOREVER: forever_loop(link, c, s, i); break;
+    case OPCODE::STOP: stop_menu(link, c, s, i); break;
 
     // Looks
     case OPCODE::SAY_FOR_SECS: say_for_sec(link, s, c, i); break;
