@@ -94,6 +94,30 @@ enum OPCODE {
     START_AS_CLONE = 508, // "control_start_as_clone"
     CREATE_CLONE_OF = 509, // "control_create_clone_of"
     DELETE_THIS_CLONE = 510, // "control_delete_this_clone"
+
+    // Sensing Blocks
+    TOUCHING_OBJECT = 600, // "sensing_touchingobject"
+    TOUCHING_OBJECT_MENU = 601, // "sensing_touchingobjectmenu"
+    TOUCHING_COLOR = 602, // "sensing_touchingcolor"
+    COLOR_TOUCHING_COLOR = 603, // "sensing_coloristouchingcolor"
+    DISTANCE_TO = 604, // "sensing_distanceto"
+    DISTANCE_TO_MENU = 605, // "sensing_distancetomenu"
+    ASK_AND_WAIT = 606, // "sensing_askandwait"
+    ANSWER = 607, // "sensing_answer"
+    KEY_PRESSED = 608, // "sensing_keypressed"
+    KEY_OPTIONS = 609, // "sensing_keyoptions"
+    MOUSE_DOWN = 610, // "sensing_mousedown"
+    MOUSE_X = 611, // "sensing_mousex"
+    MOUSE_Y = 612, // "sensing_mousey"
+    SET_DRAG_MODE = 613, // "sensing_setdragmode"
+    LOUDNESS = 614, // "sensing_loudness"
+    TIMER = 615, // "sensing_timer"
+    RESET_TIMER = 616, // "sensing_resettimer"
+    OF = 617, // "sensing_of"
+    OF_MENU = 618, // "sensing_of_object_menu"
+    CURRENT_TIME = 619, // "sensing_current"
+    DAYS_SINCE_2000 = 620, // "sensing_dayssince2000"
+    USERNAME = 621, // "sensing_username"
 };
 
 class Opcodes {
@@ -262,6 +286,52 @@ public:
             return OPCODE::CREATE_CLONE_OF;
         if (opcode == "control_delete_this_clone")
             return OPCODE::DELETE_THIS_CLONE;
+
+        // sensing
+        if (opcode == "sensing_touchingobject")
+            return OPCODE::TOUCHING_OBJECT;
+        if (opcode == "sensing_touchingobjectmenu")
+            return OPCODE::TOUCHING_OBJECT_MENU;
+        if (opcode == "sensing_touchingcolor")
+            return OPCODE::TOUCHING_COLOR;
+        if (opcode == "sensing_coloristouchingcolor")
+            return OPCODE::COLOR_TOUCHING_COLOR;
+        if (opcode == "sensing_distanceto")
+            return OPCODE::DISTANCE_TO;
+        if (opcode == "sensing_distancetomenu")
+            return OPCODE::DISTANCE_TO_MENU;
+        if (opcode == "sensing_askandwait")
+            return OPCODE::ASK_AND_WAIT;
+        if (opcode == "sensing_answer")
+            return OPCODE::ANSWER;
+        if (opcode == "sensing_keypressed")
+            return OPCODE::KEY_PRESSED;
+        if (opcode == "sensing_keyoptions")
+            return OPCODE::KEY_OPTIONS;
+        if (opcode == "sensing_mousedown")
+            return OPCODE::MOUSE_DOWN;
+        if (opcode == "sensing_mousex")
+            return OPCODE::MOUSE_X;
+        if (opcode == "sensing_mousey")
+            return OPCODE::MOUSE_Y;
+        if (opcode == "sensing_setdragmode")
+            return OPCODE::SET_DRAG_MODE;
+        if (opcode == "sensing_loudness")
+            return OPCODE::LOUDNESS;
+        if (opcode == "sensing_timer")
+            return OPCODE::TIMER;
+        if (opcode == "sensing_resettimer")
+            return OPCODE::RESET_TIMER;
+        if (opcode == "sensing_of")
+            return OPCODE::OF;
+        if (opcode == "sensing_of_object_menu")
+            return OPCODE::OF_MENU;
+        if (opcode == "sensing_current")
+            return OPCODE::CURRENT_TIME;
+        if (opcode == "sensing_dayssince2000")
+            return OPCODE::DAYS_SINCE_2000;
+        if (opcode == "sensing_username")
+            return OPCODE::USERNAME;
 
         // special
         if (opcode == "variable")
