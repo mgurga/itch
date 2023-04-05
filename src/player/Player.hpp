@@ -21,5 +21,6 @@ public:
 private:
     std::vector<std::string> pressed;
     sf::Vector2i mouse_pos;
+    bool mouse_pressed = false;
     sf::RenderWindow* window;
 };

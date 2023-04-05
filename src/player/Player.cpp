@@ -35,6 +35,14 @@ void Player::draw() {
                 }
             }
 
+            if (event.type == sf::Event::MouseButtonPressed)
+                if (event.mouseButton.button == sf::Mouse::Left && mouse_pressed != true)
+                    mouse_pressed = true;
+
+            if (event.type == sf::Event::MouseButtonReleased)
+                if (event.mouseButton.button == sf::Mouse::Left)
+                    mouse_pressed = false;
+
             mouse_pos = sf::Mouse::getPosition(*window);
             mouse_pos.x -= 240;
             mouse_pos.y = -mouse_pos.y + 180;
@@ -78,5 +86,5 @@ void Player::paint(Project& project) {
 }
 
 PlayerInfo Player::get_player_info() {
-    return {pressed, mouse_pos};
+    return {pressed, mouse_pos, mouse_pressed};
 }
