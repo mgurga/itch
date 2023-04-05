@@ -26,10 +26,11 @@ public:
     bool finished = false;
 
     void tick(PlayerInfo* player_info);
-    bool process_chain(Chain& c, ScratchSprite* s);
+    bool process_chain(Chain& c, ScratchSprite* s, bool force_activate = false);
     void process_link(Link& link, Chain& chain, ScratchSprite* sprite, int& i);
     std::variant<std::string, double> compute_input(json block);
     std::variant<std::string, double> compute_operator(std::string opid);
+    bool compute_condition(std::string opid);
 
     // utility functions
     Variable& get_var_by_name(std::string name);
@@ -54,6 +55,7 @@ public:
     void wait(double duration, Chain& c, int& i);
     void forever_loop(Link link, Chain& c, ScratchSprite* s, int& i);
     void stop_menu(Link link, Chain& c, ScratchSprite* s, int& i);
+    void if_statement(Link link, Chain& c, ScratchSprite* s);
 
     // looks helpers
     void say(Link link, ScratchSprite* s);

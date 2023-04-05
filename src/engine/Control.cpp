@@ -19,6 +19,8 @@ void EngineFunctions::Engine::wait(double duration, Chain& c, int& i) {
 }
 
 void EngineFunctions::Engine::forever_loop(Link link, Chain& c, ScratchSprite* s, int& i) {
+    if (!link.inputs.contains("SUBSTACK"))
+        return;
     if (!c.continue_at.empty() && !c.continue_at.back().end_time.has_value()) {
         auto get_chain = [&] (std::string id)-> Chain& {
             for (Chain& gc : s->chains)
@@ -27,11 +29,7 @@ void EngineFunctions::Engine::forever_loop(Link link, Chain& c, ScratchSprite* s
             throw std::invalid_argument("chain with beginning link id '" + id + "' not found");
         };
 
-        std::string cid = link.inputs["SUBSTACK"][1];
-        Chain& forever_chain = get_chain(cid);
-        forever_chain.activatable = true;
-        process_chain(get_chain(cid), s);
-        forever_chain.activatable = false;
+        process_chain(get_chain(link.inputs["SUBSTACK"][1]), s, true);
     } else {
         ResumePoint rp;
         rp.link_num = i;
@@ -71,5 +69,22 @@ void EngineFunctions::Engine::stop_menu(Link link, Chain& c, ScratchSprite* s, i
         }
     } else {
         std::cout << "unknown stop option: " << stopop << std::endl;
+    }
+}
+
+void EngineFunctions::Engine::if_statement(Link link, Chain& c, ScratchSprite* s) {
+    if (!link.inputs.contains("CONDITION") || !link.inputs.contains("SUBSTACK"))
+        return;
+    std::string cid = link.inputs["CONDITION"][1];
+    if (compute_condition(cid)) {
+        auto get_chain = [&] (std::string id)-> Chain& {
+            for (Chain& gc : s->chains)
+                if (gc.links.at(0).block_id == id)
+                    return gc;
+            throw std::invalid_argument("chain with beginning link id '" + id + "' not found");
+        };
+
+        std::cout << "processing chain" << std::endl;
+        process_chain(get_chain(link.inputs["SUBSTACK"][1]), s, true);
     }
 }

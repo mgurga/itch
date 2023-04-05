@@ -76,6 +76,39 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     }
 }
 
+bool EngineFunctions::Engine::compute_condition(std::string opid) {
+    Link op = get_sb_by_id(opid);
+
+    if (op.opcode == OPCODE::KEY_PRESSED) {
+        Link ko = get_sb_by_id(op.inputs["KEY_OPTION"][1]);
+        std::string key = ko.fields["KEY_OPTION"][0];
+        for (std::string pkey : pi->pressed)
+            if (pkey == key)
+                return true;
+        return false;
+    }
+
+    switch (op.opcode) {
+    case OPCODE::MOUSE_DOWN:
+        return pi->mouse_down;
+    case OPCODE::OPERATOR_AND:
+        if (!op.inputs.contains("OPERAND1") && !op.inputs.contains("OPERAND2")) return false;
+        if (!op.inputs.contains("OPERAND1") || !op.inputs.contains("OPERAND2")) return false;
+        return compute_condition(op.inputs["OPERAND1"][1]) && compute_condition(op.inputs["OPERAND2"][1]);
+    case OPCODE::OPERATOR_OR:
+        if (!op.inputs.contains("OPERAND1") && !op.inputs.contains("OPERAND2")) return false;
+        if (!op.inputs.contains("OPERAND1")) return compute_condition(op.inputs["OPERAND2"][1]);
+        if (!op.inputs.contains("OPERAND2")) return compute_condition(op.inputs["OPERAND1"][1]);
+        return compute_condition(op.inputs["OPERAND1"][1]) || compute_condition(op.inputs["OPERAND2"][1]);
+    case OPCODE::OPERATOR_NOT:
+        if (!op.inputs.contains("OPERAND")) return true;
+        return !compute_condition(op.inputs["OPERAND"][1]);
+    }
+
+    std::cout << "unknown condition: '" << op.string_opcode << "' returning false" << std::endl;
+    return false;
+}
+
 std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std::string opid) {
     Link op = get_operator_by_id(opid);
 
@@ -96,14 +129,12 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std:
             case OPERATOR_DIVIDE:
                 return std::get<double>(num1) / std::get<double>(num2);
             default:
-                return 1234.5678;
+                break;
             }
         } else if (std::holds_alternative<double>(num1)) {
             return std::get<double>(num1);
         } else if (std::holds_alternative<double>(num2)) {
             return std::get<double>(num2);
-        } else {
-            return {};
         }
     }
 
@@ -111,10 +142,10 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std:
     case OPERATOR_JOIN:
         return variant_str(compute_input(op.inputs["STRING1"])) + variant_str(compute_input(op.inputs["STRING2"]));
     default:
-        return "unknown operator";
+        break;
     }
 
-    return {};
+    return "unknown operator: '" + op.string_opcode + "'";
 }
 
 std::variant<std::string, double> EngineFunctions::Engine::compute_input(json input) {
@@ -134,8 +165,8 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_input(json in
     }
 }
 
-bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s) {
-    if (chain.activatable || !chain.continue_at.empty()) {
+bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s, bool force_activate) {
+    if ((chain.activatable || !chain.continue_at.empty()) || force_activate) {
         // used to interrupt continue_at if WHEN_KEY_CLICKED, BROADCAST_RECIEVED, or other special events activate
         if (chain.links.at(0).opcode >= WHEN_FLAG_CLICKED && chain.links.at(0).opcode <= BROADCAST_AND_WAIT) {
             int init_link = 0;
@@ -219,6 +250,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::WAIT: wait(std::get<double>(compute_input(link.inputs["DURATION"])), c, i); break;
     case OPCODE::FOREVER: forever_loop(link, c, s, i); break;
     case OPCODE::STOP: stop_menu(link, c, s, i); break;
+    case OPCODE::IF: if_statement(link, c, s); break;
 
     // Looks
     case OPCODE::SAY_FOR_SECS: say_for_sec(link, s, c, i); break;
