@@ -26,3 +26,18 @@ void EngineFunctions::Engine::say_for_sec(Link link, ScratchSprite *s, Chain& c,
         i = -1;
     }
 }
+
+void EngineFunctions::Engine::switch_costume_to(Link link, ScratchSprite *s) {
+    ScratchBlock costume_shadow = get_sb_by_id(link.inputs["COSTUME"][1]);
+    std::string new_costume_name = costume_shadow.fields["COSTUME"][0];
+
+    for (int i = 0; i < s->costumes.size(); i++)
+        if (s->costumes.at(i).name == new_costume_name)
+            s->currentCostume = i;
+}
+
+void EngineFunctions::Engine::next_costume(ScratchSprite *s) {
+    s->currentCostume++;
+    if (s->currentCostume == s->costumes.size())
+        s->currentCostume = 0;
+}

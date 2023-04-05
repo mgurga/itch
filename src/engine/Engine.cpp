@@ -112,6 +112,15 @@ bool EngineFunctions::Engine::compute_condition(std::string opid) {
 std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std::string opid) {
     Link op = get_operator_by_id(opid);
 
+    if (op.opcode >= OPCODE::OPERATOR_GREATER_THAN && op.opcode <= OPCODE::OPERATOR_NOT)
+        return compute_condition(opid) ? "true" : "false";
+    if (op.opcode == OPCODE::OPERATOR_CONTAINS)
+        return compute_condition(opid) ? "true" : "false";
+    if (op.opcode >= OPCODE::TOUCHING_OBJECT && op.opcode <= OPCODE::COLOR_TOUCHING_COLOR)
+        return compute_condition(opid) ? "true" : "false";
+    if (op.opcode == OPCODE::KEY_PRESSED || op.opcode == OPCODE::MOUSE_DOWN)
+        return compute_condition(opid) ? "true" : "false";
+
     // basic math operations: add, subtract, multiple, divide
     if (op.opcode >= 400 && op.opcode <= 403) {
         std::variant<std::string, double> num1, num2;
@@ -257,6 +266,8 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::SAY: say(link, s); break;
     case OPCODE::SHOW: s->visible = true; break;
     case OPCODE::HIDE: s->visible = false; break;
+    case OPCODE::SWITCH_TO_COSTUME: switch_costume_to(link, s); break;
+    case OPCODE::NEXT_COSTUME: next_costume(s); break;
 
     default:
         std::cout << "unknown opcode detected in engine: '" << link.string_opcode << "'" << std::endl;

@@ -60,6 +60,8 @@ public:
     // looks helpers
     void say(Link link, ScratchSprite* s);
     void say_for_sec(Link link, ScratchSprite* s, Chain& c, int& i);
+    void switch_costume_to(Link link, ScratchSprite* s);
+    void next_costume(ScratchSprite* s);
 private:
     static unsigned int count_chains(Project& project);
 };
