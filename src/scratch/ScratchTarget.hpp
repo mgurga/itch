@@ -25,9 +25,9 @@ public:
     std::vector<ScratchCostume> costumes;
     std::vector<ScratchSound> sounds;
     std::vector<ScratchBlock> blocks;
-    int volume;
+    unsigned int volume;
     int layerOrder;
-    int currentCostume;
+    unsigned int currentCostume;
 
     std::vector<Chain> chains;
 };
