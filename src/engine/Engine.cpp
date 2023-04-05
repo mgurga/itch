@@ -82,7 +82,7 @@ bool EngineFunctions::Engine::compute_condition(std::string opid) {
     if (op.opcode == OPCODE::KEY_PRESSED) {
         Link ko = get_sb_by_id(op.inputs["KEY_OPTION"][1]);
         std::string key = ko.fields["KEY_OPTION"][0];
-        for (std::string pkey : pi->pressed)
+        for (std::string pkey : pi->keys_down)
             if (pkey == key)
                 return true;
         return false;

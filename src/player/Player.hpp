@@ -20,6 +20,7 @@ public:
     bool& running;
 private:
     std::vector<std::string> pressed;
+    std::vector<std::string> keys_down;
     sf::Vector2i mouse_pos;
     bool mouse_pressed = false;
     sf::RenderWindow* window;

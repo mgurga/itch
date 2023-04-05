@@ -84,7 +84,6 @@ void EngineFunctions::Engine::if_statement(Link link, Chain& c, ScratchSprite* s
             throw std::invalid_argument("chain with beginning link id '" + id + "' not found");
         };
 
-        std::cout << "processing chain" << std::endl;
         process_chain(get_chain(link.inputs["SUBSTACK"][1]), s, true);
     }
 }

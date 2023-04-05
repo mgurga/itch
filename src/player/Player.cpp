@@ -20,19 +20,48 @@ void Player::draw() {
                 running = false;
             }
 
+            // add to pressed vector (only reads held keys once)
             if (event.type == sf::Event::KeyPressed) {
-                pressed.push_back("any");
+                pressed.push_back("any"); // should be removed, just check if pressed vector is not empty
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) pressed.push_back("right arrow");
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) pressed.push_back("left arrow");
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) pressed.push_back("up arrow");
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) pressed.push_back("down arrow");
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) pressed.push_back("space");
             }
-
             if (event.type == sf::Event::TextEntered) {
                 if (event.text.unicode < 128) {
                     pressed.push_back(std::string(1, static_cast<char>(event.text.unicode)));
                 }
+            }
+
+            // add to keys_down vector (held keys always in this vector)
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Right) keys_down.push_back("right arrow");
+                if (event.key.code == sf::Keyboard::Left) keys_down.push_back("left arrow");
+                if (event.key.code == sf::Keyboard::Up) keys_down.push_back("up arrow");
+                if (event.key.code == sf::Keyboard::Down) keys_down.push_back("down arrow");
+                if (event.key.code == sf::Keyboard::Space) keys_down.push_back("space");
+                if (event.key.code >= sf::Keyboard::A && event.key.code <= sf::Keyboard::Z) {
+                    char chr = static_cast<char>(event.key.code - sf::Keyboard::A + 'a');
+                    keys_down.push_back(std::string(1, chr));
+                }
+            }
+            if (event.type == sf::Event::KeyReleased) {
+                std::string toremove;
+
+                if (event.key.code == sf::Keyboard::Right) toremove = "right arrow";
+                if (event.key.code == sf::Keyboard::Left) toremove = "left arrow";
+                if (event.key.code == sf::Keyboard::Up) toremove = "up arrow";
+                if (event.key.code == sf::Keyboard::Down) toremove = "down arrow";
+                if (event.key.code == sf::Keyboard::Space) toremove = "space";
+                if (event.key.code >= sf::Keyboard::A && event.key.code <= sf::Keyboard::Z) {
+                    char chr = static_cast<char>(event.key.code - sf::Keyboard::A + 'a');
+                    toremove = std::string(1, chr);
+                }
+
+                if (!toremove.empty())
+                    keys_down.erase(std::remove(keys_down.begin(), keys_down.end(), toremove), keys_down.end());
             }
 
             if (event.type == sf::Event::MouseButtonPressed)
@@ -86,5 +115,5 @@ void Player::paint(Project& project) {
 }
 
 PlayerInfo Player::get_player_info() {
-    return {pressed, mouse_pos, mouse_pressed};
+    return {pressed, keys_down, mouse_pos, mouse_pressed};
 }
