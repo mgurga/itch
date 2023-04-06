@@ -46,3 +46,10 @@ std::string EngineFunctions::Engine::variant_str(std::variant<std::string, doubl
         return "";
     }
 }
+
+Chain& EngineFunctions::Engine::get_chain_by_link_id(std::string id, ScratchSprite* s) {
+    for (Chain& gc : s->chains)
+        if (gc.links.at(0).block_id == id)
+            return gc;
+    throw std::invalid_argument("chain with beginning link id '" + id + "' not found");
+}

@@ -38,6 +38,7 @@ public:
     Link get_operator_by_id(std::string id);
     ScratchBlock get_sb_by_id(std::string id);
     std::string variant_str(std::variant<std::string, double> varient);
+    Chain& get_chain_by_link_id(std::string id, ScratchSprite* s);
 
     std::vector<Variable> variables;
     std::vector<Link> operators;
