@@ -71,10 +71,10 @@ public:
     }
 
     Variable operator=(const std::variant<std::string, double>& other) {
-        try {
+        if (std::holds_alternative<std::string>(other)) {
             value = std::get<std::string>(other);
             type = VariableType::String;
-        } catch(const std::bad_variant_access& ex) {
+        } else if (std::holds_alternative<double>(other)) {
             value = std::get<double>(other);
             type = VariableType::Integer;
         }
