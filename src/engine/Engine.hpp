@@ -11,6 +11,7 @@
 
 #include "../player/PlayerInfo.hpp"
 #include "../Project.hpp"
+#include "../DebugMacros.hpp"
 #include "../blocks/Link.hpp"
 #include "../blocks/Opcodes.hpp"
 #include "SpriteMessage.hpp"
