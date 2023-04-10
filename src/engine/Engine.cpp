@@ -259,7 +259,8 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::WAIT: wait(std::get<double>(compute_input(link.inputs["DURATION"])), c, i); break;
     case OPCODE::FOREVER: forever_loop(link, c, s, i); break;
     case OPCODE::STOP: stop_menu(link, c, s, i); break;
-    case OPCODE::IF: if_statement(link, c, s); break;
+    case OPCODE::IF: if_statement(link, s); break;
+    case OPCODE::IF_ELSE: if_else_statement(link, s); break;
 
     // Looks
     case OPCODE::SAY_FOR_SECS: say_for_sec(link, s, c, i); break;

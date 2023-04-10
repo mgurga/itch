@@ -65,11 +65,28 @@ void EngineFunctions::Engine::stop_menu(Link link, Chain& c, ScratchSprite* s, i
     }
 }
 
-void EngineFunctions::Engine::if_statement(Link link, Chain& c, ScratchSprite* s) {
+void EngineFunctions::Engine::if_statement(Link link, ScratchSprite* s) {
     if (!link.inputs.contains("CONDITION") || !link.inputs.contains("SUBSTACK"))
         return;
     std::string cid = link.inputs["CONDITION"][1];
     if (compute_condition(cid)) {
         process_chain(get_chain_by_link_id(link.inputs["SUBSTACK"][1], s), s, true);
+    }
+}
+
+void EngineFunctions::Engine::if_else_statement(Link link, ScratchSprite* s) {
+    if (!link.inputs.contains("CONDITION")) {
+        if (link.inputs.contains("SUBSTACK2"))
+            process_chain(get_chain_by_link_id(link.inputs["SUBSTACK2"][1], s), s, true);
+        return;
+    }
+    std::string cid = link.inputs["CONDITION"][1];
+    if (compute_condition(cid)) {
+        if (!link.inputs.contains("SUBSTACK")) return;
+        process_chain(get_chain_by_link_id(link.inputs["SUBSTACK"][1], s), s, true);
+    } else {
+        if (!link.inputs.contains("SUBSTACK2")) return;
+        Chain& c = get_chain_by_link_id(link.inputs["SUBSTACK2"][1], s);
+        process_chain(c, s, true);
     }
 }

@@ -57,7 +57,8 @@ public:
     void wait(double duration, Chain& c, int& i);
     void forever_loop(Link link, Chain& c, ScratchSprite* s, int& i);
     void stop_menu(Link link, Chain& c, ScratchSprite* s, int& i);
-    void if_statement(Link link, Chain& c, ScratchSprite* s);
+    void if_statement(Link link, ScratchSprite* s);
+    void if_else_statement(Link link, ScratchSprite* s);
 
     // looks helpers
     void say(Link link, ScratchSprite* s);
