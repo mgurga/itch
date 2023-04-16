@@ -4,9 +4,11 @@ EngineFunctions::Engine::Engine(Project& project):
     TOTAL_CHAINS(count_chains(project))
 {
     prj = &project;
-    for (ScratchVariable sv : project.stage.variables) {
-        variables.push_back(Variable(sv));
-    }
+
+    for (ScratchVariable sv : project.stage.variables)
+        variables.push_back(sv);
+    for (ScratchList sl : project.stage.lists)
+        lists.push_back(sl);
 
     for (ScratchSprite sprite : project.sprites) {
         for (ScratchVariable sv : sprite.variables) {
@@ -14,11 +16,22 @@ EngineFunctions::Engine::Engine(Project& project):
             newvar.make_local(sprite.name);
             variables.push_back(newvar);
         }
+        for (ScratchList sl : sprite.lists) {
+            List newlist = List(sl);
+            newlist.make_local(sprite.name);
+            lists.push_back(newlist);
+        }
     }
 
     std::cout << "initialized " << variables.size() << " variable(s)" << std::endl;
     for (Variable v : variables) {
         std::cout << "'" << v.name << "', ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "initialized " << lists.size() << " list(s)" << std::endl;
+    for (List l : lists) {
+        std::cout << "'" << l.name << "', ";
     }
     std::cout << std::endl;
 

@@ -16,6 +16,7 @@
 #include "../blocks/Opcodes.hpp"
 #include "SpriteMessage.hpp"
 #include "Variable.hpp"
+#include "List.hpp"
 
 namespace EngineFunctions {
 class Engine {
@@ -35,12 +36,14 @@ public:
 
     // utility functions
     Variable& get_var_by_name(std::string name);
+    List& get_list_by_name(std::string name);
     Link get_operator_by_id(std::string id);
     ScratchBlock get_sb_by_id(std::string id);
     std::string variant_str(std::variant<std::string, double> varient);
     Chain& get_chain_by_link_id(std::string id, ScratchSprite* s);
 
     std::vector<Variable> variables;
+    std::vector<List> lists;
     std::vector<Link> operators;
     std::vector<std::string> broadcasts;
     std::vector<std::string> queued_broadcasts;

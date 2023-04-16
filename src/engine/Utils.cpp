@@ -30,6 +30,13 @@ Variable& EngineFunctions::Engine::get_var_by_name(std::string name) {
     throw std::invalid_argument("variable '" + name + "' not found");
 }
 
+List& EngineFunctions::Engine::get_list_by_name(std::string name) {
+    for (List& list : lists)
+        if (list.name == name)
+            return list;
+    throw std::invalid_argument("list '" + name + "' not found");
+}
+
 Link EngineFunctions::Engine::get_operator_by_id(std::string id) {
     for (Link& op : operators)
         if (op.block_id == id)
