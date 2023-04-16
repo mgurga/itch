@@ -3,7 +3,6 @@
 ScratchMonitor::ScratchMonitor(json sm):
     id(sm["id"]),
     opcode(sm["opcode"]),
-    variable(sm["params"]["VARIABLE"].is_null() ? sm["params"]["LIST"] : sm["params"]["VARIABLE"]),
     spriteName(sm["spriteName"].is_null() ? "" : sm["spriteName"]),
     value(sm["value"].dump()),
     width(sm["width"]),
@@ -22,6 +21,16 @@ ScratchMonitor::ScratchMonitor(json sm):
         mode = LIST;
     } else {
         mode = DEFAULT;
+    }
+
+    if (sm["params"].empty()) {
+        variable = "";
+    } else if (!sm["params"]["VARIABLE"].is_null()) {
+        variable = sm["params"]["VARIABLE"];
+    } else if (!sm["params"]["LIST"].is_null()) {
+        variable = sm["params"]["LIST"];
+    } else {
+        variable = "";
     }
 
     if (mode != LIST) {
