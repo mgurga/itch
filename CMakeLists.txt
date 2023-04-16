@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.11)
 project(itch)
 include(FetchContent)
 
+set(BUILD_NETWORK_SUPPORT true CACHE BOOL "build networking library to download scratch projects")
+
+add_compile_definitions(BUILD_NETWORK_SUPPORT=${BUILD_NETWORK_SUPPORT})
+
 find_program(7zip 7z REQUIRED) # install with `sudo scoop install 7zip` on windows
 find_program(imagemagick magick REQUIRED) # install with `sudo scoop install imagemagick` on windows
 
@@ -26,10 +30,23 @@ FetchContent_MakeAvailable(json)
 set_target_properties(nlohmann_json PROPERTIES INTERFACE_COMPILE_DEFINITIONS "JSON_DIAGNOSTICS=1;JSON_USE_IMPLICIT_CONVERSIONS=1")
 message("finished fetching json")
 
+if (BUILD_NETWORK_SUPPORT)
+    message("fetching cpr...")
+    FetchContent_Declare(
+        cpr
+        GIT_REPOSITORY https://github.com/libcpr/cpr.git
+        GIT_TAG 0817715923c9705e68994eb52ef9df3f6845beba)
+    FetchContent_MakeAvailable(cpr)
+    message("finished fetching cpr")
+endif()
+
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json::nlohmann_json sfml-system sfml-audio sfml-graphics sfml-window)
+if (BUILD_NETWORK_SUPPORT)
+    target_link_libraries(${PROJECT_NAME} PUBLIC cpr::cpr)
+endif()
 
 set (BUILD_TESTING TRUE)
 if (BUILD_TESTING)
