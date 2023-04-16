@@ -16,15 +16,17 @@ std::vector<Chain> Chain::create_chains(std::vector<ScratchBlock> blocks) {
         bool createchain = false;
 
         if (WHEN_FLAG_CLICKED <= bop && bop <= WHEN_BROADCAST_RECEIVED) createchain = true;
-        if (bop == FOREVER && !b.inputs.empty()) start_ids.push_back(b.inputs["SUBSTACK"][1]);
+        if (bop == FOREVER && !b.inputs.empty() && !b.inputs["SUBSTACK"][1].is_null()) {
+            start_ids.push_back(b.inputs["SUBSTACK"][1]);
+        }
         if (bop == IF && !b.inputs.empty()) {
             if (b.inputs.contains("CONDITION")) start_ids.push_back(b.inputs["CONDITION"][1]);
-            if (b.inputs.contains("SUBSTACK")) start_ids.push_back(b.inputs["SUBSTACK"][1]);
+            if (b.inputs.contains("SUBSTACK") && !b.inputs["SUBSTACK"][1].is_null()) start_ids.push_back(b.inputs["SUBSTACK"][1]);
         }
         if (bop == IF_ELSE && !b.inputs.empty()) {
             if (b.inputs.contains("CONDITION")) start_ids.push_back(b.inputs["CONDITION"][1]);
-            if (b.inputs.contains("SUBSTACK")) start_ids.push_back(b.inputs["SUBSTACK"][1]);
-            if (b.inputs.contains("SUBSTACK2")) start_ids.push_back(b.inputs["SUBSTACK2"][1]);
+            if (b.inputs.contains("SUBSTACK") && !b.inputs["SUBSTACK"][1].is_null()) start_ids.push_back(b.inputs["SUBSTACK"][1]);
+            if (b.inputs.contains("SUBSTACK2") && !b.inputs["SUBSTACK2"][1].is_null()) start_ids.push_back(b.inputs["SUBSTACK2"][1]);
         }
 
         if (createchain) start_ids.push_back(b.id);
