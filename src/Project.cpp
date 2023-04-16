@@ -7,6 +7,11 @@ void Project::load_from_project_json(bool heavyload) {
     std::ifstream f(temp_dir / "project.json");
     project_json = json::parse(f);
 
+    if (project_json.contains("info")) {
+        std::cout << "project is built for Scratch 2.0 and that is not currently supported. quitting..." << std::endl;
+        exit(1);
+    }
+
     for (auto target : project_json["targets"]) {
         std::cout << "loading target: " << target["name"] << std::endl;
         if (target["isStage"]) {
