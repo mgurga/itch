@@ -13,6 +13,11 @@ ScratchTarget::ScratchTarget(json st, std::filesystem::path temp_dir, bool heavy
         variables.push_back(ScratchVariable(sv.value(), sv.key()));
     }
 
+    std::cout << "loading lists..." << std::endl;
+    for (auto sl : st["lists"].items()) {
+        lists.push_back(ScratchList(sl.value(), sl.key()));
+    }
+
     std::cout << "loading costumes..." << std::endl;
     for (auto sc : st["costumes"]) {
         costumes.push_back(ScratchCostume(sc));

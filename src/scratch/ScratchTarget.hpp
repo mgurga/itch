@@ -6,6 +6,7 @@
 #include <nlohmann/json.hpp>
 
 #include "ScratchVariable.hpp"
+#include "ScratchList.hpp"
 #include "ScratchCostume.hpp"
 #include "ScratchSound.hpp"
 #include "ScratchBlock.hpp"
@@ -22,6 +23,7 @@ public:
     bool isStage;
     std::string name;
     std::vector<ScratchVariable> variables;
+    std::vector<ScratchList> lists;
     std::vector<ScratchCostume> costumes;
     std::vector<ScratchSound> sounds;
     std::vector<ScratchBlock> blocks;
