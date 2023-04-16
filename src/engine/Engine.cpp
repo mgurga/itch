@@ -147,6 +147,14 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std:
         }
     }
 
+    if (op.opcode == OPCODE::OPERATOR_RANDOM) {
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<int> r
+            (std::get<double>(compute_input(op.inputs["FROM"])), std::get<double>(compute_input(op.inputs["TO"])));
+        return static_cast<double>(r(rng));
+    }
+
     switch (op.opcode) {
     case OPERATOR_JOIN:
         return variant_str(compute_input(op.inputs["STRING1"])) + variant_str(compute_input(op.inputs["STRING2"]));
