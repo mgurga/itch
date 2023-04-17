@@ -7,6 +7,7 @@
 #include <variant>
 
 #include "../scratch/ScratchVariable.hpp"
+#include "Value.hpp"
 
 using json = nlohmann::json;
 
@@ -81,12 +82,36 @@ public:
         return *this;
     }
 
+    Variable operator=(Value other) {
+        if (other.contains_string()) {
+            value = other.get_string();
+            type = VariableType::String;
+        } else if (other.contains_number()) {
+            value = other.get_number();
+            type = VariableType::Integer;
+        } else {
+            value = other.get_string();
+            type = VariableType::String;
+        }
+        return *this;
+    }
+
     Variable operator+=(const double& other) {
         if (type == VariableType::String) {
             type = VariableType::Integer;
             value = std::to_string(other);
         } else {
             value = std::to_string(std::stod(value) + other);
+        }
+        return *this;
+    }
+
+    Variable operator+=(Value& other) {
+        if (type == VariableType::String) {
+            type = VariableType::Integer;
+            value = other.get_number();
+        } else {
+            value = std::to_string(std::stod(value) + other.get_number());
         }
         return *this;
     }
