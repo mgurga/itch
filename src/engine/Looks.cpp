@@ -1,7 +1,7 @@
 #include "Engine.hpp"
 
 void EngineFunctions::Engine::say(Link link, ScratchSprite *s) {
-    std::string msg = variant_str(compute_input(link.inputs["MESSAGE"]));
+    std::string msg = compute_input(link.inputs["MESSAGE"]).get_string();
     say_logs.push_back(SpriteMessage(msg, s, 0));
 }
 
@@ -13,8 +13,8 @@ void EngineFunctions::Engine::say_for_sec(Link link, ScratchSprite *s, Chain& c,
             i = -1;
         }
     } else {
-        std::string msg = variant_str(compute_input(link.inputs["MESSAGE"]));
-        double dur = std::get<double>(compute_input(link.inputs["SECS"]));
+        std::string msg = compute_input(link.inputs["MESSAGE"]).get_string();
+        double dur = compute_input(link.inputs["SECS"]).get_number();
         say_logs.push_back(SpriteMessage(msg, s, dur));
         std::cout << say_logs.back() << std::endl;
 

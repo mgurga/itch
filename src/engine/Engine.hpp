@@ -30,7 +30,7 @@ public:
     void tick(PlayerInfo* player_info);
     bool process_chain(Chain& c, ScratchSprite* s, bool force_activate = false);
     void process_link(Link& link, Chain& chain, ScratchSprite* sprite, int& i);
-    std::variant<std::string, double> compute_input(json block);
+    Value compute_input(json block);
     std::variant<std::string, double> compute_operator(std::string opid);
     bool compute_condition(std::string opid);
 

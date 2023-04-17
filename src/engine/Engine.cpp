@@ -116,6 +116,8 @@ bool EngineFunctions::Engine::compute_condition(std::string opid) {
     case OPCODE::OPERATOR_NOT:
         if (!op.inputs.contains("OPERAND")) return true;
         return !compute_condition(op.inputs["OPERAND"][1]);
+    default:
+        break;
     }
 
     std::cout << "unknown condition: '" << op.string_opcode << "' returning false" << std::endl;
@@ -136,27 +138,27 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std:
 
     // basic math operations: add, subtract, multiple, divide
     if (op.opcode >= 400 && op.opcode <= 403) {
-        std::variant<std::string, double> num1, num2;
+        Value num1, num2;
         num1 = compute_input(op.inputs["NUM1"]);
         num2 = compute_input(op.inputs["NUM2"]);
 
-        if (std::holds_alternative<double>(num1) && std::holds_alternative<double>(num2)) {
+        if (num1.contains_number() && num2.contains_number()) {
             switch(op.opcode) {
             case OPERATOR_ADD:
-                return std::get<double>(num1) + std::get<double>(num2);
+                return num1.get_number() + num2.get_number();
             case OPERATOR_SUBTRACT:
-                return std::get<double>(num1) - std::get<double>(num2);
+                return num1.get_number() - num2.get_number();
             case OPERATOR_MULTIPLY:
-                return std::get<double>(num1) * std::get<double>(num2);
+                return num1.get_number() * num2.get_number();
             case OPERATOR_DIVIDE:
-                return std::get<double>(num1) / std::get<double>(num2);
+                return num1.get_number() / num2.get_number();;
             default:
                 break;
             }
-        } else if (std::holds_alternative<double>(num1)) {
-            return std::get<double>(num1);
-        } else if (std::holds_alternative<double>(num2)) {
-            return std::get<double>(num2);
+        } else if (num1.contains_number()) {
+            return num1.get_number();
+        } else if (num2.contains_number()) {
+            return num2.get_number();
         }
     }
 
@@ -164,13 +166,13 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std:
         std::random_device dev;
         std::mt19937 rng(dev());
         std::uniform_int_distribution<int> r
-            (std::get<double>(compute_input(op.inputs["FROM"])), std::get<double>(compute_input(op.inputs["TO"])));
+            (compute_input(op.inputs["FROM"]).get_number(), compute_input(op.inputs["TO"]).get_number());
         return static_cast<double>(r(rng));
     }
 
     switch (op.opcode) {
     case OPERATOR_JOIN:
-        return variant_str(compute_input(op.inputs["STRING1"])) + variant_str(compute_input(op.inputs["STRING2"]));
+        return compute_input(op.inputs["STRING1"]).get_string() + compute_input(op.inputs["STRING2"]).get_string();
     default:
         break;
     }
@@ -178,7 +180,7 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std:
     return "unknown operator: '" + op.string_opcode + "'";
 }
 
-std::variant<std::string, double> EngineFunctions::Engine::compute_input(json input) {
+Value EngineFunctions::Engine::compute_input(json input) {
     if (input[0] == 3 && input[1].is_string())
         return compute_operator(input[1]);
 
@@ -191,7 +193,7 @@ std::variant<std::string, double> EngineFunctions::Engine::compute_input(json in
     case VariableType: case ListType:
         return get_var_by_name(sab.str_value).val();
     default:
-        return {};
+        return Value();
     }
 }
 
@@ -232,7 +234,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) = compute_input(link.inputs["VALUE"]);
         break;
     case OPCODE::CHANGE_VARIABLE_BY:
-        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) += std::get<double>(compute_input(link.inputs["VALUE"]));
+        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) += compute_input(link.inputs["VALUE"]).get_number();
         break;
 
     // Events
@@ -252,32 +254,32 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         }
         break;
     case OPCODE::BROADCAST:
-        queued_broadcasts.push_back(std::get<std::string>(compute_input(link.inputs["BROADCAST_INPUT"])));
+        queued_broadcasts.push_back(compute_input(link.inputs["BROADCAST_INPUT"]).get_string());
         break;
 
     // Motion
     case OPCODE::GO_TO: go_to_menu(link, s); break;
-    case OPCODE::SET_X_TO: s->x = std::get<double>(compute_input(link.inputs["X"])); break;
-    case OPCODE::SET_Y_TO: s->y = std::get<double>(compute_input(link.inputs["Y"])); break;
-    case OPCODE::CHANGE_Y_BY: s->y += std::get<double>(compute_input(link.inputs["DY"])); break;
-    case OPCODE::CHANGE_X_BY: s->x += std::get<double>(compute_input(link.inputs["DX"])); break;
+    case OPCODE::SET_X_TO: s->x = compute_input(link.inputs["X"]).get_number(); break;
+    case OPCODE::SET_Y_TO: s->y = compute_input(link.inputs["Y"]).get_number(); break;
+    case OPCODE::CHANGE_Y_BY: s->y += compute_input(link.inputs["DY"]).get_number(); break;
+    case OPCODE::CHANGE_X_BY: s->x += compute_input(link.inputs["DX"]).get_number(); break;
     case OPCODE::GO_TO_XY:
-        s->x = std::get<double>(compute_input(link.inputs["X"]));
-        s->y = std::get<double>(compute_input(link.inputs["Y"]));
+        s->x = compute_input(link.inputs["X"]).get_number();
+        s->y = compute_input(link.inputs["Y"]).get_number();
         break;
     case OPCODE::POINT_IN_DIRECTION:
-        s->direction = std::get<double>(compute_input(link.inputs["DIRECTION"]));
+        s->direction = compute_input(link.inputs["DIRECTION"]).get_number();
         break;
     case OPCODE::TURN_LEFT:
-        s->direction -= std::get<double>(compute_input(link.inputs["DEGREES"]));
+        s->direction -= compute_input(link.inputs["DEGREES"]).get_number();
         break;
     case OPCODE::TURN_RIGHT:
-        s->direction += std::get<double>(compute_input(link.inputs["DEGREES"]));
+        s->direction += compute_input(link.inputs["DEGREES"]).get_number();
         break;
     case OPCODE::MOVE_STEPS: move_steps(link, s); break;
 
     // Control
-    case OPCODE::WAIT: wait(std::get<double>(compute_input(link.inputs["DURATION"])), c, i); break;
+    case OPCODE::WAIT: wait(compute_input(link.inputs["DURATION"]).get_number(), c, i); break;
     case OPCODE::FOREVER: forever_loop(link, c, s, i); break;
     case OPCODE::STOP: stop_menu(link, c, s, i); break;
     case OPCODE::IF: if_statement(link, s); break;

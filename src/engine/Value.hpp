@@ -16,6 +16,7 @@ public:
     Value(double d): value(d) {};
     Value(int i): value(static_cast<double>(i)) {};
     Value(bool b): value(b) {};
+    Value() {};
 
     std::variant<std::string, double> get_variant() {
         std::variant<std::string, double> out;
@@ -45,7 +46,7 @@ public:
         }
     }
 
-    double get_double() {
+    double get_number() {
         if (std::holds_alternative<double>(value)) {
             return std::get<double>(value);
         } else {
@@ -59,6 +60,18 @@ public:
         } else {
             return false;
         }
+    }
+
+    bool contains_string() {
+        return std::holds_alternative<std::string>(value);
+    }
+
+    bool contains_number() {
+        return std::holds_alternative<double>(value);
+    }
+
+    bool contains_bool() {
+        return std::holds_alternative<bool>(value);
     }
 
 private:
