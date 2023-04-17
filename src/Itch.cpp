@@ -43,6 +43,9 @@ void Itch::load_from_url(std::string project_url) {
     std::cout << "response code is " << pd_res.status_code << std::endl;
     json project_description = json::parse(pd_res.text);
     std::cout << "project token is " << project_description["project_token"] << std::endl;
+    std::ofstream pjdf(temp_dir / "project_description.json");
+    pjdf << pd_res.text;
+    pjdf.close();
 
     // download project.json
     std::cout << "downloading project.json..." << std::endl;
