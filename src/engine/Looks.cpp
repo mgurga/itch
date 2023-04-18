@@ -3,6 +3,7 @@
 void EngineFunctions::Engine::say(Link link, ScratchSprite *s) {
     std::string msg = compute_input(link.inputs["MESSAGE"]).get_string();
     say_logs.push_back(SpriteMessage(msg, s, 0));
+    std::cout << say_logs.back() << std::endl;
 }
 
 void EngineFunctions::Engine::say_for_sec(Link link, ScratchSprite *s, Chain& c, int& i) {
