@@ -59,9 +59,22 @@ enum OPCODE {
     BACKDROP_NUM_NAME = 218, // "looks_backdropnumbername"
     SIZE_VAL = 219, // "looks_size"
 
-    // Variables
+    // Variables and Lists
     SET_VARIABLE_TO = 300, // "data_setvariableto"
     CHANGE_VARIABLE_BY = 301, // "data_changevariableby"
+    SHOW_VARIABLE = 302, // "data_showvariable"
+    HIDE_VARIABLE = 303, // "data_hidevariable"
+    ADD_TO_LIST = 304, // "data_addtolist"
+    DELETE_OF = 305, // "data_deleteoflist"
+    DELETE_ALL = 306, // "data_deletealloflist"
+    INSERT_AT = 307, // "data_insertatlist"
+    REPLACE_ITEM = 308, // "data_replaceitemoflist"
+    LIST_ITEM = 309, // "data_itemoflist"
+    ITEM_NUM_IN_LIST = 310, // "data_itemnumoflist"
+    LIST_LENGTH = 311, // "data_lengthoflist"
+    LIST_CONTAINS = 312, // "data_listcontainsitem"
+    SHOW_LIST = 313, // "data_showlist"
+    HIDE_LIST = 314, // "data_hidelist"
 
     // Operator Symbols
     OPERATOR_ADD = 400, // "operator_add"
@@ -172,6 +185,17 @@ const std::unordered_map<std::string, OPCODE> opcodeenum {
 
     {"data_setvariableto", OPCODE::SET_VARIABLE_TO},
     {"data_changevariableby", OPCODE::CHANGE_VARIABLE_BY},
+    {"data_addtolist", OPCODE::ADD_TO_LIST},
+    {"data_insertatlist", OPCODE::INSERT_AT},
+    {"data_deleteoflist", OPCODE::DELETE_OF},
+    {"data_deletealloflist", OPCODE::DELETE_ALL},
+    {"data_replaceitemoflist", OPCODE::REPLACE_ITEM},
+    {"data_itemoflist", OPCODE::LIST_ITEM},
+    {"data_itemnumoflist", OPCODE::ITEM_NUM_IN_LIST},
+    {"data_lengthoflist", OPCODE::LIST_LENGTH},
+    {"data_listcontainsitem", OPCODE::LIST_CONTAINS},
+    {"data_showlist", OPCODE::SHOW_LIST},
+    {"data_hidelist", OPCODE::HIDE_LIST},
 
     {"operator_add", OPCODE::OPERATOR_ADD},
     {"operator_subtract", OPCODE::OPERATOR_SUBTRACT},
