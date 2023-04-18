@@ -89,7 +89,7 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     }
 }
 
-bool EngineFunctions::Engine::compute_condition(std::string opid) {
+Value EngineFunctions::Engine::compute_condition(std::string opid) {
     Link op = get_sb_by_id(opid);
 
     if (op.opcode == OPCODE::KEY_PRESSED) {
@@ -107,15 +107,15 @@ bool EngineFunctions::Engine::compute_condition(std::string opid) {
     case OPCODE::OPERATOR_AND:
         if (!op.inputs.contains("OPERAND1") && !op.inputs.contains("OPERAND2")) return false;
         if (!op.inputs.contains("OPERAND1") || !op.inputs.contains("OPERAND2")) return false;
-        return compute_condition(op.inputs["OPERAND1"][1]) && compute_condition(op.inputs["OPERAND2"][1]);
+        return compute_condition(op.inputs["OPERAND1"][1]).get_bool() && compute_condition(op.inputs["OPERAND2"][1]).get_bool();
     case OPCODE::OPERATOR_OR:
         if (!op.inputs.contains("OPERAND1") && !op.inputs.contains("OPERAND2")) return false;
         if (!op.inputs.contains("OPERAND1")) return compute_condition(op.inputs["OPERAND2"][1]);
         if (!op.inputs.contains("OPERAND2")) return compute_condition(op.inputs["OPERAND1"][1]);
-        return compute_condition(op.inputs["OPERAND1"][1]) || compute_condition(op.inputs["OPERAND2"][1]);
+        return compute_condition(op.inputs["OPERAND1"][1]).get_bool() || compute_condition(op.inputs["OPERAND2"][1]).get_bool();
     case OPCODE::OPERATOR_NOT:
         if (!op.inputs.contains("OPERAND")) return true;
-        return !compute_condition(op.inputs["OPERAND"][1]);
+        return !compute_condition(op.inputs["OPERAND"][1]).get_bool();
     default:
         break;
     }
@@ -124,17 +124,17 @@ bool EngineFunctions::Engine::compute_condition(std::string opid) {
     return false;
 }
 
-std::variant<std::string, double> EngineFunctions::Engine::compute_operator(std::string opid) {
+Value EngineFunctions::Engine::compute_operator(std::string opid) {
     Link op = get_operator_by_id(opid);
 
     if (op.opcode >= OPCODE::OPERATOR_GREATER_THAN && op.opcode <= OPCODE::OPERATOR_NOT)
-        return compute_condition(opid) ? "true" : "false";
+        return compute_condition(opid);
     if (op.opcode == OPCODE::OPERATOR_CONTAINS)
-        return compute_condition(opid) ? "true" : "false";
+        return compute_condition(opid);
     if (op.opcode >= OPCODE::TOUCHING_OBJECT && op.opcode <= OPCODE::COLOR_TOUCHING_COLOR)
-        return compute_condition(opid) ? "true" : "false";
+        return compute_condition(opid);
     if (op.opcode == OPCODE::KEY_PRESSED || op.opcode == OPCODE::MOUSE_DOWN)
-        return compute_condition(opid) ? "true" : "false";
+        return compute_condition(opid);
 
     // basic math operations: add, subtract, multiple, divide
     if (op.opcode >= 400 && op.opcode <= 403) {

@@ -18,6 +18,10 @@ public:
     Value(bool b): value(b) {};
     Value() {};
 
+    operator std::string() { return get_string(); }
+    operator double() { return get_number(); }
+    operator bool() { return get_bool(); }
+
     std::variant<std::string, double> get_variant() {
         std::variant<std::string, double> out;
 
