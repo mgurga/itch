@@ -22,6 +22,9 @@ file(GLOB_RECURSE SB3FILES ${PROJECT_SOURCE_DIR}/test/*.sb3)
 add_executable(${TEST_PROJECT_NAME} ${TESTFILES} ${SRCFILES})
 set_target_properties(${TEST_PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 target_link_libraries(${TEST_PROJECT_NAME} PUBLIC gtest_main gmock_main nlohmann_json::nlohmann_json sfml-system sfml-audio sfml-graphics sfml-window)
+if (BUILD_NETWORK_SUPPORT)
+    target_link_libraries(${TEST_PROJECT_NAME} PUBLIC cpr::cpr)
+endif()
 
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET ${TEST_PROJECT_NAME} POST_BUILD
