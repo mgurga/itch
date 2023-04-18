@@ -78,6 +78,16 @@ public:
         return std::holds_alternative<bool>(value);
     }
 
+    static Value detect_type(std::string s) {
+        Value out;
+        try {
+            out = std::stod(s);
+        } catch (const std::invalid_argument&) {
+            out = s;
+        }
+        return out;
+    }
+
 private:
     std::variant<std::string, double, bool> value;
 };

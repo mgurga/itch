@@ -10,11 +10,7 @@ class List {
 public:
     List(const ScratchList& sl): name(sl.name), id(sl.id) {
         for (std::string s : sl.values) {
-            try {
-                values.push_back(std::stod(s));
-            } catch (const std::invalid_argument&) {
-                values.push_back(s);
-            }
+            values.push_back(Value::detect_type(s));
         }
     };
 
