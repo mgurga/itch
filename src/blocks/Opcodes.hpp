@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <unordered_map>
 
 enum OPCODE {
     VARIABLE = -2,
@@ -56,7 +57,7 @@ enum OPCODE {
     CHANGE_LAYER_BY = 216, // "looks_goforwardbackwardlayers"
     COSTUME_NUM_NAME = 217, // "looks_costumenumbername"
     BACKDROP_NUM_NAME = 218, // "looks_backdropnumbername"
-    SIZE = 219, // "looks_size"
+    SIZE_VAL = 219, // "looks_size"
 
     // Variables
     SET_VARIABLE_TO = 300, // "data_setvariableto"
@@ -120,224 +121,123 @@ enum OPCODE {
     USERNAME = 621, // "sensing_username"
 };
 
+const std::unordered_map<std::string, OPCODE> opcodeenum {
+    {"event_whenflagclicked", OPCODE::WHEN_FLAG_CLICKED},
+    {"event_whenkeypressed", OPCODE::WHEN_KEY_PRESSED},
+    {"event_whenthisspriteclicked", OPCODE::WHEN_THIS_SPRITE_CLICKED},
+    {"event_whengreaterthan", OPCODE::WHEN_GREATER_THAN},
+    {"event_whenbroadcastreceived", OPCODE::WHEN_BROADCAST_RECEIVED},
+    {"event_broadcast", OPCODE::BROADCAST},
+    {"event_broadcastandwait", OPCODE::BROADCAST_AND_WAIT},
+
+    {"motion_movesteps", OPCODE::MOVE_STEPS},
+    {"motion_turnright", OPCODE::TURN_RIGHT},
+    {"motion_turnleft", OPCODE::TURN_LEFT},
+    {"motion_goto", OPCODE::GO_TO},
+    {"motion_gotoxy", OPCODE::GO_TO_XY},
+    {"motion_glideto", OPCODE::GLIDE_TO},
+    {"motion_glidesecstoxy", OPCODE::GLIDE_TO_XY},
+    {"motion_pointindirection", OPCODE::GLIDE_TO},
+    {"motion_pointtowards", OPCODE::POINT_IN_DIRECTION},
+    {"motion_changexby", OPCODE::CHANGE_X_BY},
+    {"motion_setx", OPCODE::SET_X_TO},
+    {"motion_changeyby", OPCODE::CHANGE_Y_BY},
+    {"motion_sety", OPCODE::SET_Y_TO},
+    {"motion_ifonedgebounce", OPCODE::IF_ON_EDGE_BOUNCE},
+    {"motion_setrotationstyle", OPCODE::SET_ROTATION_STYLE},
+    {"motion_xposition", OPCODE::X_POS},
+    {"motion_yposition", OPCODE::Y_POS},
+    {"motion_direction", OPCODE::DIRECTION},
+
+    {"looks_sayforsecs", OPCODE::SAY_FOR_SECS},
+    {"looks_say", OPCODE::SAY},
+    {"looks_thinkforsecs", OPCODE::THINK_FOR_SECS},
+    {"looks_think", OPCODE::THINK},
+    {"looks_switchcostumeto", OPCODE::SWITCH_TO_COSTUME},
+    {"looks_nextcostume", OPCODE::NEXT_COSTUME},
+    {"looks_switchbackdropto", OPCODE::SWITCH_TO_BACKDROP},
+    {"looks_nextbackdrop", OPCODE::NEXT_BACKDROP},
+    {"looks_changesizeby", OPCODE::CHANGE_SIZE_BY},
+    {"looks_setsizeto", OPCODE::SET_SIZE_TO},
+    {"looks_changeeffectby", OPCODE::CHANGE_EFFECT_BY},
+    {"looks_seteffectto", OPCODE::SET_EFFECT_TO},
+    {"looks_cleargraphiceffects", OPCODE::CLEAR_GRAPHIC_EFFECTS},
+    {"looks_show", OPCODE::SHOW},
+    {"looks_hide", OPCODE::HIDE},
+    {"looks_gotofrontback", OPCODE::GO_TO_LAYER},
+    {"looks_goforwardbackwardlayers", OPCODE::CHANGE_LAYER_BY},
+    {"looks_costumenumbername", OPCODE::COSTUME_NUM_NAME},
+    {"looks_backdropnumbername", OPCODE::BACKDROP_NUM_NAME},
+    {"looks_size", OPCODE::SIZE_VAL},
+
+    {"data_setvariableto", OPCODE::SET_VARIABLE_TO},
+    {"data_changevariableby", OPCODE::CHANGE_VARIABLE_BY},
+
+    {"operator_add", OPCODE::OPERATOR_ADD},
+    {"operator_subtract", OPCODE::OPERATOR_SUBTRACT},
+    {"operator_multiply", OPCODE::OPERATOR_MULTIPLY},
+    {"operator_divide", OPCODE::OPERATOR_DIVIDE},
+    {"operator_random", OPCODE::OPERATOR_RANDOM},
+    {"operator_gt", OPCODE::OPERATOR_GREATER_THAN},
+    {"operator_lt", OPCODE::OPERATOR_LESS_THAN},
+    {"operator_equals", OPCODE::OPERATOR_EQUALS},
+    {"operator_and", OPCODE::OPERATOR_AND},
+    {"operator_or", OPCODE::OPERATOR_OR},
+    {"operator_not", OPCODE::OPERATOR_NOT},
+    {"operator_join", OPCODE::OPERATOR_JOIN},
+    {"operator_letter_of", OPCODE::OPERATOR_LETTER_OF},
+    {"operator_length", OPCODE::OPERATOR_LENGTH},
+    {"operator_contains", OPCODE::OPERATOR_CONTAINS},
+    {"operator_mod", OPCODE::OPERATOR_MOD},
+    {"operator_round", OPCODE::OPERATOR_ROUND},
+    {"operator_mathop", OPCODE::OPERATOR_MATHOP},
+
+    {"control_wait", OPCODE::WAIT},
+    {"control_repeat", OPCODE::REPEAT},
+    {"control_forever", OPCODE::FOREVER},
+    {"control_wait_until", OPCODE::WAIT_UNTIL},
+    {"control_if", OPCODE::IF},
+    {"control_if_else", OPCODE::IF_ELSE},
+    {"control_repeat_until", OPCODE::REPEAT_UNTIL},
+    {"control_stop", OPCODE::STOP},
+    {"control_start_as_clone", OPCODE::START_AS_CLONE},
+    {"control_create_clone_of", OPCODE::CREATE_CLONE_OF},
+    {"control_delete_this_clone", OPCODE::DELETE_THIS_CLONE},
+
+    {"sensing_touchingobject", OPCODE::TOUCHING_OBJECT},
+    {"sensing_touchingobjectmenu", OPCODE::TOUCHING_OBJECT_MENU},
+    {"sensing_touchingcolor", OPCODE::TOUCHING_COLOR},
+    {"sensing_coloristouchingcolor", OPCODE::COLOR_TOUCHING_COLOR},
+    {"sensing_distanceto", OPCODE::DISTANCE_TO},
+    {"sensing_distancetomenu", OPCODE::DISTANCE_TO_MENU},
+    {"sensing_askandwait", OPCODE::ASK_AND_WAIT},
+    {"sensing_answer", OPCODE::ANSWER},
+    {"sensing_keypressed", OPCODE::KEY_PRESSED},
+    {"sensing_keyoptions", OPCODE::KEY_OPTIONS},
+    {"sensing_mousedown", OPCODE::MOUSE_DOWN},
+    {"sensing_mousex", OPCODE::MOUSE_X},
+    {"sensing_mousey", OPCODE::MOUSE_Y},
+    {"sensing_setdragmode", OPCODE::SET_DRAG_MODE},
+    {"sensing_loudness", OPCODE::LOUDNESS},
+    {"sensing_timer", OPCODE::TIMER},
+    {"sensing_resettimer", OPCODE::RESET_TIMER},
+    {"sensing_of", OPCODE::OF},
+    {"sensing_of_object_menu", OPCODE::OF_MENU},
+    {"sensing_current", OPCODE::CURRENT_TIME},
+    {"sensing_dayssince2000", OPCODE::DAYS_SINCE_2000},
+    {"sensing_username", OPCODE::USERNAME},
+
+    {"variable", OPCODE::VARIABLE}
+};
+
 class Opcodes {
 public:
     static OPCODE opcode_to_enum(std::string opcode) {
-        // events
-        if (opcode == "event_whenflagclicked")
-            return OPCODE::WHEN_FLAG_CLICKED;
-        if (opcode == "event_whenkeypressed")
-            return OPCODE::WHEN_KEY_PRESSED;
-        if (opcode == "event_whenthisspriteclicked")
-            return OPCODE::WHEN_THIS_SPRITE_CLICKED;
-        if (opcode == "event_whengreaterthan")
-            return OPCODE::WHEN_GREATER_THAN;
-        if (opcode == "event_whenbroadcastreceived")
-            return OPCODE::WHEN_BROADCAST_RECEIVED;
-        if (opcode == "event_broadcast")
-            return OPCODE::BROADCAST;
-        if (opcode == "event_broadcastandwait")
-            return OPCODE::BROADCAST_AND_WAIT;
-
-        // motion
-        if (opcode == "motion_movesteps")
-            return OPCODE::MOVE_STEPS;
-        if (opcode == "motion_turnright")
-            return OPCODE::TURN_RIGHT;
-        if (opcode == "motion_turnleft")
-            return OPCODE::TURN_LEFT;
-        if (opcode == "motion_goto")
-            return OPCODE::GO_TO;
-        if (opcode == "motion_gotoxy")
-            return OPCODE::GO_TO_XY;
-        if (opcode == "motion_glideto")
-            return OPCODE::GLIDE_TO;
-        if (opcode == "motion_glidesecstoxy")
-            return OPCODE::GLIDE_TO_XY;
-        if (opcode == "motion_pointindirection")
-            return OPCODE::POINT_IN_DIRECTION;
-        if (opcode == "motion_pointtowards")
-            return OPCODE::POINT_TOWARDS;
-        if (opcode == "motion_changexby")
-            return OPCODE::CHANGE_X_BY;
-        if (opcode == "motion_setx")
-            return OPCODE::SET_X_TO;
-        if (opcode == "motion_changeyby")
-            return OPCODE::CHANGE_Y_BY;
-        if (opcode == "motion_sety")
-            return OPCODE::SET_Y_TO;
-        if (opcode == "motion_ifonedgebounce")
-            return OPCODE::IF_ON_EDGE_BOUNCE;
-        if (opcode == "motion_setrotationstyle")
-            return OPCODE::SET_ROTATION_STYLE;
-        if (opcode == "motion_xposition")
-            return OPCODE::X_POS;
-        if (opcode == "motion_yposition")
-            return OPCODE::Y_POS;
-        if (opcode == "motion_direction")
-            return OPCODE::DIRECTION;
-
-        // looks
-        if (opcode == "looks_sayforsecs")
-            return OPCODE::SAY_FOR_SECS;
-        if (opcode == "looks_say")
-            return OPCODE::SAY;
-        if (opcode == "looks_thinkforsecs")
-            return OPCODE::THINK_FOR_SECS;
-        if (opcode == "looks_think")
-            return OPCODE::THINK;
-        if (opcode == "looks_switchcostumeto")
-            return OPCODE::SWITCH_TO_COSTUME;
-        if (opcode == "looks_nextcostume")
-            return OPCODE::NEXT_COSTUME;
-        if (opcode == "looks_switchbackdropto")
-            return OPCODE::SWITCH_TO_BACKDROP;
-        if (opcode == "looks_nextbackdrop")
-            return OPCODE::NEXT_BACKDROP;
-        if (opcode == "looks_changesizeby")
-            return OPCODE::CHANGE_SIZE_BY;
-        if (opcode == "looks_setsizeto")
-            return OPCODE::SET_SIZE_TO;
-        if (opcode == "looks_changeeffectby")
-            return OPCODE::CHANGE_EFFECT_BY;
-        if (opcode == "looks_seteffectto")
-            return OPCODE::SET_EFFECT_TO;
-        if (opcode == "looks_cleargraphiceffects")
-            return OPCODE::CLEAR_GRAPHIC_EFFECTS;
-        if (opcode == "looks_show")
-            return OPCODE::SHOW;
-        if (opcode == "looks_hide")
-            return OPCODE::HIDE;
-        if (opcode == "looks_gotofrontback")
-            return OPCODE::GO_TO_LAYER;
-        if (opcode == "looks_goforwardbackwardlayers")
-            return OPCODE::CHANGE_LAYER_BY;
-        if (opcode == "looks_costumenumbername")
-            return OPCODE::COSTUME_NUM_NAME;
-        if (opcode == "looks_backdropnumbername")
-            return OPCODE::BACKDROP_NUM_NAME;
-        if (opcode == "looks_size")
-            return OPCODE::SIZE;
-
-        // variables
-        if (opcode == "data_setvariableto")
-            return OPCODE::SET_VARIABLE_TO;
-        if (opcode == "data_changevariableby")
-            return OPCODE::CHANGE_VARIABLE_BY;
-
-        // operators
-        if (opcode == "operator_add")
-            return OPCODE::OPERATOR_ADD;
-        if (opcode == "operator_subtract")
-            return OPCODE::OPERATOR_SUBTRACT;
-        if (opcode == "operator_multiply")
-            return OPCODE::OPERATOR_MULTIPLY;
-        if (opcode == "operator_divide")
-            return OPCODE::OPERATOR_DIVIDE;
-        if (opcode == "operator_random")
-            return OPCODE::OPERATOR_RANDOM;
-        if (opcode == "operator_gt")
-            return OPCODE::OPERATOR_GREATER_THAN;
-        if (opcode == "operator_lt")
-            return OPCODE::OPERATOR_LESS_THAN;
-        if (opcode == "operator_equals")
-            return OPCODE::OPERATOR_EQUALS;
-        if (opcode == "operator_and")
-            return OPCODE::OPERATOR_AND;
-        if (opcode == "operator_or")
-            return OPCODE::OPERATOR_OR;
-        if (opcode == "operator_not")
-            return OPCODE::OPERATOR_NOT;
-        if (opcode == "operator_join")
-            return OPCODE::OPERATOR_JOIN;
-        if (opcode == "operator_letter_of")
-            return OPCODE::OPERATOR_LETTER_OF;
-        if (opcode == "operator_length")
-            return OPCODE::OPERATOR_LENGTH;
-        if (opcode == "operator_contains")
-            return OPCODE::OPERATOR_CONTAINS;
-        if (opcode == "operator_mod")
-            return OPCODE::OPERATOR_MOD;
-        if (opcode == "operator_round")
-            return OPCODE::OPERATOR_ROUND;
-        if (opcode == "operator_mathop")
-            return OPCODE::OPERATOR_MATHOP;
-
-        // control
-        if (opcode == "control_wait")
-            return OPCODE::WAIT;
-        if (opcode == "control_repeat")
-            return OPCODE::REPEAT;
-        if (opcode == "control_forever")
-            return OPCODE::FOREVER;
-        if (opcode == "control_if")
-            return OPCODE::IF;
-        if (opcode == "control_if_else")
-            return OPCODE::IF_ELSE;
-        if (opcode == "control_wait_until")
-            return OPCODE::WAIT_UNTIL;
-        if (opcode == "control_repeat_until")
-            return OPCODE::REPEAT_UNTIL;
-        if (opcode == "control_stop")
-            return OPCODE::STOP;
-        if (opcode == "control_start_as_clone")
-            return OPCODE::START_AS_CLONE;
-        if (opcode == "control_create_clone_of")
-            return OPCODE::CREATE_CLONE_OF;
-        if (opcode == "control_delete_this_clone")
-            return OPCODE::DELETE_THIS_CLONE;
-
-        // sensing
-        if (opcode == "sensing_touchingobject")
-            return OPCODE::TOUCHING_OBJECT;
-        if (opcode == "sensing_touchingobjectmenu")
-            return OPCODE::TOUCHING_OBJECT_MENU;
-        if (opcode == "sensing_touchingcolor")
-            return OPCODE::TOUCHING_COLOR;
-        if (opcode == "sensing_coloristouchingcolor")
-            return OPCODE::COLOR_TOUCHING_COLOR;
-        if (opcode == "sensing_distanceto")
-            return OPCODE::DISTANCE_TO;
-        if (opcode == "sensing_distancetomenu")
-            return OPCODE::DISTANCE_TO_MENU;
-        if (opcode == "sensing_askandwait")
-            return OPCODE::ASK_AND_WAIT;
-        if (opcode == "sensing_answer")
-            return OPCODE::ANSWER;
-        if (opcode == "sensing_keypressed")
-            return OPCODE::KEY_PRESSED;
-        if (opcode == "sensing_keyoptions")
-            return OPCODE::KEY_OPTIONS;
-        if (opcode == "sensing_mousedown")
-            return OPCODE::MOUSE_DOWN;
-        if (opcode == "sensing_mousex")
-            return OPCODE::MOUSE_X;
-        if (opcode == "sensing_mousey")
-            return OPCODE::MOUSE_Y;
-        if (opcode == "sensing_setdragmode")
-            return OPCODE::SET_DRAG_MODE;
-        if (opcode == "sensing_loudness")
-            return OPCODE::LOUDNESS;
-        if (opcode == "sensing_timer")
-            return OPCODE::TIMER;
-        if (opcode == "sensing_resettimer")
-            return OPCODE::RESET_TIMER;
-        if (opcode == "sensing_of")
-            return OPCODE::OF;
-        if (opcode == "sensing_of_object_menu")
-            return OPCODE::OF_MENU;
-        if (opcode == "sensing_current")
-            return OPCODE::CURRENT_TIME;
-        if (opcode == "sensing_dayssince2000")
-            return OPCODE::DAYS_SINCE_2000;
-        if (opcode == "sensing_username")
-            return OPCODE::USERNAME;
-
-        // special
-        if (opcode == "variable")
-            return OPCODE::VARIABLE;
-
-        std::cout << "unknown opcode detected: '" << opcode << "'" << std::endl;
-        return OPCODE::UNKNOWN;
+        try {
+            return opcodeenum.at(opcode);
+        } catch(std::exception e) {
+            std::cout << "unknown opcode detected: '" << opcode << "'" << std::endl;
+            return OPCODE::UNKNOWN;
+        }
     }
 };
