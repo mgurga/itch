@@ -53,7 +53,7 @@ public:
     PlayerInfo* pi;
 
     // motion helpers
-    void move_steps(Link link, ScratchSprite* s);
+    void move_steps(double steps, ScratchSprite* s);
     void go_to_menu(Link link, ScratchSprite* s);
 
     // control helpers

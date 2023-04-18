@@ -259,16 +259,14 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
 
     // Motion
     case OPCODE::GO_TO: go_to_menu(link, s); break;
-    case OPCODE::SET_X_TO: s->x = compute_input(link.inputs["X"]).get_number(); break;
-    case OPCODE::SET_Y_TO: s->y = compute_input(link.inputs["Y"]).get_number(); break;
+    case OPCODE::SET_X_TO: s->x = compute_input(link.inputs["X"]); break;
+    case OPCODE::SET_Y_TO: s->y = compute_input(link.inputs["Y"]); break;
     case OPCODE::CHANGE_Y_BY: s->y += compute_input(link.inputs["DY"]).get_number(); break;
     case OPCODE::CHANGE_X_BY: s->x += compute_input(link.inputs["DX"]).get_number(); break;
+    case OPCODE::POINT_IN_DIRECTION: s->direction = compute_input(link.inputs["DIRECTION"]); break;
     case OPCODE::GO_TO_XY:
-        s->x = compute_input(link.inputs["X"]).get_number();
-        s->y = compute_input(link.inputs["Y"]).get_number();
-        break;
-    case OPCODE::POINT_IN_DIRECTION:
-        s->direction = compute_input(link.inputs["DIRECTION"]).get_number();
+        s->x = compute_input(link.inputs["X"]);
+        s->y = compute_input(link.inputs["Y"]);
         break;
     case OPCODE::TURN_LEFT:
         s->direction -= compute_input(link.inputs["DEGREES"]).get_number();
@@ -276,7 +274,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::TURN_RIGHT:
         s->direction += compute_input(link.inputs["DEGREES"]).get_number();
         break;
-    case OPCODE::MOVE_STEPS: move_steps(link, s); break;
+    case OPCODE::MOVE_STEPS: move_steps(compute_input(link.inputs["STEPS"]), s); break;
 
     // Control
     case OPCODE::WAIT: wait(compute_input(link.inputs["DURATION"]).get_number(), c, i); break;
