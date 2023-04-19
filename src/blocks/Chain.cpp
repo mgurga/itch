@@ -15,7 +15,8 @@ std::vector<Chain> Chain::create_chains(std::vector<ScratchBlock> blocks) {
         OPCODE bop = Opcodes::opcode_to_enum(b.opcode);
         bool createchain = false;
 
-        if (WHEN_FLAG_CLICKED <= bop && bop <= WHEN_BROADCAST_RECEIVED) createchain = true;
+        if (WHEN_FLAG_CLICKED <= bop && bop <= WHEN_BROADCAST_RECEIVED)
+            start_ids.push_back(b.id);
         if (bop == FOREVER && !b.inputs.empty() && !b.inputs["SUBSTACK"][1].is_null()) {
             start_ids.push_back(b.inputs["SUBSTACK"][1]);
         }
@@ -28,8 +29,9 @@ std::vector<Chain> Chain::create_chains(std::vector<ScratchBlock> blocks) {
             if (b.inputs.contains("SUBSTACK") && !b.inputs["SUBSTACK"][1].is_null()) start_ids.push_back(b.inputs["SUBSTACK"][1]);
             if (b.inputs.contains("SUBSTACK2") && !b.inputs["SUBSTACK2"][1].is_null()) start_ids.push_back(b.inputs["SUBSTACK2"][1]);
         }
-
-        if (createchain) start_ids.push_back(b.id);
+        if (bop == REPEAT && !b.inputs.empty()) {
+            if (b.inputs.contains("SUBSTACK") && !b.inputs["SUBSTACK"][1].is_null()) start_ids.push_back(b.inputs["SUBSTACK"][1]);
+        }
     }
 
     Chain* tempchain;

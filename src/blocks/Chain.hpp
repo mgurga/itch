@@ -17,6 +17,7 @@ struct ResumePoint {
     int link_num; // link to resume at
     std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
     std::optional<std::chrono::time_point<std::chrono::high_resolution_clock>> end_time;
+    double runs = -1;
 };
 
 class Chain {
