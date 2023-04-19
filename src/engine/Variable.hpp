@@ -13,28 +13,24 @@ using json = nlohmann::json;
 
 class Variable {
 public:
-    enum VariableType {Integer, String};
-
     Variable(std::string name, std::string value, std::string id = ""):
-        name(name), value(value), type(VariableType::String), id(id), is_global(true), is_cloud(false)
+        name(name), value(value), id(id), is_global(true), is_cloud(false)
     {};
     Variable(json sv, std::string id = ""):
         name(to_string(sv[0])),
         value(to_string(sv[1])),
-        type(VariableType::String),
         is_cloud(sv.size() == 3),
         is_global(true),
         id(id)
     {};
     Variable(const ScratchVariable& sv):
-        name(sv.name), value(sv.value), type(VariableType::String), is_cloud(sv.isCloud), is_global(true), id(sv.id)
+        name(sv.name), value(sv.value), is_cloud(sv.isCloud), is_global(true), id(sv.id)
     {};
 
     std::string name;
     bool is_cloud;
     bool is_global; // otherwise only available in target
     std::string sprite_name; // if is_global is false this is sent to the sprite name
-    VariableType type;
 
     void make_local(std::string sprite_name) {
         is_global = false;
@@ -49,73 +45,40 @@ public:
         }
     }
 
-    std::variant<std::string, double> val() {
-        std::variant<std::string, double> out;
-        if (type == VariableType::Integer) {
-            out = std::stod(value);
-        } else if (type == VariableType::String) {
-            out = value;
-        }
-        return out;
+    Value val() {
+        return value;
     }
 
     Variable operator=(const std::string& other) {
-        type = VariableType::String;
         value = other;
         return *this;
     }
 
     Variable operator=(const double& other) {
-        type = VariableType::Integer;
         value = other;
         return *this;
     }
 
     Variable operator=(const std::variant<std::string, double>& other) {
-        if (std::holds_alternative<std::string>(other)) {
-            value = std::get<std::string>(other);
-            type = VariableType::String;
-        } else if (std::holds_alternative<double>(other)) {
-            value = std::get<double>(other);
-            type = VariableType::Integer;
-        }
+        value = other;
         return *this;
     }
 
     Variable operator=(Value other) {
-        if (other.contains_string()) {
-            value = other.get_string();
-            type = VariableType::String;
-        } else if (other.contains_number()) {
-            value = other.get_number();
-            type = VariableType::Integer;
-        } else {
-            value = other.get_string();
-            type = VariableType::String;
-        }
+        value = other;
         return *this;
     }
 
-    Variable operator+=(const double& other) {
-        if (type == VariableType::String) {
-            type = VariableType::Integer;
-            value = std::to_string(other);
-        } else {
-            value = std::to_string(std::stod(value) + other);
-        }
+    Variable operator+=(double& other) {
+        value += other;
         return *this;
     }
 
     Variable operator+=(Value& other) {
-        if (type == VariableType::String) {
-            type = VariableType::Integer;
-            value = other.get_number();
-        } else {
-            value = std::to_string(std::stod(value) + other.get_number());
-        }
+        value += other;
         return *this;
     }
 private:
     std::string id;
-    std::string value;
+    Value value;
 };

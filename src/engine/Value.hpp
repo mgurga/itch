@@ -12,7 +12,17 @@ public:
             value = std::get<double>(var);
     };
     Value(std::variant<std::string, double, bool> var): value(var) {};
-    Value(std::string s): value(s) {};
+    Value(std::string s) {
+        if (std::all_of(std::begin(s), std::end(s), [](char c){ return (std::isxdigit(c) || c == '.'); })) {
+            try {
+                value = std::stod(s);
+            } catch (const std::invalid_argument&) {
+                value = s;
+            }
+            return;
+        }
+        value = s;
+    };
     Value(double d): value(d) {};
     Value(int i): value(static_cast<double>(i)) {};
     Value(bool b): value(b) {};
@@ -66,15 +76,15 @@ public:
         }
     }
 
-    bool contains_string() {
+    bool contains_string() const {
         return std::holds_alternative<std::string>(value);
     }
 
-    bool contains_number() {
+    bool contains_number() const {
         return std::holds_alternative<double>(value);
     }
 
-    bool contains_bool() {
+    bool contains_bool() const {
         return std::holds_alternative<bool>(value);
     }
 
@@ -86,6 +96,47 @@ public:
             out = s;
         }
         return out;
+    }
+
+    Value operator=(Value other) {
+        value = other.value;
+        return *this;
+    }
+
+    Value operator+=(double& other) {
+        if (contains_string() || contains_bool()) {
+            value = other;
+            return *this;
+        }
+        value = get_number() + other;
+        return *this;
+    }
+
+    Value operator+=(Value& other) {
+        if (other.contains_string() || other.contains_bool()) {
+            return *this;
+        }
+        if (contains_string() || contains_bool()) {
+            value = other.get_number();
+            return *this;
+        }
+        value = get_number() + other.get_number();
+        return *this;
+    }
+
+    std::string debug_string() {
+        std::string out;
+        if (contains_string()) {
+            out = "[string] ";
+        } else if (contains_number()) {
+            out = "[double] ";
+        } else if (contains_bool()) {
+            out = "[bool] ";
+        } else {
+            out = "[unknown] ";
+        }
+
+        return out + get_string();
     }
 
 private:
