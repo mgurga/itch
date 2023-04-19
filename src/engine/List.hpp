@@ -24,4 +24,26 @@ public:
         is_global = false;
         this->sprite_name = sprite_name;
     }
+
+    void delete_all() { values.clear(); }
+    void add_to_list(Value v) { values.push_back(v); }
+    int length() { return static_cast<int>(values.size()); }
+
+    void set(int pos, Value newVal) {
+        if ((pos - 1) < 0)
+            return;
+        values.at(pos - 1) = newVal;
+    }
+
+    void insert_at(int pos, Value v) {
+        if ((pos - 1) < 0)
+            return;
+        values.insert(values.begin() + (pos - 1), v);
+    }
+
+    Value at(int pos) {
+        if ((pos - 1) < 0)
+            return Value("");
+        return values.at(pos - 1);
+    }
 };
