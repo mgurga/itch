@@ -16,7 +16,7 @@ public:
     {}
 
     std::string block_id;
-    OPCODE opcode;
+    OPCODETYPE opcode;
     std::string string_opcode;
     json inputs;
     json fields;
