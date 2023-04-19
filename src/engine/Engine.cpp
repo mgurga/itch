@@ -36,20 +36,20 @@ EngineFunctions::Engine::Engine(Project& project):
     std::cout << std::endl;
 
     for (ScratchBlock& b : project.stage.blocks) {
-        OPCODE bop = Opcodes::opcode_to_enum(b.opcode);
-        if (bop >= 400 && bop < 500)
-            operators.push_back(b);
+        OPCODETYPE bop = Opcodes::opcode_to_enum(b.opcode);
+        if (bop == OPTYPE::REPORTER)
+            reporters.push_back(b);
     }
 
     for (ScratchSprite& sprite : project.sprites) {
         for (ScratchBlock& b : sprite.blocks) {
-            OPCODE bop = Opcodes::opcode_to_enum(b.opcode);
-            if (bop >= 400 && bop < 500)
-                operators.push_back(b);
+            OPCODETYPE bop = Opcodes::opcode_to_enum(b.opcode);
+            if (bop == OPTYPE::REPORTER)
+                reporters.push_back(b);
         }
     }
 
-    std::cout << "found " << operators.size() << " operator(s)" << std::endl;
+    std::cout << "found " << reporters.size() << " reporters(s)" << std::endl;
 }
 
 void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
@@ -101,7 +101,7 @@ Value EngineFunctions::Engine::compute_condition(std::string opid) {
         return false;
     }
 
-    switch (op.opcode) {
+    switch (op.opcode.opcode) {
     case OPCODE::MOUSE_DOWN:
         return pi->mouse_down;
     case OPCODE::OPERATOR_AND:
@@ -124,26 +124,20 @@ Value EngineFunctions::Engine::compute_condition(std::string opid) {
     return false;
 }
 
-Value EngineFunctions::Engine::compute_operator(std::string opid) {
-    Link op = get_operator_by_id(opid);
+Value EngineFunctions::Engine::compute_reporter(std::string opid) {
+    Link op = get_reporter_by_id(opid);
 
-    if (op.opcode >= OPCODE::OPERATOR_GREATER_THAN && op.opcode <= OPCODE::OPERATOR_NOT)
-        return compute_condition(opid);
-    if (op.opcode == OPCODE::OPERATOR_CONTAINS)
-        return compute_condition(opid);
-    if (op.opcode >= OPCODE::TOUCHING_OBJECT && op.opcode <= OPCODE::COLOR_TOUCHING_COLOR)
-        return compute_condition(opid);
-    if (op.opcode == OPCODE::KEY_PRESSED || op.opcode == OPCODE::MOUSE_DOWN)
+    if (op.opcode == OPTYPE::CONDITIONAL)
         return compute_condition(opid);
 
     // basic math operations: add, subtract, multiple, divide
-    if (op.opcode >= 400 && op.opcode <= 403) {
+    if (op.opcode.opcode >= 400 && op.opcode.opcode <= 403) {
         Value num1, num2;
         num1 = compute_input(op.inputs["NUM1"]);
         num2 = compute_input(op.inputs["NUM2"]);
 
         if (num1.contains_number() && num2.contains_number()) {
-            switch(op.opcode) {
+            switch(op.opcode.opcode) {
             case OPERATOR_ADD:
                 return num1.get_number() + num2.get_number();
             case OPERATOR_SUBTRACT:
@@ -170,31 +164,35 @@ Value EngineFunctions::Engine::compute_operator(std::string opid) {
         return static_cast<double>(r(rng));
     }
 
-    switch (op.opcode) {
-    case OPERATOR_JOIN:
+    switch (op.opcode.opcode) {
+    case OPCODE::OPERATOR_JOIN:
         return compute_input(op.inputs["STRING1"]).get_string() + compute_input(op.inputs["STRING2"]).get_string();
+    case OPCODE::LIST_LENGTH:
+        return get_list_by_name(op.fields["LIST"][0].get<std::string>()).length();
+    case OPCODE::LIST_ITEM:
+        return get_list_by_name(op.fields["LIST"][0].get<std::string>()).at(compute_input(op.inputs["INDEX"]).get_number());
     default:
         break;
     }
 
-    return "unknown operator: '" + op.string_opcode + "'";
+    std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
+    return Value("");
 }
 
 Value EngineFunctions::Engine::compute_input(json input) {
     if (input[0] == 3 && input[1].is_string())
-        return compute_operator(input[1]);
+        return compute_reporter(input[1]);
 
     ScratchArrayBlock sab = ScratchArrayBlock(input[1]);
     switch (sab.type) {
     case Number: case Positive_Integer: case Positive_Number: case Integer: case Angle:
-        return sab.num_val;
+        return Value(sab.num_val);
     case Color: case String: case Broadcast:
-        return sab.str_value;
+        return Value(sab.str_value);
     case VariableType: case ListType:
         return get_var_by_name(sab.str_value).val();
-    default:
-        return Value();
     }
+    return Value("");
 }
 
 bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s, bool force_activate) {
@@ -228,13 +226,23 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         return;
     }
 
-    switch (link.opcode) {
+    switch (link.opcode.opcode) {
     // Variables
     case OPCODE::SET_VARIABLE_TO:
         get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) = compute_input(link.inputs["VALUE"]);
         break;
     case OPCODE::CHANGE_VARIABLE_BY:
-        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) += compute_input(link.inputs["VALUE"]).get_number();
+        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) += compute_input(link.inputs["VALUE"]);
+        break;
+    case OPCODE::DELETE_ALL: get_list_by_name(link.fields["LIST"][0].get<std::string>()).delete_all(); break;
+    case OPCODE::ADD_TO_LIST:
+        get_list_by_name(link.fields["LIST"][0].get<std::string>()).add_to_list(Value::detect_type(compute_input(link.inputs["ITEM"])));
+        break;
+    case OPCODE::REPLACE_ITEM:
+        get_list_by_name(link.fields["LIST"][0].get<std::string>()).set(compute_input(link.inputs["INDEX"]).get_number(), compute_input(link.inputs["ITEM"]));
+        break;
+    case OPCODE::INSERT_AT:
+        get_list_by_name(link.fields["LIST"][0].get<std::string>()).insert_at(compute_input(link.inputs["INDEX"]).get_number(), compute_input(link.inputs["ITEM"]));
         break;
 
     // Events
@@ -282,6 +290,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::STOP: stop_menu(link, c, s, i); break;
     case OPCODE::IF: if_statement(link, s); break;
     case OPCODE::IF_ELSE: if_else_statement(link, s); break;
+    case OPCODE::REPEAT: repeat_loop(link, c, s, i); break;
 
     // Looks
     case OPCODE::SAY_FOR_SECS: say_for_sec(link, s, c, i); break;

@@ -98,3 +98,28 @@ void EngineFunctions::Engine::if_else_statement(Link link, ScratchSprite* s) {
         process_chain(c, s, true);
     }
 }
+
+void EngineFunctions::Engine::repeat_loop(Link link, Chain& c, ScratchSprite* s, int& i) {
+    if (!link.inputs.contains("SUBSTACK"))
+        return;
+    if (link.inputs["SUBSTACK"][1].is_null())
+        return;
+    double times = compute_input(link.inputs["TIMES"]);
+    if (times <= 0)
+        return;
+    if (!c.continue_at.empty() && !c.continue_at.back().end_time.has_value()) {
+        if (c.continue_at.back().runs >= times) {
+            c.continue_at.pop_back();
+            return;
+        }
+        process_chain(get_chain_by_link_id(link.inputs["SUBSTACK"][1], s), s, true);
+        c.continue_at.back().runs++;
+    } else {
+        ResumePoint rp;
+        rp.link_num = i;
+        rp.start_time = std::chrono::high_resolution_clock::now();
+        rp.end_time = {};
+        rp.runs = 0;
+        c.continue_at.push_back(rp);
+    }
+}
