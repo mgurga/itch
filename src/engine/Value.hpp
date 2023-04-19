@@ -50,7 +50,10 @@ public:
 
     std::string get_string() {
         if (std::holds_alternative<double>(value)) {
-            return std::to_string(std::get<double>(value));
+            std::string s = std::to_string(std::get<double>(value));
+            s.erase (s.find_last_not_of('0') + 1, std::string::npos);
+            s.erase (s.find_last_not_of('.') + 1, std::string::npos);
+            return s;
         } else if (std::holds_alternative<std::string>(value)) {
             return std::get<std::string>(value);
         } else if (std::holds_alternative<bool>(value)) {
