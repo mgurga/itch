@@ -41,7 +41,7 @@ public:
         case VariableType: case ListType:
             str_value = sb[1];
             element_id = sb[2];
-            // operators do not have x and y variables
+            // reporters do not have x and y variables
             if (sb.size() >= 4) {
                 x = sb[3];
                 y = sb[4];
