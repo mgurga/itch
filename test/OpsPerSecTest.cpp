@@ -50,7 +50,7 @@ TEST_F(OpsPerSecTest, ChainTest) {
 }
 
 TEST_F(OpsPerSecTest, OperatorsTest) {
-    ASSERT_EQ(engine->operators.size(), 0);
+    ASSERT_EQ(engine->reporters.size(), 0);
 }
 
 TEST_F(OpsPerSecTest, InitalVariableTest) {

@@ -49,7 +49,7 @@ TEST_F(MotionBlocksTest, ChainTest) {
 }
 
 TEST_F(MotionBlocksTest, OperatorsTest) {
-    ASSERT_EQ(engine->operators.size(), 6);
+    ASSERT_EQ(engine->reporters.size(), 6);
 }
 
 TEST_F(MotionBlocksTest, UpPressTest) {
