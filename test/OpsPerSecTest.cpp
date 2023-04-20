@@ -7,7 +7,6 @@
 #include "../src/Project.hpp"
 #include "../src/engine/Engine.hpp"
 #include "../src/FileHandler.hpp"
-#include "../src/blocks/Opcodes.hpp"
 
 class OpsPerSecTest : public ::testing::Test {
 protected:
@@ -56,12 +55,12 @@ TEST_F(OpsPerSecTest, OperatorsTest) {
 TEST_F(OpsPerSecTest, InitalVariableTest) {
     PlayerInfo pi = PlayerInfo::get_empty_player_info();
     engine->tick(&pi);
-    ASSERT_EQ(std::get<std::string>(engine->get_var_by_name("my variable").val()), "0");
+    ASSERT_EQ(engine->get_var_by_name("my variable").val().get_number(), 0);
 }
 
 TEST_F(OpsPerSecTest, ForeverLoopTest) {
     PlayerInfo pi = PlayerInfo::get_empty_player_info();
     for (int i = 0; i < 10; i++)
         engine->tick(&pi);
-    ASSERT_EQ(std::get<double>(engine->get_var_by_name("my variable").val()), 10);
+    ASSERT_EQ(engine->get_var_by_name("my variable").val().get_number(), 10);
 }

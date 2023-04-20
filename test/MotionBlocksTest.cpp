@@ -6,7 +6,6 @@
 #include "../src/Project.hpp"
 #include "../src/engine/Engine.hpp"
 #include "../src/FileHandler.hpp"
-#include "../src/blocks/Opcodes.hpp"
 
 class MotionBlocksTest : public ::testing::Test {
 protected:
@@ -75,7 +74,7 @@ TEST_F(MotionBlocksTest, ResetTest) {
     ASSERT_EQ(project->sprites.at(0).x, 0.0);
     ASSERT_EQ(project->sprites.at(0).y, 0.0);
     ASSERT_EQ(project->sprites.at(0).direction, 90.0);
-    ASSERT_EQ(engine->variant_str(engine->get_var_by_name("var").val()), "0");
+    ASSERT_EQ(engine->get_var_by_name("var").val().get_number(), 0);
 }
 
 TEST_F(MotionBlocksTest, ThreeUpPressTest) {
@@ -101,7 +100,7 @@ TEST_F(MotionBlocksTest, ResetTest2) {
     ASSERT_EQ(project->sprites.at(0).x, 0.0);
     ASSERT_EQ(project->sprites.at(0).y, 0.0);
     ASSERT_EQ(project->sprites.at(0).direction, 90.0);
-    ASSERT_EQ(engine->variant_str(engine->get_var_by_name("var").val()), "0");
+    ASSERT_EQ(engine->get_var_by_name("var").val().get_number(), 0);
 }
 
 TEST_F(MotionBlocksTest, GoToMouseTest) {
