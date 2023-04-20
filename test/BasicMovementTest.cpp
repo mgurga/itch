@@ -62,9 +62,9 @@ TEST_F(BasicMovementTest, ChainTest) {
     ASSERT_EQ(project->sprites[0].chains[2].activatable, true);
     ASSERT_EQ(project->sprites[0].chains[3].activatable, true);
 
-    ASSERT_EQ(project->sprites[0].chains[0].links[0].opcode, WHEN_KEY_PRESSED);
-    ASSERT_THAT(project->sprites[0].chains[0].links[1].opcode, AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
+    ASSERT_EQ(project->sprites[0].chains[0].links[0].opcode.opcode, WHEN_KEY_PRESSED);
+    ASSERT_THAT(project->sprites[0].chains[0].links[1].opcode.opcode, AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
 
-    ASSERT_EQ(project->sprites[0].chains[1].links[0].opcode, WHEN_KEY_PRESSED);
-    ASSERT_THAT(project->sprites[0].chains[1].links[1].opcode, AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
+    ASSERT_EQ(project->sprites[0].chains[1].links[0].opcode.opcode, WHEN_KEY_PRESSED);
+    ASSERT_THAT(project->sprites[0].chains[1].links[1].opcode.opcode, AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
 }
