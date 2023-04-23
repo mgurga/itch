@@ -232,7 +232,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) = compute_input(link.inputs["VALUE"]);
         break;
     case OPCODE::CHANGE_VARIABLE_BY:
-        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) += compute_input(link.inputs["VALUE"]);
+        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) += compute_input(link.inputs["VALUE"]).get_number();
         break;
     case OPCODE::DELETE_ALL: get_list_by_name(link.fields["LIST"][0].get<std::string>()).delete_all(); break;
     case OPCODE::ADD_TO_LIST:

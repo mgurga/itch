@@ -69,7 +69,7 @@ public:
         return *this;
     }
 
-    Variable operator+=(double& other) {
+    Variable operator+=(double other) {
         value += other;
         return *this;
     }
