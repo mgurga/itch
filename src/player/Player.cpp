@@ -115,5 +115,5 @@ void Player::paint(Project& project) {
 }
 
 PlayerInfo Player::get_player_info() {
-    return {pressed, keys_down, mouse_pos, mouse_pressed};
+    return {pressed, keys_down, mouse_pos.x, mouse_pos.y, mouse_pressed};
 }

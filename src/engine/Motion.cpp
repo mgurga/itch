@@ -19,8 +19,8 @@ void EngineFunctions::Engine::go_to_menu(Link link, ScratchSprite* s) {
         s->x = static_cast<double>(randwidth(rng));
         s->y = static_cast<double>(randheight(rng));
     } else if (target == "_mouse_") {
-        s->x = pi->mouse_pos.x;
-        s->y = pi->mouse_pos.y;
+        s->x = pi->mouse_x;
+        s->y = pi->mouse_y;
     } else {
         std::cout << "unknown go_to_menu entry: " << target << std::endl;
     }
