@@ -171,6 +171,10 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid) {
         return get_list_by_name(op.fields["LIST"][0].get<std::string>()).length();
     case OPCODE::LIST_ITEM:
         return get_list_by_name(op.fields["LIST"][0].get<std::string>()).at(compute_input(op.inputs["INDEX"]).get_number());
+    case OPCODE::MOUSE_X:
+        return static_cast<double>(pi->mouse_x);
+    case OPCODE::MOUSE_Y:
+        return static_cast<double>(pi->mouse_y);
     default:
         break;
     }
