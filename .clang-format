@@ -9,3 +9,4 @@ TabWidth: 4
 ColumnLimit: 100
 IndentCaseLabels: false
 # AllowShortIfStatementsOnASingleLine: Never
+BreakConstructorInitializers: AfterColon
