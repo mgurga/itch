@@ -1,16 +1,16 @@
 #include "Engine.hpp"
 
-Value EngineFunctions::Engine::compute_reporter(std::string opid) {
+Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite* s) {
     Link op = get_reporter_by_id(opid);
 
     if (op.opcode == OPTYPE::CONDITIONAL)
-        return compute_condition(opid);
+        return compute_condition(opid, s);
 
     // basic math operations: add, subtract, multiple, divide
     if (op.opcode.opcode >= 400 && op.opcode.opcode <= 403) {
         Value num1, num2;
-        num1 = compute_input(op.inputs["NUM1"]);
-        num2 = compute_input(op.inputs["NUM2"]);
+        num1 = compute_input(op.inputs["NUM1"], s);
+        num2 = compute_input(op.inputs["NUM2"], s);
 
         if (num1.contains_number() && num2.contains_number()) {
             switch(op.opcode.opcode) {
@@ -36,21 +36,21 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid) {
         std::random_device dev;
         std::mt19937 rng(dev());
         std::uniform_int_distribution<int> r
-            (compute_input(op.inputs["FROM"]).get_number(), compute_input(op.inputs["TO"]).get_number());
+            (compute_input(op.inputs["FROM"], s).get_number(), compute_input(op.inputs["TO"], s).get_number());
         return static_cast<double>(r(rng));
     }
 
     switch (op.opcode.opcode) {
     case OPCODE::OPERATOR_JOIN:
-        return compute_input(op.inputs["STRING1"]).get_string() + compute_input(op.inputs["STRING2"]).get_string();
+        return compute_input(op.inputs["STRING1"], s).get_string() + compute_input(op.inputs["STRING2"], s).get_string();
     case OPCODE::LIST_LENGTH:
         return get_list_by_name(op.fields["LIST"][0].get<std::string>()).length();
     case OPCODE::LIST_ITEM:
-        return get_list_by_name(op.fields["LIST"][0].get<std::string>()).at(compute_input(op.inputs["INDEX"]).get_number());
+        return get_list_by_name(op.fields["LIST"][0].get<std::string>()).at(compute_input(op.inputs["INDEX"], s).get_number());
     case OPCODE::MOUSE_X:
-        return static_cast<double>(pi->mouse_x);
+        return pi->mouse_x;
     case OPCODE::MOUSE_Y:
-        return static_cast<double>(pi->mouse_y);
+        return pi->mouse_y;
     default:
         break;
     }

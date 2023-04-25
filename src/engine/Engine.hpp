@@ -30,9 +30,9 @@ public:
     void tick(PlayerInfo* player_info);
     bool process_chain(Chain& c, ScratchSprite* s, bool force_activate = false);
     void process_link(Link& link, Chain& chain, ScratchSprite* sprite, int& i);
-    Value compute_input(json block);
-    Value compute_reporter(std::string opid);
-    Value compute_condition(std::string opid);
+    Value compute_input(json block, ScratchSprite* sprite);
+    Value compute_reporter(std::string opid, ScratchSprite* sprite);
+    Value compute_condition(std::string opid, ScratchSprite* sprite);
 
     // utility functions
     Variable& get_var_by_name(std::string name);

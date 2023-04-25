@@ -1,6 +1,6 @@
 #include "Engine.hpp"
 
-Value EngineFunctions::Engine::compute_condition(std::string opid) {
+Value EngineFunctions::Engine::compute_condition(std::string opid, ScratchSprite* s) {
     Link op = get_sb_by_id(opid);
 
     if (op.opcode == OPCODE::KEY_PRESSED) {
@@ -18,21 +18,21 @@ Value EngineFunctions::Engine::compute_condition(std::string opid) {
     case OPCODE::OPERATOR_AND:
         if (!op.inputs.contains("OPERAND1") && !op.inputs.contains("OPERAND2")) return false;
         if (!op.inputs.contains("OPERAND1") || !op.inputs.contains("OPERAND2")) return false;
-        return compute_condition(op.inputs["OPERAND1"][1]).get_bool() && compute_condition(op.inputs["OPERAND2"][1]).get_bool();
+        return compute_condition(op.inputs["OPERAND1"][1], s).get_bool() && compute_condition(op.inputs["OPERAND2"][1], s).get_bool();
     case OPCODE::OPERATOR_OR:
         if (!op.inputs.contains("OPERAND1") && !op.inputs.contains("OPERAND2")) return false;
-        if (!op.inputs.contains("OPERAND1")) return compute_condition(op.inputs["OPERAND2"][1]);
-        if (!op.inputs.contains("OPERAND2")) return compute_condition(op.inputs["OPERAND1"][1]);
-        return compute_condition(op.inputs["OPERAND1"][1]).get_bool() || compute_condition(op.inputs["OPERAND2"][1]).get_bool();
+        if (!op.inputs.contains("OPERAND1")) return compute_condition(op.inputs["OPERAND2"][1], s);
+        if (!op.inputs.contains("OPERAND2")) return compute_condition(op.inputs["OPERAND1"][1], s);
+        return compute_condition(op.inputs["OPERAND1"][1], s).get_bool() || compute_condition(op.inputs["OPERAND2"][1], s).get_bool();
     case OPCODE::OPERATOR_NOT:
         if (!op.inputs.contains("OPERAND")) return true;
-        return !compute_condition(op.inputs["OPERAND"][1]).get_bool();
+        return !compute_condition(op.inputs["OPERAND"][1], s).get_bool();
     case OPCODE::OPERATOR_LESS_THAN:
-        return compute_input(op.inputs["OPERAND1"]).get_number() < compute_input(op.inputs["OPERAND2"]).get_number();
+        return compute_input(op.inputs["OPERAND1"], s).get_number() < compute_input(op.inputs["OPERAND2"], s).get_number();
     case OPCODE::OPERATOR_GREATER_THAN:
-        return compute_input(op.inputs["OPERAND1"]).get_number() > compute_input(op.inputs["OPERAND2"]).get_number();
+        return compute_input(op.inputs["OPERAND1"], s).get_number() > compute_input(op.inputs["OPERAND2"], s).get_number();
     case OPCODE::OPERATOR_EQUALS:
-        return compute_input(op.inputs["OPERAND1"]).get_number() == compute_input(op.inputs["OPERAND2"]).get_number();
+        return compute_input(op.inputs["OPERAND1"], s).get_number() == compute_input(op.inputs["OPERAND2"], s).get_number();
     default:
         break;
     }

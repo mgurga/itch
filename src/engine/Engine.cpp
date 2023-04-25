@@ -89,9 +89,9 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     }
 }
 
-Value EngineFunctions::Engine::compute_input(json input) {
+Value EngineFunctions::Engine::compute_input(json input, ScratchSprite* sprite) {
     if (input[0] == 3 && input[1].is_string())
-        return compute_reporter(input[1]);
+        return compute_reporter(input[1], sprite);
 
     ScratchArrayBlock sab = ScratchArrayBlock(input[1]);
     switch (sab.type) {
@@ -101,8 +101,9 @@ Value EngineFunctions::Engine::compute_input(json input) {
         return Value(sab.str_value);
     case VariableType: case ListType:
         return get_var_by_name(sab.str_value).val();
+    default:
+        return Value("");
     }
-    return Value("");
 }
 
 bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s, bool force_activate) {
@@ -139,20 +140,20 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     switch (link.opcode.opcode) {
     // Variables
     case OPCODE::SET_VARIABLE_TO:
-        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) = compute_input(link.inputs["VALUE"]);
+        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) = compute_input(link.inputs["VALUE"], s);
         break;
     case OPCODE::CHANGE_VARIABLE_BY:
-        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) += compute_input(link.inputs["VALUE"]).get_number();
+        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) += compute_input(link.inputs["VALUE"], s).get_number();
         break;
     case OPCODE::DELETE_ALL: get_list_by_name(link.fields["LIST"][0].get<std::string>()).delete_all(); break;
     case OPCODE::ADD_TO_LIST:
-        get_list_by_name(link.fields["LIST"][0].get<std::string>()).add_to_list(Value::detect_type(compute_input(link.inputs["ITEM"])));
+        get_list_by_name(link.fields["LIST"][0].get<std::string>()).add_to_list(Value::detect_type(compute_input(link.inputs["ITEM"], s)));
         break;
     case OPCODE::REPLACE_ITEM:
-        get_list_by_name(link.fields["LIST"][0].get<std::string>()).set(compute_input(link.inputs["INDEX"]).get_number(), compute_input(link.inputs["ITEM"]));
+        get_list_by_name(link.fields["LIST"][0].get<std::string>()).set(compute_input(link.inputs["INDEX"], s).get_number(), compute_input(link.inputs["ITEM"], s));
         break;
     case OPCODE::INSERT_AT:
-        get_list_by_name(link.fields["LIST"][0].get<std::string>()).insert_at(compute_input(link.inputs["INDEX"]).get_number(), compute_input(link.inputs["ITEM"]));
+        get_list_by_name(link.fields["LIST"][0].get<std::string>()).insert_at(compute_input(link.inputs["INDEX"], s).get_number(), compute_input(link.inputs["ITEM"], s));
         break;
 
     // Events
@@ -172,30 +173,30 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
         }
         break;
     case OPCODE::BROADCAST:
-        queued_broadcasts.push_back(compute_input(link.inputs["BROADCAST_INPUT"]).get_string());
+        queued_broadcasts.push_back(compute_input(link.inputs["BROADCAST_INPUT"], s).get_string());
         break;
 
     // Motion
     case OPCODE::GO_TO: go_to_menu(link, s); break;
-    case OPCODE::SET_X_TO: s->x = compute_input(link.inputs["X"]); break;
-    case OPCODE::SET_Y_TO: s->y = compute_input(link.inputs["Y"]); break;
-    case OPCODE::CHANGE_Y_BY: s->y += compute_input(link.inputs["DY"]).get_number(); break;
-    case OPCODE::CHANGE_X_BY: s->x += compute_input(link.inputs["DX"]).get_number(); break;
-    case OPCODE::POINT_IN_DIRECTION: s->direction = compute_input(link.inputs["DIRECTION"]); break;
+    case OPCODE::SET_X_TO: s->x = compute_input(link.inputs["X"], s); break;
+    case OPCODE::SET_Y_TO: s->y = compute_input(link.inputs["Y"], s); break;
+    case OPCODE::CHANGE_Y_BY: s->y += compute_input(link.inputs["DY"], s).get_number(); break;
+    case OPCODE::CHANGE_X_BY: s->x += compute_input(link.inputs["DX"], s).get_number(); break;
+    case OPCODE::POINT_IN_DIRECTION: s->direction = compute_input(link.inputs["DIRECTION"], s); break;
     case OPCODE::GO_TO_XY:
-        s->x = compute_input(link.inputs["X"]);
-        s->y = compute_input(link.inputs["Y"]);
+        s->x = compute_input(link.inputs["X"], s);
+        s->y = compute_input(link.inputs["Y"], s);
         break;
     case OPCODE::TURN_LEFT:
-        s->direction -= compute_input(link.inputs["DEGREES"]).get_number();
+        s->direction -= compute_input(link.inputs["DEGREES"], s).get_number();
         break;
     case OPCODE::TURN_RIGHT:
-        s->direction += compute_input(link.inputs["DEGREES"]).get_number();
+        s->direction += compute_input(link.inputs["DEGREES"], s).get_number();
         break;
-    case OPCODE::MOVE_STEPS: move_steps(compute_input(link.inputs["STEPS"]), s); break;
+    case OPCODE::MOVE_STEPS: move_steps(compute_input(link.inputs["STEPS"], s), s); break;
 
     // Control
-    case OPCODE::WAIT: wait(compute_input(link.inputs["DURATION"]).get_number(), c, i); break;
+    case OPCODE::WAIT: wait(compute_input(link.inputs["DURATION"], s).get_number(), c, i); break;
     case OPCODE::FOREVER: forever_loop(link, c, s, i); break;
     case OPCODE::STOP: stop_menu(link, c, s, i); break;
     case OPCODE::IF: if_statement(link, s); break;
