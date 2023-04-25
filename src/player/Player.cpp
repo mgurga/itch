@@ -1,8 +1,6 @@
 #include "Player.hpp"
 
-Player::Player(bool& r):
-    running(r)
-{
+Player::Player(bool& r) : running(r) {
     window = new sf::RenderWindow(sf::VideoMode(480, 360), "Itch");
     window->setKeyRepeatEnabled(false);
     // sf::View v = sf::View();
@@ -22,8 +20,10 @@ void Player::draw() {
 
             // add to pressed vector (only reads held keys once)
             if (event.type == sf::Event::KeyPressed) {
-                pressed.push_back("any"); // should be removed, just check if pressed vector is not empty
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) pressed.push_back("right arrow");
+                pressed.push_back(
+                    "any");  // should be removed, just check if pressed vector is not empty
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+                    pressed.push_back("right arrow");
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) pressed.push_back("left arrow");
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) pressed.push_back("up arrow");
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) pressed.push_back("down arrow");
@@ -61,7 +61,8 @@ void Player::draw() {
                 }
 
                 if (!toremove.empty())
-                    keys_down.erase(std::remove(keys_down.begin(), keys_down.end(), toremove), keys_down.end());
+                    keys_down.erase(std::remove(keys_down.begin(), keys_down.end(), toremove),
+                                    keys_down.end());
             }
 
             if (event.type == sf::Event::MouseButtonPressed)
@@ -69,8 +70,7 @@ void Player::draw() {
                     mouse_pressed = true;
 
             if (event.type == sf::Event::MouseButtonReleased)
-                if (event.mouseButton.button == sf::Mouse::Left)
-                    mouse_pressed = false;
+                if (event.mouseButton.button == sf::Mouse::Left) mouse_pressed = false;
 
             mouse_pos = sf::Mouse::getPosition(*window);
             mouse_pos.x -= 240;
@@ -80,8 +80,8 @@ void Player::draw() {
 }
 
 void Player::paint(Project& project) {
-    unsigned int ww = window->getSize().x; // window width
-    unsigned int wh = window->getSize().y; // window height
+    unsigned int ww = window->getSize().x;  // window width
+    unsigned int wh = window->getSize().y;  // window height
 
     window->clear(sf::Color(255, 255, 255));
 
@@ -99,8 +99,9 @@ void Player::paint(Project& project) {
             // draw sprite
             out.setTexture(st, true);
             out.setPosition(float(sprite.x) + (ww / 2.0), float(-sprite.y) + (wh / 2.0));
-            out.setOrigin(sprite.costumes[sprite.currentCostume].rotationCenterX, sprite.costumes[sprite.currentCostume].rotationCenterY);
-            out.setRotation(sprite.direction - 90);
+            out.setOrigin(sprite.costumes[sprite.currentCostume].rotationCenterX,
+                          sprite.costumes[sprite.currentCostume].rotationCenterY);
+            out.setRotation(sprite.direction - 90.0);
             window->draw(out);
 
             // draw dot at center the center of sprite

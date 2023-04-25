@@ -1,27 +1,25 @@
 #pragma once
 
-#include <vector>
+#include <algorithm>
+#include <chrono>
+#include <cmath>
 #include <iostream>
 #include <random>
 #include <string>
-#include <algorithm>
 #include <variant>
-#include <cmath>
-#include <chrono>
+#include <vector>
 
-#include "../player/PlayerInfo.hpp"
 #include "../Project.hpp"
-#include "../DebugMacros.hpp"
 #include "../blocks/Link.hpp"
-#include "../blocks/Opcodes.hpp"
+#include "../player/PlayerInfo.hpp"
+#include "List.hpp"
 #include "SpriteMessage.hpp"
 #include "Variable.hpp"
-#include "List.hpp"
 
 namespace EngineFunctions {
 class Engine {
 public:
-    Engine(): TOTAL_CHAINS(0) {};
+    Engine() : TOTAL_CHAINS(0){};
     Engine(Project& project);
 
     unsigned int TOTAL_CHAINS;
@@ -69,7 +67,8 @@ public:
     void say_for_sec(Link link, ScratchSprite* s, Chain& c, int& i);
     void switch_costume_to(Link link, ScratchSprite* s);
     void next_costume(ScratchSprite* s);
+
 private:
     static unsigned int count_chains(Project& project);
 };
-}
+}  // namespace EngineFunctions

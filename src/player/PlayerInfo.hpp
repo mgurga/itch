@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
 struct PlayerInfo {
     std::vector<std::string>& pressed;

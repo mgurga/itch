@@ -1,14 +1,10 @@
 #include "Engine.hpp"
 
-EngineFunctions::Engine::Engine(Project& project):
-    TOTAL_CHAINS(count_chains(project))
-{
+EngineFunctions::Engine::Engine(Project& project) : TOTAL_CHAINS(count_chains(project)) {
     prj = &project;
 
-    for (ScratchVariable sv : project.stage.variables)
-        variables.push_back(sv);
-    for (ScratchList sl : project.stage.lists)
-        lists.push_back(sl);
+    for (ScratchVariable sv : project.stage.variables) variables.push_back(sv);
+    for (ScratchList sl : project.stage.lists) lists.push_back(sl);
 
     for (ScratchSprite sprite : project.sprites) {
         for (ScratchVariable sv : sprite.variables) {
@@ -24,28 +20,22 @@ EngineFunctions::Engine::Engine(Project& project):
     }
 
     std::cout << "initialized " << variables.size() << " variable(s)" << std::endl;
-    for (Variable v : variables) {
-        std::cout << "'" << v.name << "', ";
-    }
+    for (Variable v : variables) { std::cout << "'" << v.name << "', "; }
     std::cout << std::endl;
 
     std::cout << "initialized " << lists.size() << " list(s)" << std::endl;
-    for (List l : lists) {
-        std::cout << "'" << l.name << "', ";
-    }
+    for (List l : lists) { std::cout << "'" << l.name << "', "; }
     std::cout << std::endl;
 
     for (ScratchBlock& b : project.stage.blocks) {
         OPCODETYPE bop = Opcodes::opcode_to_enum(b.opcode);
-        if (bop == OPTYPE::REPORTER)
-            reporters.push_back(b);
+        if (bop == OPTYPE::REPORTER) reporters.push_back(b);
     }
 
     for (ScratchSprite& sprite : project.sprites) {
         for (ScratchBlock& b : sprite.blocks) {
             OPCODETYPE bop = Opcodes::opcode_to_enum(b.opcode);
-            if (bop == OPTYPE::REPORTER)
-                reporters.push_back(b);
+            if (bop == OPTYPE::REPORTER) reporters.push_back(b);
         }
     }
 
@@ -61,23 +51,19 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
 
     // delete old messages
     auto cur = std::chrono::high_resolution_clock::now();
-    say_logs.erase(std::remove_if(say_logs.begin(), say_logs.end(), [&cur](SpriteMessage sm) {
-        return (sm.end_time <= cur);
-    }), say_logs.end());
+    say_logs.erase(std::remove_if(say_logs.begin(), say_logs.end(),
+                                  [&cur](SpriteMessage sm) { return (sm.end_time <= cur); }),
+                   say_logs.end());
 
     int processed_chains = 0;
     // hack to treat ScratchStage as a ScratchSprite
     for (Chain& chain : prj->stage.chains) {
-        if (process_chain(chain, dynamic_cast<ScratchSprite*>(&prj->stage))) {
-            processed_chains++;
-        }
+        if (process_chain(chain, dynamic_cast<ScratchSprite*>(&prj->stage))) { processed_chains++; }
     }
 
     for (ScratchSprite& sprite : prj->sprites) {
         for (Chain& chain : sprite.chains) {
-            if(process_chain(chain, &sprite)) {
-                processed_chains++;
-            }
+            if (process_chain(chain, &sprite)) { processed_chains++; }
         }
     }
 
@@ -90,34 +76,30 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
 }
 
 Value EngineFunctions::Engine::compute_input(json input, ScratchSprite* sprite) {
-    if (input[0] == 3 && input[1].is_string())
-        return compute_reporter(input[1], sprite);
+    if (input[0] == 3 && input[1].is_string()) return compute_reporter(input[1], sprite);
 
     ScratchArrayBlock sab = ScratchArrayBlock(input[1]);
-    switch (sab.type) {
-    case Number: case Positive_Integer: case Positive_Number: case Integer: case Angle:
-        return Value(sab.num_val);
-    case Color: case String: case Broadcast:
+
+    if (sab.type >= BlockType::Number && sab.type <= BlockType::Angle) return Value(sab.num_val);
+    if (sab.type >= BlockType::Color && sab.type <= BlockType::Broadcast)
         return Value(sab.str_value);
-    case VariableType: case ListType:
-        return get_var_by_name(sab.str_value).val();
-    default:
-        return Value("");
-    }
+    if (sab.type == BlockType::VariableType) return get_var_by_name(sab.str_value).val();
+    return Value("");
 }
 
 bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s, bool force_activate) {
     if ((chain.activatable || !chain.continue_at.empty()) || force_activate) {
-        // used to interrupt continue_at if WHEN_KEY_CLICKED, BROADCAST_RECIEVED, or other special events activate
-        if (chain.links.at(0).opcode >= WHEN_FLAG_CLICKED && chain.links.at(0).opcode <= BROADCAST_AND_WAIT) {
+        // used to interrupt continue_at if WHEN_KEY_CLICKED, BROADCAST_RECIEVED, or other special
+        // events activate
+        if (chain.links.at(0).opcode >= WHEN_FLAG_CLICKED &&
+            chain.links.at(0).opcode <= BROADCAST_AND_WAIT) {
             int init_link = 0;
             process_link(chain.links.at(0), chain, s, init_link);
         }
 
         // resume i to continue_at if set
         int start_link = 0;
-        if (!chain.continue_at.empty())
-            start_link = chain.continue_at.back().link_num;
+        if (!chain.continue_at.empty()) start_link = chain.continue_at.back().link_num;
 
         // process all other links in chain
         for (int i = start_link; i < chain.links.size(); i++) {
@@ -133,40 +115,52 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     // std::cout << "processing link opcode: " << link.string_opcode << std::endl;
     if (s == nullptr) {
         // throw std::invalid_argument("scratch sprite pointer is null when processing link");
-        std::cout << "scratch sprite pointer is null when processing link with opcode " << link.string_opcode << std::endl;
+        std::cout << "scratch sprite pointer is null when processing link with opcode "
+                  << link.string_opcode << std::endl;
         return;
     }
 
     switch (link.opcode.opcode) {
     // Variables
     case OPCODE::SET_VARIABLE_TO:
-        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) = compute_input(link.inputs["VALUE"], s);
+        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) =
+            compute_input(link.inputs["VALUE"], s);
         break;
     case OPCODE::CHANGE_VARIABLE_BY:
-        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) += compute_input(link.inputs["VALUE"], s).get_number();
+        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) +=
+            compute_input(link.inputs["VALUE"], s).get_number();
         break;
-    case OPCODE::DELETE_ALL: get_list_by_name(link.fields["LIST"][0].get<std::string>()).delete_all(); break;
+    case OPCODE::DELETE_ALL:
+        get_list_by_name(link.fields["LIST"][0].get<std::string>()).delete_all();
+        break;
     case OPCODE::ADD_TO_LIST:
-        get_list_by_name(link.fields["LIST"][0].get<std::string>()).add_to_list(Value::detect_type(compute_input(link.inputs["ITEM"], s)));
+        get_list_by_name(link.fields["LIST"][0].get<std::string>())
+            .add_to_list(Value::detect_type(compute_input(link.inputs["ITEM"], s)));
         break;
     case OPCODE::REPLACE_ITEM:
-        get_list_by_name(link.fields["LIST"][0].get<std::string>()).set(compute_input(link.inputs["INDEX"], s).get_number(), compute_input(link.inputs["ITEM"], s));
+        get_list_by_name(link.fields["LIST"][0].get<std::string>())
+            .set(compute_input(link.inputs["INDEX"], s).get_number(),
+                 compute_input(link.inputs["ITEM"], s));
         break;
     case OPCODE::INSERT_AT:
-        get_list_by_name(link.fields["LIST"][0].get<std::string>()).insert_at(compute_input(link.inputs["INDEX"], s).get_number(), compute_input(link.inputs["ITEM"], s));
+        get_list_by_name(link.fields["LIST"][0].get<std::string>())
+            .insert_at(compute_input(link.inputs["INDEX"], s).get_number(),
+                       compute_input(link.inputs["ITEM"], s));
         break;
 
     // Events
     case OPCODE::WHEN_FLAG_CLICKED: c.activatable = false; break;
     case OPCODE::WHEN_KEY_PRESSED:
-        if (!(std::find(pi->pressed.begin(), pi->pressed.end(), link.fields["KEY_OPTION"][0]) != pi->pressed.end())) {
+        if (!(std::find(pi->pressed.begin(), pi->pressed.end(), link.fields["KEY_OPTION"][0]) !=
+              pi->pressed.end())) {
             i = -1;
         } else {
             c.continue_at.clear();
         }
         break;
     case OPCODE::WHEN_BROADCAST_RECEIVED:
-        if (!(std::find(broadcasts.begin(), broadcasts.end(), link.fields["BROADCAST_OPTION"][0]) != broadcasts.end())) {
+        if (!(std::find(broadcasts.begin(), broadcasts.end(), link.fields["BROADCAST_OPTION"][0]) !=
+              broadcasts.end())) {
             i = -1;
         } else {
             c.continue_at.clear();
@@ -182,7 +176,9 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::SET_Y_TO: s->y = compute_input(link.inputs["Y"], s); break;
     case OPCODE::CHANGE_Y_BY: s->y += compute_input(link.inputs["DY"], s).get_number(); break;
     case OPCODE::CHANGE_X_BY: s->x += compute_input(link.inputs["DX"], s).get_number(); break;
-    case OPCODE::POINT_IN_DIRECTION: s->direction = compute_input(link.inputs["DIRECTION"], s); break;
+    case OPCODE::POINT_IN_DIRECTION:
+        s->direction = compute_input(link.inputs["DIRECTION"], s);
+        break;
     case OPCODE::GO_TO_XY:
         s->x = compute_input(link.inputs["X"], s);
         s->y = compute_input(link.inputs["Y"], s);
@@ -212,7 +208,8 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::NEXT_COSTUME: next_costume(s); break;
 
     default:
-        std::cout << "unknown opcode detected in engine: '" << link.string_opcode << "'" << std::endl;
+        std::cout << "unknown opcode detected in engine: '" << link.string_opcode << "'"
+                  << std::endl;
         break;
     }
 }
