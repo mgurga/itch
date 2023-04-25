@@ -41,6 +41,12 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
     }
 
     switch (op.opcode.opcode) {
+    case OPCODE::COSTUME_NUM_NAME:
+        if (op.fields["NUMBER_NAME"][0].get<std::string>() == "number") {
+            return s->currentCostume;
+        } else {
+            return s->costumes[s->currentCostume].name;
+        }
     case OPCODE::OPERATOR_JOIN:
         return compute_input(op.inputs["STRING1"], s).get_string() + compute_input(op.inputs["STRING2"], s).get_string();
     case OPCODE::LIST_LENGTH:
@@ -52,6 +58,8 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
     case OPCODE::X_POS: return s->x;
     case OPCODE::Y_POS: return s->y;
     case OPCODE::DIRECTION: return s->direction;
+    case OPCODE::SIZE_VAL: return s->size;
+    case OPCODE::LOUDNESS: return -1;
     default:
         std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
         return Value("");

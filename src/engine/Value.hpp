@@ -27,6 +27,7 @@ public:
     };
     Value(double d): value(d) {};
     Value(int i): value(static_cast<double>(i)) {};
+    Value(unsigned int i): value(static_cast<double>(i)) {};
     Value(bool b): value(b) {};
     Value() {};
 
