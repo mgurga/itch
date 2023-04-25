@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <stdexcept>
 #include <string>
 #include <variant>
 
@@ -66,6 +68,13 @@ public:
     double get_number() {
         if (std::holds_alternative<double>(value)) {
             return std::get<double>(value);
+        } else if (contains_bool()) {
+            // hack to make sure true values are greater than false values
+            if (get_bool()) {
+                return 1.0; // should be 0.000001 or something but 1 feels more proper
+            } else {
+                return 0.0;
+            }
         } else {
             return 0.0;
         }
