@@ -19,10 +19,8 @@ void EngineFunctions::Engine::wait(double duration, Chain& c, int& i) {
 }
 
 void EngineFunctions::Engine::forever_loop(Link link, Chain& c, ScratchSprite* s, int& i) {
-    if (!link.inputs.contains("SUBSTACK"))
-        return;
-    if (link.inputs["SUBSTACK"][1].is_null())
-        return;
+    if (!link.inputs.contains("SUBSTACK")) return;
+    if (link.inputs["SUBSTACK"][1].is_null()) return;
     if (!c.continue_at.empty() && !c.continue_at.back().end_time.has_value()) {
         process_chain(get_chain_by_link_id(link.inputs["SUBSTACK"][1], s), s, true);
     } else {
@@ -68,10 +66,8 @@ void EngineFunctions::Engine::stop_menu(Link link, Chain& c, ScratchSprite* s, i
 }
 
 void EngineFunctions::Engine::if_statement(Link link, ScratchSprite* s) {
-    if (!link.inputs.contains("CONDITION") || !link.inputs.contains("SUBSTACK"))
-        return;
-    if (link.inputs["SUBSTACK"][1].is_null())
-        return;
+    if (!link.inputs.contains("CONDITION") || !link.inputs.contains("SUBSTACK")) return;
+    if (link.inputs["SUBSTACK"][1].is_null()) return;
     std::string cid = link.inputs["CONDITION"][1];
     if (compute_condition(cid, s)) {
         process_chain(get_chain_by_link_id(link.inputs["SUBSTACK"][1], s), s, true);
@@ -84,10 +80,8 @@ void EngineFunctions::Engine::if_else_statement(Link link, ScratchSprite* s) {
             process_chain(get_chain_by_link_id(link.inputs["SUBSTACK2"][1], s), s, true);
         return;
     }
-    if (link.inputs["SUBSTACK"][1].is_null())
-        return;
-    if (link.inputs["SUBSTACK2"][1].is_null())
-        return;
+    if (link.inputs["SUBSTACK"][1].is_null()) return;
+    if (link.inputs["SUBSTACK2"][1].is_null()) return;
     std::string cid = link.inputs["CONDITION"][1];
     if (compute_condition(cid, s)) {
         if (!link.inputs.contains("SUBSTACK")) return;
@@ -100,13 +94,10 @@ void EngineFunctions::Engine::if_else_statement(Link link, ScratchSprite* s) {
 }
 
 void EngineFunctions::Engine::repeat_loop(Link link, Chain& c, ScratchSprite* s, int& i) {
-    if (!link.inputs.contains("SUBSTACK"))
-        return;
-    if (link.inputs["SUBSTACK"][1].is_null())
-        return;
+    if (!link.inputs.contains("SUBSTACK")) return;
+    if (link.inputs["SUBSTACK"][1].is_null()) return;
     double times = compute_input(link.inputs["TIMES"], s);
-    if (times <= 0)
-        return;
+    if (times <= 0) return;
     if (!c.continue_at.empty() && !c.continue_at.back().end_time.has_value()) {
         if (c.continue_at.back().runs >= times) {
             c.continue_at.pop_back();
@@ -114,6 +105,7 @@ void EngineFunctions::Engine::repeat_loop(Link link, Chain& c, ScratchSprite* s,
         }
         process_chain(get_chain_by_link_id(link.inputs["SUBSTACK"][1], s), s, true);
         c.continue_at.back().runs++;
+        i = -1;
     } else {
         ResumePoint rp;
         rp.link_num = i;
@@ -121,5 +113,6 @@ void EngineFunctions::Engine::repeat_loop(Link link, Chain& c, ScratchSprite* s,
         rp.end_time = {};
         rp.runs = 0;
         c.continue_at.push_back(rp);
+        i = -1;
     }
 }
