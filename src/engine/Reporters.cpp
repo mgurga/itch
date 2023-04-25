@@ -47,14 +47,13 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
         return get_list_by_name(op.fields["LIST"][0].get<std::string>()).length();
     case OPCODE::LIST_ITEM:
         return get_list_by_name(op.fields["LIST"][0].get<std::string>()).at(compute_input(op.inputs["INDEX"], s).get_number());
-    case OPCODE::MOUSE_X:
-        return pi->mouse_x;
-    case OPCODE::MOUSE_Y:
-        return pi->mouse_y;
+    case OPCODE::MOUSE_X: return pi->mouse_x;
+    case OPCODE::MOUSE_Y: return pi->mouse_y;
+    case OPCODE::X_POS: return s->x;
+    case OPCODE::Y_POS: return s->y;
+    case OPCODE::DIRECTION: return s->direction;
     default:
-        break;
+        std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
+        return Value("");
     }
-
-    std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
-    return Value("");
 }
