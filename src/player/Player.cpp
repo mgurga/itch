@@ -94,12 +94,12 @@ void Player::paint(Project& project) {
         if (sprite.visible) {
             sf::Sprite out;
             sf::Texture& st = sprite.costumes[sprite.currentCostume].texture;
-            sf::Vector2u ss = st.getSize(); // sprite size
+            // sf::Vector2u ss = st.getSize(); // sprite size
 
             // draw sprite
             out.setTexture(st, true);
             out.setPosition(float(sprite.x) + (ww / 2.0), float(-sprite.y) + (wh / 2.0));
-            out.setOrigin(float(ss.x) / 2.0, float(ss.y) / 2.0);
+            out.setOrigin(sprite.costumes[sprite.currentCostume].rotationCenterX, sprite.costumes[sprite.currentCostume].rotationCenterY);
             out.setRotation(sprite.direction - 90);
             window->draw(out);
 
