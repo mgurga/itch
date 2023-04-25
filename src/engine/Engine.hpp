@@ -24,6 +24,8 @@ public:
 
     unsigned int TOTAL_CHAINS;
     bool finished = false;
+    std::chrono::time_point<std::chrono::steady_clock> timer =
+        std::chrono::high_resolution_clock::now();
 
     void tick(PlayerInfo* player_info);
     bool process_chain(Chain& c, ScratchSprite* s, bool force_activate = false);

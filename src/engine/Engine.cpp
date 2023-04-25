@@ -207,6 +207,9 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::SWITCH_TO_COSTUME: switch_costume_to(link, s); break;
     case OPCODE::NEXT_COSTUME: next_costume(s); break;
 
+    // Sensing
+    case OPCODE::RESET_TIMER: timer = std::chrono::high_resolution_clock::now(); break;
+
     default:
         std::cout << "unknown opcode detected in engine: '" << link.string_opcode << "'"
                   << std::endl;

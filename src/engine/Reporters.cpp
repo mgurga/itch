@@ -58,6 +58,10 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
     case OPCODE::DIRECTION: return s->direction;
     case OPCODE::SIZE_VAL: return s->size;
     case OPCODE::LOUDNESS: return -1;
+    case OPCODE::TIMER:
+        return static_cast<double>(std::chrono::duration_cast<std::chrono::seconds>(
+                                       std::chrono::high_resolution_clock::now() - timer)
+                                       .count());
     default:
         std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
         return Value("");
