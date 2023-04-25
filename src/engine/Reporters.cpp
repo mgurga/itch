@@ -6,8 +6,8 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
     if (op.opcode == OPTYPE::CONDITIONAL)
         return compute_condition(opid, s);
 
-    // basic math operations: add, subtract, multiple, divide
-    if (op.opcode.opcode >= 400 && op.opcode.opcode <= 403) {
+    // basic math operations: add, subtract, multiple, divide, modulo
+    if ((op.opcode.opcode >= 400 && op.opcode.opcode <= 403) || op.opcode.opcode == OPCODE::OPERATOR_MOD) {
         Value num1, num2;
         num1 = compute_input(op.inputs["NUM1"], s);
         num2 = compute_input(op.inputs["NUM2"], s);
@@ -21,7 +21,9 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
             case OPERATOR_MULTIPLY:
                 return num1.get_number() * num2.get_number();
             case OPERATOR_DIVIDE:
-                return num1.get_number() / num2.get_number();;
+                return num1.get_number() / num2.get_number();
+            case OPERATOR_MOD:
+                return std::fmod(num1.get_number(), num2.get_number());
             default:
                 break;
             }
