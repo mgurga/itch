@@ -1,13 +1,10 @@
 #include "Itch.hpp"
 
-Itch::Itch():
-    player(Player(running))
-{
+Itch::Itch() : player(Player(running)) {
     std::cout << "initalized itch" << std::endl;
     // cleanup old files
     std::cout << "cleaning up old files" << std::endl;
-    if (std::filesystem::exists(temp_dir))
-        std::filesystem::remove_all(temp_dir);
+    if (std::filesystem::exists(temp_dir)) std::filesystem::remove_all(temp_dir);
     std::filesystem::create_directory(temp_dir);
 }
 
@@ -15,7 +12,7 @@ void Itch::load_from_file(std::filesystem::path sb3_file) {
     std::cout << "got sb3 file: " << sb3_file << std::endl;
 
     FileHandler sb3 = FileHandler(sb3_file, temp_dir);
-    sb3.init([&] () {
+    sb3.init([&]() {
         std::cout << "finished unzipping sb3" << std::endl;
 
         project = Project(temp_dir);
@@ -31,9 +28,7 @@ void Itch::load_from_url(std::string project_url) {
     std::string seg;
     std::vector<std::string> url_parts;
 
-    while(std::getline(urlss, seg, '/')) {
-        url_parts.push_back(seg);
-    }
+    while (std::getline(urlss, seg, '/')) { url_parts.push_back(seg); }
 
     std::string pid = url_parts.back();
     std::cout << "project id is " << pid << std::endl;
@@ -49,7 +44,9 @@ void Itch::load_from_url(std::string project_url) {
 
     // download project.json
     std::cout << "downloading project.json..." << std::endl;
-    cpr::Response pj_res = cpr::Get(cpr::Url{"https://projects.scratch.mit.edu/" + pid + "?token=" + project_description["project_token"].get<std::string>()});
+    cpr::Response pj_res =
+        cpr::Get(cpr::Url{"https://projects.scratch.mit.edu/" + pid +
+                          "?token=" + project_description["project_token"].get<std::string>()});
     std::cout << "project json response code: " << pj_res.status_code << std::endl;
     json project_json = json::parse(pj_res.text);
     std::ofstream pjf;
@@ -64,7 +61,8 @@ void Itch::load_from_url(std::string project_url) {
 
         // costumes
         for (json cos : target["costumes"]) {
-            cpr::Response c_res = cpr::Get(cpr::Url{scratch_asset_endpoint + cos["md5ext"].get<std::string>() + "/get/"});
+            cpr::Response c_res = cpr::Get(
+                cpr::Url{scratch_asset_endpoint + cos["md5ext"].get<std::string>() + "/get/"});
             std::ofstream cf;
             cf.open(temp_dir / cos["md5ext"].get<std::string>());
             cf << c_res.text;
@@ -73,7 +71,8 @@ void Itch::load_from_url(std::string project_url) {
 
         // sounds
         for (json snd : target["sounds"]) {
-            cpr::Response s_res = cpr::Get(cpr::Url{scratch_asset_endpoint + snd["md5ext"].get<std::string>() + "/get/"});
+            cpr::Response s_res = cpr::Get(
+                cpr::Url{scratch_asset_endpoint + snd["md5ext"].get<std::string>() + "/get/"});
             std::ofstream sf;
             sf.open(temp_dir / snd["md5ext"].get<std::string>());
             sf << s_res.text;

@@ -1,12 +1,12 @@
 #pragma once
 
-#include <string>
-#include <iostream>
-#include <fstream>
 #include <filesystem>
-#include <vector>
-#include <sstream>
+#include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
+#include <sstream>
+#include <string>
+#include <vector>
 
 using json = nlohmann::json;
 
@@ -14,10 +14,10 @@ using json = nlohmann::json;
 #include <cpr/cpr.h>
 #endif
 
-#include "Project.hpp"
-#include "player/Player.hpp"
-#include "engine/Engine.hpp"
 #include "FileHandler.hpp"
+#include "Project.hpp"
+#include "engine/Engine.hpp"
+#include "player/Player.hpp"
 
 class Itch {
 public:
