@@ -1,11 +1,12 @@
 #include "Itch.hpp"
 
-Itch::Itch() : player(Player(running)) {
-    std::cout << "initalized itch" << std::endl;
+Itch::Itch() : player() {
+    if (!headless) player = new Player(running);
     // cleanup old files
     std::cout << "cleaning up old files" << std::endl;
     if (std::filesystem::exists(temp_dir)) std::filesystem::remove_all(temp_dir);
     std::filesystem::create_directory(temp_dir);
+    std::cout << "initialized itch" << std::endl;
 }
 
 void Itch::load_from_file(std::filesystem::path sb3_file) {
@@ -92,9 +93,14 @@ void Itch::load_from_url(std::string project_url) {
 }
 
 void Itch::draw() {
-    PlayerInfo pi = player.get_player_info();
-    engine.tick(&pi);
-    pi.pressed.clear();
-    player.draw();
-    player.paint(project);
+    if (headless) {
+        EMPTY_PLAYER_INFO(pi)
+        engine.tick(&pi);
+    } else {
+        PlayerInfo pi = player->get_player_info();
+        engine.tick(&pi);
+        pi.pressed.clear();
+        player->draw();
+        player->paint(project);
+    }
 }

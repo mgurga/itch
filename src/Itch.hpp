@@ -22,6 +22,7 @@ using json = nlohmann::json;
 class Itch {
 public:
     Itch();
+    ~Itch() { delete player; }
 
     void load_from_file(std::filesystem::path sb3_file);
     void load_from_url(std::string project_url);
@@ -30,8 +31,9 @@ public:
 
     Project project;
     EngineFunctions::Engine engine;
-    Player player;
+    Player* player;
 
     bool running = true;
+    bool headless = false;  // run without rendering code (engine only)
     const std::filesystem::path temp_dir{"temp"};
 };
