@@ -1,23 +1,21 @@
 #pragma once
 
+#include <deque>
 #include <string>
-#include <vector>
 
 #include "../scratch/ScratchList.hpp"
 #include "Value.hpp"
 
 class List {
 public:
-    List(const ScratchList& sl): name(sl.name), id(sl.id) {
-        for (std::string s : sl.values) {
-            values.push_back(Value::detect_type(s));
-        }
+    List(const ScratchList& sl) : name(sl.name), id(sl.id) {
+        for (std::string s : sl.values) { values.push_back(Value::detect_type(s)); }
     };
 
     std::string name;
-    bool is_global = true; // otherwise only available in target
-    std::string sprite_name; // if is_global is false this is sent to the sprite name
-    std::vector<Value> values;
+    bool is_global = true;    // otherwise only available in target
+    std::string sprite_name;  // if is_global is false this is sent to the sprite name
+    std::deque<Value> values;
     std::string id;
 
     void make_local(std::string sprite_name) {
@@ -26,24 +24,24 @@ public:
     }
 
     void delete_all() { values.clear(); }
-    void add_to_list(Value v) { values.push_back(v); }
+    void add_to_list(Value v) {
+        values.push_back(v);
+        std::cout << length() << std::endl;
+    }
     int length() { return static_cast<int>(values.size()); }
 
     void set(int pos, Value newVal) {
-        if ((pos - 1) < 0)
-            return;
+        if ((pos - 1) < 0) return;
         values.at(pos - 1) = newVal;
     }
 
     void insert_at(int pos, Value v) {
-        if ((pos - 1) < 0)
-            return;
+        if ((pos - 1) < 0) return;
         values.insert(values.begin() + (pos - 1), v);
     }
 
     Value at(int pos) {
-        if ((pos - 1) < 0)
-            return Value("");
+        if ((pos - 1) < 0) return Value("");
         return values.at(pos - 1);
     }
 };
