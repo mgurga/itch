@@ -1,11 +1,11 @@
-#include <SFML/System/Vector2.hpp>
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
 #include <vector>
 
+#include "../src/FileHandler.hpp"
 #include "../src/Project.hpp"
 #include "../src/engine/Engine.hpp"
-#include "../src/FileHandler.hpp"
 
 class MotionBlocksTest : public ::testing::Test {
 protected:
@@ -16,9 +16,8 @@ protected:
     static void SetUpTestSuite() {
         temp_dir = new std::string("motionblocks/");
         FileHandler sb3 = FileHandler("motionblocks.sb3", *temp_dir);
-        sb3.init([&] () {
-            std::cout << "finished unzipping " << sb3.file_name_no_ext << std::endl;
-        });
+        sb3.init(
+            [&]() { std::cout << "finished unzipping " << sb3.file_name_no_ext << std::endl; });
 
         project = new Project(*temp_dir);
         project->load_from_project_json(false);
@@ -39,25 +38,19 @@ Project* MotionBlocksTest::project = nullptr;
 std::string* MotionBlocksTest::temp_dir = nullptr;
 EngineFunctions::Engine* MotionBlocksTest::engine = nullptr;
 
-TEST_F(MotionBlocksTest, MetaTest) {
-    ASSERT_EQ(project->meta.semver, "3.0.0");
-}
+TEST_F(MotionBlocksTest, MetaTest) { ASSERT_EQ(project->meta.semver, "3.0.0"); }
 
-TEST_F(MotionBlocksTest, ChainTest) {
-    ASSERT_EQ(engine->TOTAL_CHAINS, 11);
-}
+TEST_F(MotionBlocksTest, ChainTest) { ASSERT_EQ(engine->TOTAL_CHAINS, 11); }
 
-TEST_F(MotionBlocksTest, OperatorsTest) {
-    ASSERT_EQ(engine->reporters.size(), 6);
-}
+TEST_F(MotionBlocksTest, OperatorsTest) { ASSERT_EQ(engine->reporters.size(), 6); }
 
 TEST_F(MotionBlocksTest, UpPressTest) {
-    PlayerInfo pi = PlayerInfo::get_empty_player_info();
+    EMPTY_PLAYER_INFO(pi);
     engine->tick(&pi);
     pi.pressed.push_back("up arrow");
     engine->tick(&pi);
     pi.pressed.clear();
-    engine->tick(&pi); // second tick to process broadcasts
+    engine->tick(&pi);  // second tick to process broadcasts
     ASSERT_EQ(project->sprites.at(0).x, 10.0);
     ASSERT_EQ(project->sprites.at(0).y, 20.0);
     ASSERT_TRUE(engine->say_logs.at(0).message.find("Going to x:") != std::string::npos);
@@ -65,7 +58,7 @@ TEST_F(MotionBlocksTest, UpPressTest) {
 }
 
 TEST_F(MotionBlocksTest, ResetTest) {
-    PlayerInfo pi = PlayerInfo::get_empty_player_info();
+    EMPTY_PLAYER_INFO(pi);
     engine->tick(&pi);
     pi.pressed.push_back("z");
     engine->tick(&pi);
@@ -78,20 +71,20 @@ TEST_F(MotionBlocksTest, ResetTest) {
 }
 
 TEST_F(MotionBlocksTest, ThreeUpPressTest) {
-    PlayerInfo pi = PlayerInfo::get_empty_player_info();
+    EMPTY_PLAYER_INFO(pi);
     engine->tick(&pi);
     pi.pressed.push_back("up arrow");
     engine->tick(&pi);
     engine->tick(&pi);
     engine->tick(&pi);
     pi.pressed.clear();
-    engine->tick(&pi); // second tick to process broadcasts
+    engine->tick(&pi);  // second tick to process broadcasts
     ASSERT_EQ(project->sprites.at(0).x, 30.0);
     ASSERT_EQ(project->sprites.at(0).y, 60.0);
 }
 
 TEST_F(MotionBlocksTest, ResetTest2) {
-    PlayerInfo pi = PlayerInfo::get_empty_player_info();
+    EMPTY_PLAYER_INFO(pi);
     engine->tick(&pi);
     pi.pressed.push_back("z");
     engine->tick(&pi);
@@ -104,7 +97,9 @@ TEST_F(MotionBlocksTest, ResetTest2) {
 }
 
 TEST_F(MotionBlocksTest, GoToMouseTest) {
-    PlayerInfo pi = PlayerInfo::get_empty_player_info();
+    EMPTY_PLAYER_INFO(pi);
+    pi.mouse_x = 25;
+    pi.mouse_y = 25;
     engine->tick(&pi);
     pi.pressed.push_back("m");
     engine->tick(&pi);
@@ -115,7 +110,7 @@ TEST_F(MotionBlocksTest, GoToMouseTest) {
 }
 
 TEST_F(MotionBlocksTest, ChangeDirectionTest) {
-    PlayerInfo pi = PlayerInfo::get_empty_player_info();
+    EMPTY_PLAYER_INFO(pi);
     pi.pressed.push_back("m");
     engine->tick(&pi);
     pi.pressed.clear();
@@ -133,7 +128,7 @@ TEST_F(MotionBlocksTest, ChangeDirectionTest) {
 }
 
 TEST_F(MotionBlocksTest, MoveStepsTest) {
-    PlayerInfo pi = PlayerInfo::get_empty_player_info();
+    EMPTY_PLAYER_INFO(pi);
     engine->tick(&pi);
     pi.pressed.push_back("space");
     engine->tick(&pi);
@@ -143,7 +138,7 @@ TEST_F(MotionBlocksTest, MoveStepsTest) {
 }
 
 TEST_F(MotionBlocksTest, RandomPositionTest) {
-    PlayerInfo pi = PlayerInfo::get_empty_player_info();
+    EMPTY_PLAYER_INFO(pi);
     pi.pressed.push_back("z");
     bool changed = false;
 
@@ -152,14 +147,11 @@ TEST_F(MotionBlocksTest, RandomPositionTest) {
     pi.pressed.push_back("r");
 
     engine->tick(&pi);
-    if (project->sprites.at(0).x != 0.0 && project->sprites.at(0).y != 0.0)
-        changed = true;
+    if (project->sprites.at(0).x != 0.0 && project->sprites.at(0).y != 0.0) changed = true;
     engine->tick(&pi);
-    if (project->sprites.at(0).x != 0.0 && project->sprites.at(0).y != 0.0)
-        changed = true;
+    if (project->sprites.at(0).x != 0.0 && project->sprites.at(0).y != 0.0) changed = true;
     engine->tick(&pi);
-    if (project->sprites.at(0).x != 0.0 && project->sprites.at(0).y != 0.0)
-        changed = true;
+    if (project->sprites.at(0).x != 0.0 && project->sprites.at(0).y != 0.0) changed = true;
 
     ASSERT_TRUE(changed);
 }
