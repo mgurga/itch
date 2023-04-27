@@ -1,21 +1,21 @@
 #pragma once
 
-#include <string>
-#include <vector>
 #include <filesystem>
 #include <nlohmann/json.hpp>
+#include <string>
+#include <vector>
 
-#include "ScratchVariable.hpp"
-#include "ScratchList.hpp"
-#include "ScratchCostume.hpp"
-#include "ScratchSound.hpp"
-#include "ScratchBlock.hpp"
 #include "../blocks/Chain.hpp"
+#include "../blocks/Link.hpp"
+#include "ScratchBlock.hpp"
+#include "ScratchCostume.hpp"
+#include "ScratchList.hpp"
+#include "ScratchSound.hpp"
+#include "ScratchVariable.hpp"
 
 using json = nlohmann::json;
 
-class ScratchTarget
-{
+class ScratchTarget {
 public:
     ScratchTarget();
     ScratchTarget(json st, std::filesystem::path temp_dir, bool heavyload = true);
@@ -27,6 +27,7 @@ public:
     std::vector<ScratchCostume> costumes;
     std::vector<ScratchSound> sounds;
     std::vector<ScratchBlock> blocks;
+    std::vector<Link> links;
     unsigned int volume;
     int layerOrder;
     unsigned int currentCostume;
