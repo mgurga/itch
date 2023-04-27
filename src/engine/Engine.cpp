@@ -41,7 +41,7 @@ EngineFunctions::Engine::Engine(Project& project) :
     }
 
     std::cout << "found " << reporters.size() << " reporters(s)" << std::endl;
-    std::cout << "finished initalizing engine" << std::endl;
+    std::cout << "finished initializing engine" << std::endl;
 }
 
 void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
