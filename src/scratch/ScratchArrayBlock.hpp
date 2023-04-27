@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-#include <optional>
 #include <nlohmann/json.hpp>
+#include <optional>
+#include <string>
 
 using json = nlohmann::json;
 
@@ -28,17 +28,21 @@ public:
         block_id = id;
 
         switch (type) {
-        case Number: case Positive_Integer: case Positive_Number: case Integer: case Angle:
-            num_val = std::stoi(sb[1].get<std::string>());
+        case Number:
+        case Positive_Integer:
+        case Positive_Number:
+        case Integer:
+        case Angle:
+            if (!(sb[1].get<std::string>() == "")) num_val = std::stoi(sb[1].get<std::string>());
             break;
-        case Color: case String:
-            str_value = sb[1];
-            break;
+        case Color:
+        case String: str_value = sb[1]; break;
         case Broadcast:
             str_value = sb[1];
             element_id = sb[2];
             break;
-        case VariableType: case ListType:
+        case VariableType:
+        case ListType:
             str_value = sb[1];
             element_id = sb[2];
             // reporters do not have x and y variables
@@ -47,8 +51,7 @@ public:
                 y = sb[4];
             }
             break;
-        default:
-            break;
+        default: break;
         }
     }
 
@@ -61,8 +64,8 @@ public:
     }
 
     BlockType type;
-    double num_val;
-    std::string str_value;
+    double num_val = 0;
+    std::string str_value = "";
     std::string element_id;
     int x, y;
 
