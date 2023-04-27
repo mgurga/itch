@@ -38,7 +38,7 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
 
     switch (op.opcode.opcode) {
     case OPCODE::COSTUME_NUM_NAME:
-        if (op.fields["NUMBER_NAME"][0].get<std::string>() == "number") {
+        if (op.fields["NUMBER_NAME"][0] == "number") {
             return s->currentCostume;
         } else {
             return s->costumes[s->currentCostume].name;
@@ -46,10 +46,9 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
     case OPCODE::OPERATOR_JOIN:
         return compute_input(op.inputs["STRING1"], s).get_string() +
                compute_input(op.inputs["STRING2"], s).get_string();
-    case OPCODE::LIST_LENGTH:
-        return get_list_by_name(op.fields["LIST"][0].get<std::string>()).length();
+    case OPCODE::LIST_LENGTH: return get_list_by_name(op.fields["LIST"][0]).length();
     case OPCODE::LIST_ITEM:
-        return get_list_by_name(op.fields["LIST"][0].get<std::string>())
+        return get_list_by_name(op.fields["LIST"][0])
             .at(compute_input(op.inputs["INDEX"], s).get_number());
     case OPCODE::MOUSE_X: return pi->mouse_x;
     case OPCODE::MOUSE_Y: return pi->mouse_y;

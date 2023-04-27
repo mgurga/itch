@@ -30,7 +30,7 @@ public:
     void tick(PlayerInfo* player_info);
     bool process_chain(Chain& c, ScratchSprite* s, bool force_activate = false);
     void process_link(Link& link, Chain& chain, ScratchSprite* sprite, int& i);
-    Value compute_input(json block, ScratchSprite* sprite);
+    Value compute_input(LinkInput block, ScratchSprite* sprite);
     Value compute_reporter(std::string opid, ScratchSprite* sprite);
     Value compute_condition(std::string opid, ScratchSprite* sprite);
 
@@ -38,13 +38,14 @@ public:
     Variable& get_var_by_name(std::string name);
     List& get_list_by_name(std::string name);
     Link get_reporter_by_id(std::string id);
-    ScratchBlock get_sb_by_id(std::string id);
+    Link& get_link_by_id(std::string id);
     std::string variant_str(std::variant<std::string, double> varient);
     Chain& get_chain_by_link_id(std::string id, ScratchSprite* s);
 
     std::vector<Variable> variables;
     std::vector<List> lists;
     std::vector<Link> reporters;
+    std::vector<Link> links;
     std::vector<std::string> broadcasts;
     std::vector<std::string> queued_broadcasts;
     std::vector<SpriteMessage> say_logs;

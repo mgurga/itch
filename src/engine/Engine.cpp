@@ -1,10 +1,10 @@
 #include "Engine.hpp"
 
-EngineFunctions::Engine::Engine(Project& project) : TOTAL_CHAINS(count_chains(project)) {
-    prj = &project;
-
+EngineFunctions::Engine::Engine(Project& project) :
+    TOTAL_CHAINS(count_chains(project)), prj(&project) {
     for (ScratchVariable sv : project.stage.variables) variables.push_back(sv);
     for (ScratchList sl : project.stage.lists) lists.push_back(sl);
+    for (Link l : project.stage.links) links.push_back(l);
 
     for (ScratchSprite sprite : project.sprites) {
         for (ScratchVariable sv : sprite.variables) {
@@ -17,6 +17,7 @@ EngineFunctions::Engine::Engine(Project& project) : TOTAL_CHAINS(count_chains(pr
             newlist.make_local(sprite.name);
             lists.push_back(newlist);
         }
+        for (Link l : sprite.links) links.push_back(l);
     }
 
     std::cout << "initialized " << variables.size() << " variable(s)" << std::endl;
@@ -75,10 +76,10 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     }
 }
 
-Value EngineFunctions::Engine::compute_input(json input, ScratchSprite* sprite) {
-    if (input[0] == 3 && input[1].is_string()) return compute_reporter(input[1], sprite);
+Value EngineFunctions::Engine::compute_input(LinkInput input, ScratchSprite* sprite) {
+    if (input.reporter_id.has_value()) return compute_reporter(input.reporter_id.value(), sprite);
 
-    ScratchArrayBlock sab = ScratchArrayBlock(input[1]);
+    ScratchArrayBlock sab = input.sab.sab;
 
     if (sab.type >= BlockType::Number && sab.type <= BlockType::Angle) return Value(sab.num_val);
     if (sab.type >= BlockType::Color && sab.type <= BlockType::Broadcast)
@@ -123,28 +124,25 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     switch (link.opcode.opcode) {
     // Variables
     case OPCODE::SET_VARIABLE_TO:
-        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) =
-            compute_input(link.inputs["VALUE"], s);
+        get_var_by_name(link.fields["VARIABLE"][0]) = compute_input(link.inputs["VALUE"], s);
         break;
     case OPCODE::CHANGE_VARIABLE_BY:
-        get_var_by_name(link.fields["VARIABLE"][0].get<std::string>()) +=
+        get_var_by_name(link.fields["VARIABLE"][0]) +=
             compute_input(link.inputs["VALUE"], s).get_number();
         break;
-    case OPCODE::DELETE_ALL:
-        get_list_by_name(link.fields["LIST"][0].get<std::string>()).delete_all();
-        break;
+    case OPCODE::DELETE_ALL: get_list_by_name(link.fields["LIST"][0]).delete_all(); break;
     case OPCODE::ADD_TO_LIST:
-        get_list_by_name(link.fields["LIST"][0].get<std::string>())
+        get_list_by_name(link.fields["LIST"][0])
             .add_to_list(Value::detect_type(compute_input(link.inputs["ITEM"], s)));
         break;
     case OPCODE::REPLACE_ITEM:
-        get_list_by_name(link.fields["LIST"][0].get<std::string>())
-            .set(compute_input(link.inputs["INDEX"], s).get_number(),
+        get_list_by_name(link.fields["LIST"][0])
+            .set(static_cast<int>(compute_input(link.inputs["INDEX"], s).get_number()),
                  compute_input(link.inputs["ITEM"], s));
         break;
     case OPCODE::INSERT_AT:
-        get_list_by_name(link.fields["LIST"][0].get<std::string>())
-            .insert_at(compute_input(link.inputs["INDEX"], s).get_number(),
+        get_list_by_name(link.fields["LIST"][0])
+            .insert_at(static_cast<int>(compute_input(link.inputs["INDEX"], s).get_number()),
                        compute_input(link.inputs["ITEM"], s));
         break;
 

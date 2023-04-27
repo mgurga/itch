@@ -19,8 +19,8 @@ void EngineFunctions::Engine::wait(double duration, Chain& c, int& i) {
 }
 
 void EngineFunctions::Engine::forever_loop(Link link, Chain& c, ScratchSprite* s, int& i) {
-    if (!link.inputs.contains("SUBSTACK")) return;
-    if (link.inputs["SUBSTACK"][1].is_null()) return;
+    if (!link.inputs_contains("SUBSTACK")) return;
+    // if (link.inputs["SUBSTACK"][1].is_null()) return;
     if (!c.continue_at.empty() && !c.continue_at.back().end_time.has_value()) {
         process_chain(get_chain_by_link_id(link.inputs["SUBSTACK"][1], s), s, true);
     } else {
@@ -55,7 +55,7 @@ void EngineFunctions::Engine::stop_menu(Link link, Chain& c, ScratchSprite* s, i
         i = -1;
     } else if (stopop == "other scripts in sprite") {
         for (Chain& cc : s->chains) {
-            if (cc.links.at(0).block_id != c.links.at(0).block_id) {
+            if (cc.links.at(0).id != c.links.at(0).id) {
                 cc.activatable = false;
                 cc.continue_at.clear();
             }
@@ -66,8 +66,8 @@ void EngineFunctions::Engine::stop_menu(Link link, Chain& c, ScratchSprite* s, i
 }
 
 void EngineFunctions::Engine::if_statement(Link link, ScratchSprite* s) {
-    if (!link.inputs.contains("CONDITION") || !link.inputs.contains("SUBSTACK")) return;
-    if (link.inputs["SUBSTACK"][1].is_null()) return;
+    if (!link.inputs_contains("CONDITION") || !link.inputs_contains("SUBSTACK")) return;
+    // if (link.inputs["SUBSTACK"][1].is_null()) return;
     std::string cid = link.inputs["CONDITION"][1];
     if (compute_condition(cid, s)) {
         process_chain(get_chain_by_link_id(link.inputs["SUBSTACK"][1], s), s, true);
@@ -75,27 +75,27 @@ void EngineFunctions::Engine::if_statement(Link link, ScratchSprite* s) {
 }
 
 void EngineFunctions::Engine::if_else_statement(Link link, ScratchSprite* s) {
-    if (!link.inputs.contains("CONDITION")) {
-        if (link.inputs.contains("SUBSTACK2"))
+    if (!link.inputs_contains("CONDITION")) {
+        if (link.inputs_contains("SUBSTACK2"))
             process_chain(get_chain_by_link_id(link.inputs["SUBSTACK2"][1], s), s, true);
         return;
     }
-    if (link.inputs["SUBSTACK"][1].is_null()) return;
-    if (link.inputs["SUBSTACK2"][1].is_null()) return;
+    // if (link.inputs["SUBSTACK"][1].is_null()) return;
+    // if (link.inputs["SUBSTACK2"][1].is_null()) return;
     std::string cid = link.inputs["CONDITION"][1];
     if (compute_condition(cid, s)) {
-        if (!link.inputs.contains("SUBSTACK")) return;
+        if (!link.inputs_contains("SUBSTACK")) return;
         process_chain(get_chain_by_link_id(link.inputs["SUBSTACK"][1], s), s, true);
     } else {
-        if (!link.inputs.contains("SUBSTACK2")) return;
+        if (!link.inputs_contains("SUBSTACK2")) return;
         Chain& c = get_chain_by_link_id(link.inputs["SUBSTACK2"][1], s);
         process_chain(c, s, true);
     }
 }
 
 void EngineFunctions::Engine::repeat_loop(Link link, Chain& c, ScratchSprite* s, int& i) {
-    if (!link.inputs.contains("SUBSTACK")) return;
-    if (link.inputs["SUBSTACK"][1].is_null()) return;
+    if (!link.inputs_contains("SUBSTACK")) return;
+    // if (link.inputs["SUBSTACK"][1].is_null()) return;
     double times = compute_input(link.inputs["TIMES"], s);
     if (times <= 0) return;
     if (!c.continue_at.empty() && !c.continue_at.back().end_time.has_value()) {

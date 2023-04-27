@@ -6,7 +6,7 @@ void EngineFunctions::Engine::say(Link link, ScratchSprite *s) {
     std::cout << say_logs.back() << std::endl;
 }
 
-void EngineFunctions::Engine::say_for_sec(Link link, ScratchSprite *s, Chain& c, int& i) {
+void EngineFunctions::Engine::say_for_sec(Link link, ScratchSprite *s, Chain &c, int &i) {
     if (!c.continue_at.empty() && c.continue_at.back().end_time.has_value()) {
         if (c.continue_at.back().end_time <= std::chrono::high_resolution_clock::now()) {
             c.continue_at.pop_back();
@@ -29,16 +29,14 @@ void EngineFunctions::Engine::say_for_sec(Link link, ScratchSprite *s, Chain& c,
 }
 
 void EngineFunctions::Engine::switch_costume_to(Link link, ScratchSprite *s) {
-    ScratchBlock costume_shadow = get_sb_by_id(link.inputs["COSTUME"][1]);
+    Link &costume_shadow = get_link_by_id(link.inputs["COSTUME"][1]);
     std::string new_costume_name = costume_shadow.fields["COSTUME"][0];
 
     for (int i = 0; i < s->costumes.size(); i++)
-        if (s->costumes.at(i).name == new_costume_name)
-            s->currentCostume = i;
+        if (s->costumes.at(i).name == new_costume_name) s->currentCostume = i;
 }
 
 void EngineFunctions::Engine::next_costume(ScratchSprite *s) {
     s->currentCostume++;
-    if (s->currentCostume == s->costumes.size())
-        s->currentCostume = 0;
+    if (s->currentCostume == s->costumes.size()) s->currentCostume = 0;
 }
