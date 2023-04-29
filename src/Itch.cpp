@@ -1,8 +1,7 @@
 #include "Itch.hpp"
 
-Itch::Itch() : player() {
+void Itch::init() {
     if (!headless) player = new Player(running);
-    // cleanup old files
     std::cout << "cleaning up old files" << std::endl;
     if (std::filesystem::exists(temp_dir)) std::filesystem::remove_all(temp_dir);
     std::filesystem::create_directory(temp_dir);
@@ -96,6 +95,8 @@ void Itch::draw() {
     if (headless) {
         EMPTY_PLAYER_INFO(pi)
         engine.tick(&pi);
+
+        if (engine.finished) running = false;
     } else {
         PlayerInfo pi = player->get_player_info();
         engine.tick(&pi);

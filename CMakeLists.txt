@@ -3,8 +3,9 @@ project(itch)
 include(FetchContent)
 
 set(BUILD_NETWORK_SUPPORT true CACHE BOOL "build networking library to download scratch projects")
-
 add_compile_definitions(BUILD_NETWORK_SUPPORT=${BUILD_NETWORK_SUPPORT})
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 
 find_program(7zip 7z REQUIRED) # install with `sudo scoop install 7zip` on windows
 find_program(imagemagick magick REQUIRED) # install with `sudo scoop install imagemagick` on windows
@@ -30,6 +31,14 @@ FetchContent_MakeAvailable(json)
 set_target_properties(nlohmann_json PROPERTIES INTERFACE_COMPILE_DEFINITIONS "JSON_DIAGNOSTICS=1;JSON_USE_IMPLICIT_CONVERSIONS=1")
 message("finished fetching json")
 
+message("fetching cli11...")
+FetchContent_Declare(
+    cli11
+    GIT_REPOSITORY https://github.com/CLIUtils/CLI11
+    GIT_TAG v2.2.0)
+FetchContent_MakeAvailable(cli11)
+message("finished fetching cli11")
+
 if (BUILD_NETWORK_SUPPORT)
     message("fetching cpr...")
     FetchContent_Declare(
@@ -43,9 +52,9 @@ endif()
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
-target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json::nlohmann_json sfml-system sfml-audio sfml-graphics sfml-window)
+target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json sfml-system sfml-audio sfml-graphics sfml-window CLI11::CLI11)
 if (BUILD_NETWORK_SUPPORT)
-    target_link_libraries(${PROJECT_NAME} PUBLIC cpr::cpr)
+    target_link_libraries(${PROJECT_NAME} cpr::cpr)
 endif()
 
 set (BUILD_TESTING TRUE)
