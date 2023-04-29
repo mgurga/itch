@@ -31,8 +31,9 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
     if (op.opcode == OPCODE::OPERATOR_RANDOM) {
         std::random_device dev;
         std::mt19937 rng(dev());
-        std::uniform_int_distribution<int> r(compute_input(op.inputs["FROM"], s).get_number(),
-                                             compute_input(op.inputs["TO"], s).get_number());
+        int from = static_cast<int>(compute_input(op.inputs["FROM"], s).get_number());
+        int to = static_cast<int>(compute_input(op.inputs["TO"], s).get_number());
+        std::uniform_int_distribution<int> r(from, to);
         return static_cast<double>(r(rng));
     }
 
@@ -49,7 +50,7 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
     case OPCODE::LIST_LENGTH: return get_list_by_name(op.fields["LIST"][0]).length();
     case OPCODE::LIST_ITEM:
         return get_list_by_name(op.fields["LIST"][0])
-            .at(compute_input(op.inputs["INDEX"], s).get_number());
+            .at(static_cast<int>(compute_input(op.inputs["INDEX"], s).get_number()));
     case OPCODE::MOUSE_X: return pi->mouse_x;
     case OPCODE::MOUSE_Y: return pi->mouse_y;
     case OPCODE::X_POS: return s->x;
