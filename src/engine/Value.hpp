@@ -8,28 +8,25 @@
 class Value {
 public:
     Value(std::variant<std::string, double> var) {
-        if (std::holds_alternative<std::string>(var))
-            value = std::get<std::string>(var);
-        if (std::holds_alternative<double>(var))
-            value = std::get<double>(var);
+        if (std::holds_alternative<std::string>(var)) value = std::get<std::string>(var);
+        if (std::holds_alternative<double>(var)) value = std::get<double>(var);
     };
-    Value(std::variant<std::string, double, bool> var): value(var) {};
+    Value(std::variant<std::string, double, bool> var) : value(var){};
     Value(std::string s) {
-        if (std::all_of(std::begin(s), std::end(s), [](char c){ return (std::isxdigit(c) || c == '.'); })) {
+        if (std::all_of(std::begin(s), std::end(s),
+                        [](char c) { return (std::isxdigit(c) || c == '.'); })) {
             try {
                 value = std::stod(s);
-            } catch (const std::invalid_argument&) {
-                value = s;
-            }
+            } catch (const std::invalid_argument&) { value = s; }
             return;
         }
         value = s;
     };
-    Value(double d): value(d) {};
-    Value(int i): value(static_cast<double>(i)) {};
-    Value(unsigned int i): value(static_cast<double>(i)) {};
-    Value(bool b): value(b) {};
-    Value() {};
+    Value(double d) : value(d){};
+    Value(int i) : value(static_cast<double>(i)){};
+    Value(unsigned int i) : value(static_cast<double>(i)){};
+    Value(bool b) : value(b){};
+    Value(){};
 
     operator std::string() { return get_string(); }
     operator double() { return get_number(); }
@@ -54,8 +51,8 @@ public:
     std::string get_string() {
         if (std::holds_alternative<double>(value)) {
             std::string s = std::to_string(std::get<double>(value));
-            s.erase (s.find_last_not_of('0') + 1, std::string::npos);
-            s.erase (s.find_last_not_of('.') + 1, std::string::npos);
+            s.erase(s.find_last_not_of('0') + 1, std::string::npos);
+            s.erase(s.find_last_not_of('.') + 1, std::string::npos);
             return s;
         } else if (std::holds_alternative<std::string>(value)) {
             return std::get<std::string>(value);
@@ -72,7 +69,7 @@ public:
         } else if (contains_bool()) {
             // hack to make sure true values are greater than false values
             if (get_bool()) {
-                return 1.0; // should be 0.000001 or something but 1 feels more proper
+                return 1.0;  // should be 0.000001 or something but 1 feels more proper
             } else {
                 return 0.0;
             }
@@ -89,27 +86,9 @@ public:
         }
     }
 
-    bool contains_string() const {
-        return std::holds_alternative<std::string>(value);
-    }
-
-    bool contains_number() const {
-        return std::holds_alternative<double>(value);
-    }
-
-    bool contains_bool() const {
-        return std::holds_alternative<bool>(value);
-    }
-
-    static Value detect_type(std::string s) {
-        Value out;
-        try {
-            out = std::stod(s);
-        } catch (const std::invalid_argument&) {
-            out = s;
-        }
-        return out;
-    }
+    bool contains_string() const { return std::holds_alternative<std::string>(value); }
+    bool contains_number() const { return std::holds_alternative<double>(value); }
+    bool contains_bool() const { return std::holds_alternative<bool>(value); }
 
     Value operator=(Value other) {
         value = other.value;
@@ -126,9 +105,7 @@ public:
     }
 
     Value operator+=(Value& other) {
-        if (other.contains_string() || other.contains_bool()) {
-            return *this;
-        }
+        if (other.contains_string() || other.contains_bool()) { return *this; }
         if (contains_string() || contains_bool()) {
             value = other.get_number();
             return *this;

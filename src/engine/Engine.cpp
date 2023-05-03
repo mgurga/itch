@@ -134,7 +134,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     case OPCODE::DELETE_ALL: get_list_by_name(link.fields["LIST"][0]).delete_all(); break;
     case OPCODE::ADD_TO_LIST:
         get_list_by_name(link.fields["LIST"][0])
-            .add_to_list(Value::detect_type(compute_input(link.inputs["ITEM"], s)));
+            .add_to_list(Value(compute_input(link.inputs["ITEM"], s)));
         break;
     case OPCODE::REPLACE_ITEM:
         get_list_by_name(link.fields["LIST"][0])

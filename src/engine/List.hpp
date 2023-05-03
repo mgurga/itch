@@ -9,7 +9,7 @@
 class List {
 public:
     List(const ScratchList& sl) : name(sl.name), id(sl.id) {
-        for (std::string s : sl.values) { values.push_back(Value::detect_type(s)); }
+        for (std::string s : sl.values) { values.push_back(Value(s)); }
     };
 
     std::string name;
@@ -24,10 +24,7 @@ public:
     }
 
     void delete_all() { values.clear(); }
-    void add_to_list(Value v) {
-        values.push_back(v);
-        std::cout << length() << std::endl;
-    }
+    void add_to_list(Value v) { values.push_back(v); }
     int length() { return static_cast<int>(values.size()); }
 
     void set(int pos, Value newVal) {
