@@ -7,7 +7,6 @@ void EngineFunctions::Engine::move_steps(double steps, ScratchSprite* s) {
 }
 
 void EngineFunctions::Engine::go_to_menu(Link link, ScratchSprite* s) {
-    std::cout << link.inputs["TO"].sab.sab.str_value << std::endl;
     Link& sb = get_link_by_id(link.inputs["TO"].sab.sab.str_value);
     std::string target = sb.fields["TO"].at(0);
 
