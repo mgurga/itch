@@ -24,7 +24,7 @@ public:
 
     unsigned int TOTAL_CHAINS;
     bool finished = false;
-    std::chrono::time_point<std::chrono::steady_clock> timer =
+    std::chrono::high_resolution_clock::time_point timer =
         std::chrono::high_resolution_clock::now();
 
     void tick(PlayerInfo* player_info);
