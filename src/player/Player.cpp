@@ -1,5 +1,7 @@
 #include "Player.hpp"
 
+#include <math.h>
+
 Player::Player(bool& r) : running(r) {
     window = new sf::RenderWindow(sf::VideoMode(480, 360), "Itch");
     window->setKeyRepeatEnabled(false);
@@ -91,7 +93,7 @@ void Player::paint(Project& project) {
     window->draw(stagesprite);
 
     for (ScratchSprite sprite : project.sprites) {
-        if (sprite.visible) {
+        if (sprite.visible && sprite.effects["GHOST"] != 0.0) {
             sf::Sprite out;
             sf::Texture& st = sprite.costumes[sprite.currentCostume].texture;
             // sf::Vector2u ss = st.getSize(); // sprite size
@@ -102,6 +104,10 @@ void Player::paint(Project& project) {
             out.setOrigin(sprite.costumes[sprite.currentCostume].rotationCenterX,
                           sprite.costumes[sprite.currentCostume].rotationCenterY);
             out.setRotation(sprite.direction - 90.0);
+            if (sprite.effects["GHOST"] != 0) {
+                out.setColor(
+                    sf::Color(255, 255, 255, floor(abs(100 - sprite.effects["GHOST"])) * 2.55));
+            }
             window->draw(out);
 
             // draw dot at center the center of sprite
