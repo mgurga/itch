@@ -9,12 +9,12 @@ EngineFunctions::Engine::Engine(Project& project) :
     for (ScratchSprite sprite : project.sprites) {
         for (ScratchVariable sv : sprite.variables) {
             Variable newvar = Variable(sv);
-            newvar.make_local(sprite.name);
+            newvar.make_local(sprite.name());
             variables.push_back(newvar);
         }
         for (ScratchList sl : sprite.lists) {
             List newlist = List(sl);
-            newlist.make_local(sprite.name);
+            newlist.make_local(sprite.name());
             lists.push_back(newlist);
         }
         for (Link l : sprite.links) links.push_back(l);
@@ -60,7 +60,7 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     int processed_chains = 0;
     // hack to treat ScratchStage as a ScratchSprite
     for (Chain& chain : prj->stage.chains) {
-        if (process_chain(chain, dynamic_cast<ScratchSprite*>(&prj->stage))) { processed_chains++; }
+        if (process_chain(chain, dynamic_cast<ScratchTarget*>(&prj->stage))) { processed_chains++; }
     }
 
     for (ScratchSprite& sprite : prj->sprites) {
@@ -77,7 +77,7 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     }
 }
 
-Value EngineFunctions::Engine::compute_input(LinkInput input, ScratchSprite* sprite) {
+Value EngineFunctions::Engine::compute_input(LinkInput input, ScratchTarget* sprite) {
     if (input.reporter_id.has_value()) return compute_reporter(input.reporter_id.value(), sprite);
 
     ScratchArrayBlock sab = input.sab.sab;
@@ -89,7 +89,7 @@ Value EngineFunctions::Engine::compute_input(LinkInput input, ScratchSprite* spr
     return Value("");
 }
 
-bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s, bool force_activate) {
+bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchTarget* s, bool force_activate) {
     if ((chain.activatable || !chain.continue_at.empty()) || force_activate) {
         // used to interrupt continue_at if WHEN_KEY_CLICKED, BROADCAST_RECIEVED, or other special
         // events activate
@@ -113,7 +113,7 @@ bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchSprite* s, bool
     return false;
 }
 
-void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* s, int& i) {
+void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* s, int& i) {
     // std::cout << "processing link opcode: " << link.string_opcode << std::endl;
     if (s == nullptr) {
         // throw std::invalid_argument("scratch sprite pointer is null when processing link");
@@ -171,22 +171,22 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
 
     // Motion
     case OPCODE::GO_TO: go_to_menu(link, s); break;
-    case OPCODE::SET_X_TO: s->x = compute_input(link.inputs["X"], s); break;
-    case OPCODE::SET_Y_TO: s->y = compute_input(link.inputs["Y"], s); break;
-    case OPCODE::CHANGE_Y_BY: s->y += compute_input(link.inputs["DY"], s).get_number(); break;
-    case OPCODE::CHANGE_X_BY: s->x += compute_input(link.inputs["DX"], s).get_number(); break;
+    case OPCODE::SET_X_TO: s->x() = compute_input(link.inputs["X"], s); break;
+    case OPCODE::SET_Y_TO: s->y() = compute_input(link.inputs["Y"], s); break;
+    case OPCODE::CHANGE_Y_BY: s->y() += compute_input(link.inputs["DY"], s).get_number(); break;
+    case OPCODE::CHANGE_X_BY: s->x() += compute_input(link.inputs["DX"], s).get_number(); break;
     case OPCODE::POINT_IN_DIRECTION:
-        s->direction = compute_input(link.inputs["DIRECTION"], s);
+        s->direction() = compute_input(link.inputs["DIRECTION"], s);
         break;
     case OPCODE::GO_TO_XY:
-        s->x = compute_input(link.inputs["X"], s);
-        s->y = compute_input(link.inputs["Y"], s);
+        s->x() = compute_input(link.inputs["X"], s);
+        s->y() = compute_input(link.inputs["Y"], s);
         break;
     case OPCODE::TURN_LEFT:
-        s->direction -= compute_input(link.inputs["DEGREES"], s).get_number();
+        s->direction() -= compute_input(link.inputs["DEGREES"], s).get_number();
         break;
     case OPCODE::TURN_RIGHT:
-        s->direction += compute_input(link.inputs["DEGREES"], s).get_number();
+        s->direction() += compute_input(link.inputs["DEGREES"], s).get_number();
         break;
     case OPCODE::MOVE_STEPS: move_steps(compute_input(link.inputs["STEPS"], s), s); break;
 
@@ -201,20 +201,20 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchSprite* 
     // Looks
     case OPCODE::SAY_FOR_SECS: say_for_sec(link, s, c, i); break;
     case OPCODE::SAY: say(link, s); break;
-    case OPCODE::SHOW: s->visible = true; break;
-    case OPCODE::HIDE: s->visible = false; break;
+    case OPCODE::SHOW: s->visible() = true; break;
+    case OPCODE::HIDE: s->visible() = false; break;
     case OPCODE::SWITCH_TO_COSTUME: switch_costume_to(link, s); break;
     case OPCODE::NEXT_COSTUME: next_costume(s); break;
     case OPCODE::SET_EFFECT_TO:
-        s->effects[link.fields["EFFECT"][0]] = compute_input(link.inputs["VALUE"], s);
+        s->effects()[link.fields["EFFECT"][0]] = compute_input(link.inputs["VALUE"], s);
         break;
     case OPCODE::CHANGE_EFFECT_BY:
-        s->effects[link.fields["EFFECT"][0]] +=
+        s->effects()[link.fields["EFFECT"][0]] +=
             compute_input(link.inputs["CHANGE"], s).get_number();
         break;
     case OPCODE::CLEAR_GRAPHIC_EFFECTS:
-        s->effects = {{"COLOR", 0},  {"FISHEYE", 0},    {"WHIRL", 0}, {"PIXELATE", 0},
-                      {"MOSAIC", 0}, {"BRIGHTNESS", 0}, {"GHOST", 0}};
+        s->effects() = {{"COLOR", 0},  {"FISHEYE", 0},    {"WHIRL", 0}, {"PIXELATE", 0},
+                        {"MOSAIC", 0}, {"BRIGHTNESS", 0}, {"GHOST", 0}};
         break;
 
     // Sensing

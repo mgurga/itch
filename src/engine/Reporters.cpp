@@ -1,6 +1,6 @@
 #include "Engine.hpp"
 
-Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite* s) {
+Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget* s) {
     Link op = get_reporter_by_id(opid);
 
     if (op.opcode == OPTYPE::CONDITIONAL) return compute_condition(opid, s);
@@ -40,9 +40,9 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
     switch (op.opcode.opcode) {
     case OPCODE::COSTUME_NUM_NAME:
         if (op.fields["NUMBER_NAME"][0] == "number") {
-            return s->currentCostume;
+            return s->currentCostume();
         } else {
-            return s->costumes[s->currentCostume].name;
+            return s->costumes[s->currentCostume()].name;
         }
     case OPCODE::OPERATOR_JOIN:
         return compute_input(op.inputs["STRING1"], s).get_string() +
@@ -53,10 +53,10 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchSprite*
             .at(static_cast<int>(compute_input(op.inputs["INDEX"], s).get_number()));
     case OPCODE::MOUSE_X: return pi->mouse_x;
     case OPCODE::MOUSE_Y: return pi->mouse_y;
-    case OPCODE::X_POS: return s->x;
-    case OPCODE::Y_POS: return s->y;
-    case OPCODE::DIRECTION: return s->direction;
-    case OPCODE::SIZE_VAL: return s->size;
+    case OPCODE::X_POS: return s->x();
+    case OPCODE::Y_POS: return s->y();
+    case OPCODE::DIRECTION: return s->direction();
+    case OPCODE::SIZE_VAL: return s->size();
     case OPCODE::LOUDNESS: return -1;
     case OPCODE::TIMER:
         return static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(

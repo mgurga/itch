@@ -18,7 +18,7 @@ void EngineFunctions::Engine::wait(double duration, Chain& c, int& i) {
     }
 }
 
-void EngineFunctions::Engine::forever_loop(Link link, Chain& c, ScratchSprite* s, int& i) {
+void EngineFunctions::Engine::forever_loop(Link link, Chain& c, ScratchTarget* s, int& i) {
     if (!link.inputs_contains("SUBSTACK")) return;
     // if (link.inputs["SUBSTACK"][1].is_null()) return;
     if (!c.continue_at.empty() && !c.continue_at.back().end_time.has_value()) {
@@ -32,7 +32,7 @@ void EngineFunctions::Engine::forever_loop(Link link, Chain& c, ScratchSprite* s
     }
 }
 
-void EngineFunctions::Engine::stop_menu(Link link, Chain& c, ScratchSprite* s, int& i) {
+void EngineFunctions::Engine::stop_menu(Link link, Chain& c, ScratchTarget* s, int& i) {
     std::string stopop = link.fields["STOP_OPTION"][0];
 
     if (stopop == "all") {
@@ -65,7 +65,7 @@ void EngineFunctions::Engine::stop_menu(Link link, Chain& c, ScratchSprite* s, i
     }
 }
 
-void EngineFunctions::Engine::if_statement(Link link, ScratchSprite* s) {
+void EngineFunctions::Engine::if_statement(Link link, ScratchTarget* s) {
     if (!link.inputs_contains("CONDITION") || !link.inputs_contains("SUBSTACK")) return;
     // if (link.inputs["SUBSTACK"][1].is_null()) return;
     std::string cid = link.inputs["CONDITION"][1];
@@ -74,7 +74,7 @@ void EngineFunctions::Engine::if_statement(Link link, ScratchSprite* s) {
     }
 }
 
-void EngineFunctions::Engine::if_else_statement(Link link, ScratchSprite* s) {
+void EngineFunctions::Engine::if_else_statement(Link link, ScratchTarget* s) {
     if (!link.inputs_contains("CONDITION")) {
         if (link.inputs_contains("SUBSTACK2"))
             process_chain(get_chain_by_link_id(link.inputs["SUBSTACK2"][1], s), s, true);
@@ -93,7 +93,7 @@ void EngineFunctions::Engine::if_else_statement(Link link, ScratchSprite* s) {
     }
 }
 
-void EngineFunctions::Engine::repeat_loop(Link link, Chain& c, ScratchSprite* s, int& i) {
+void EngineFunctions::Engine::repeat_loop(Link link, Chain& c, ScratchTarget* s, int& i) {
     if (!link.inputs_contains("SUBSTACK")) return;
     // if (link.inputs["SUBSTACK"][1].is_null()) return;
     double times = compute_input(link.inputs["TIMES"], s);

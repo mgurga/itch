@@ -1,19 +1,17 @@
 #include "ScratchStage.hpp"
 
 ScratchStage::ScratchStage() {}
-ScratchStage::ScratchStage(json ss, std::filesystem::path temp_dir, bool heavyload):
-    ScratchTarget(ss, temp_dir, heavyload),
-    tempo(ss["tempo"])
-{
+ScratchStage::ScratchStage(json ss, std::filesystem::path temp_dir, bool heavyload) :
+    ScratchTarget(ss, temp_dir, heavyload), m_tempo(ss["tempo"]) {
     if (ss["videoState"] == "on") {
-        videoState = ON;
+        m_videoState = ON;
     } else if (ss["videoState"] == "off") {
-        videoState = OFF;
+        m_videoState = OFF;
     } else if (ss["videoState"] == "on-flipped") {
-        videoState = ON_FLIPPED;
+        m_videoState = ON_FLIPPED;
     } else {
-        videoState = ON;
+        m_videoState = ON;
     }
 
-    textToSpeechLanguage = ss["textToSpeechLanguage"].is_null() ? "" : ss["textToSpeechLanguage"];
+    m_textToSpeechLanguage = ss["textToSpeechLanguage"].is_null() ? "" : ss["textToSpeechLanguage"];
 }

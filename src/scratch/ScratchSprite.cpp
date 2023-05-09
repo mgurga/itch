@@ -1,32 +1,20 @@
 #include "ScratchSprite.hpp"
 
-ScratchSprite::ScratchSprite(json ss, std::filesystem::path temp_dir, bool heavyload):
+ScratchSprite::ScratchSprite(json ss, std::filesystem::path temp_dir, bool heavyload) :
     ScratchTarget(ss, temp_dir, heavyload),
-    x(ss["x"]),
-    y(ss["y"]),
-    size(ss["size"]),
-    direction(ss["direction"]),
-    draggable(ss["draggable"]),
-    visible(ss["visible"])
-{
+    m_x(ss["x"]),
+    m_y(ss["y"]),
+    m_size(ss["size"]),
+    m_direction(ss["direction"]),
+    m_draggable(ss["draggable"]),
+    m_visible(ss["visible"]) {
     if (ss["rotationStyle"] == "all around") {
-        rotationStyle = RotationStyle::ALL_AROUND;
+        m_rotationStyle = RotationStyle::ALL_AROUND;
     } else if (ss["rotationStyle"] == "left-right") {
-        rotationStyle = RotationStyle::LEFT_RIGHT;
+        m_rotationStyle = RotationStyle::LEFT_RIGHT;
     } else if (ss["rotationStyle"] == "don't rotate") {
-        rotationStyle = RotationStyle::DONT_ROTATE;
+        m_rotationStyle = RotationStyle::DONT_ROTATE;
     } else {
-        rotationStyle = ALL_AROUND;
+        m_rotationStyle = RotationStyle::ALL_AROUND;
     }
 }
-
-ScratchSprite::ScratchSprite(ScratchStage& ss):
-    ScratchTarget(),
-    x(0),
-    y(0),
-    size(100),
-    direction(90),
-    draggable(false),
-    rotationStyle(ALL_AROUND),
-    visible(true)
-{}

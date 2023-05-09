@@ -2,11 +2,11 @@
 
 ScratchTarget::ScratchTarget() {}
 ScratchTarget::ScratchTarget(json st, std::filesystem::path temp_dir, bool heavyload) :
-    isStage(st["isStage"]),
-    name(st["name"]),
-    volume(st["volume"]),
-    layerOrder(st["layerOrder"]),
-    currentCostume(st["currentCostume"]) {
+    m_isStage(st["isStage"]),
+    m_name(st["name"]),
+    m_volume(st["volume"]),
+    m_layerOrder(st["layerOrder"]),
+    m_currentCostume(st["currentCostume"]) {
     std::cout << "loading variables..." << std::endl;
     for (auto sv : st["variables"].items()) {
         variables.push_back(ScratchVariable(sv.value(), sv.key()));
@@ -36,5 +36,5 @@ ScratchTarget::ScratchTarget(json st, std::filesystem::path temp_dir, bool heavy
     std::cout << "creating chains..." << std::endl;
     chains = Chain::create_chains(blocks);
 
-    std::cout << "finished loading target: " << name << std::endl;
+    std::cout << "finished loading target: " << m_name << std::endl;
 }

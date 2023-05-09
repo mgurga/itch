@@ -1,7 +1,8 @@
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "../src/Project.hpp"
+#include <gtest/gtest.h>
+
 #include "../src/FileHandler.hpp"
+#include "../src/Project.hpp"
 #include "../src/blocks/Opcodes.hpp"
 
 using ::testing::AnyOf;
@@ -14,9 +15,8 @@ protected:
     static void SetUpTestSuite() {
         temp_dir = new std::string("basicmovement/");
         FileHandler sb3 = FileHandler("basicmovement.sb3", *temp_dir);
-        sb3.init([&] () {
-            std::cout << "finished unzipping " << sb3.file_name_no_ext << std::endl;
-        });
+        sb3.init(
+            [&]() { std::cout << "finished unzipping " << sb3.file_name_no_ext << std::endl; });
 
         project = new Project(*temp_dir);
         project->load_from_project_json(false);
@@ -33,16 +33,14 @@ protected:
 Project* BasicMovementTest::project = nullptr;
 std::string* BasicMovementTest::temp_dir = nullptr;
 
-TEST_F(BasicMovementTest, MetaTest) {
-    ASSERT_EQ(project->meta.semver, "3.0.0");
-}
+TEST_F(BasicMovementTest, MetaTest) { ASSERT_EQ(project->meta.semver, "3.0.0"); }
 
 TEST_F(BasicMovementTest, TargetTest) {
-    ASSERT_EQ(project->stage.isStage, true);
-    ASSERT_EQ(project->stage.name, "Stage");
+    ASSERT_EQ(project->stage.isStage(), true);
+    ASSERT_EQ(project->stage.name(), "Stage");
 
-    ASSERT_EQ(project->sprites[0].isStage, false);
-    ASSERT_EQ(project->sprites[0].name, "Sprite1");
+    ASSERT_EQ(project->sprites[0].isStage(), false);
+    ASSERT_EQ(project->sprites[0].name(), "Sprite1");
 }
 
 TEST_F(BasicMovementTest, SoundTest) {
@@ -63,8 +61,10 @@ TEST_F(BasicMovementTest, ChainTest) {
     ASSERT_EQ(project->sprites[0].chains[3].activatable, true);
 
     ASSERT_EQ(project->sprites[0].chains[0].links[0].opcode.opcode, WHEN_KEY_PRESSED);
-    ASSERT_THAT(project->sprites[0].chains[0].links[1].opcode.opcode, AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
+    ASSERT_THAT(project->sprites[0].chains[0].links[1].opcode.opcode,
+                AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
 
     ASSERT_EQ(project->sprites[0].chains[1].links[0].opcode.opcode, WHEN_KEY_PRESSED);
-    ASSERT_THAT(project->sprites[0].chains[1].links[1].opcode.opcode, AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
+    ASSERT_THAT(project->sprites[0].chains[1].links[1].opcode.opcode,
+                AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
 }

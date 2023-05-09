@@ -88,26 +88,24 @@ void Player::paint(Project& project) {
     window->clear(sf::Color(255, 255, 255));
 
     sf::Sprite stagesprite;
-    stagesprite.setTexture(project.stage.costumes[project.stage.currentCostume].texture);
+    stagesprite.setTexture(project.stage.costumes[project.stage.currentCostume()].texture);
     stagesprite.setPosition(0, 0);
     window->draw(stagesprite);
 
     for (ScratchSprite sprite : project.sprites) {
-        if (sprite.visible && sprite.effects["GHOST"] != 0.0) {
+        if (sprite.visible() && sprite.effects()["GHOST"] != 100.0) {
             sf::Sprite out;
-            sf::Texture& st = sprite.costumes[sprite.currentCostume].texture;
+            sf::Texture& st = sprite.costumes[sprite.currentCostume()].texture;
             // sf::Vector2u ss = st.getSize(); // sprite size
 
             // draw sprite
             out.setTexture(st, true);
-            out.setPosition(float(sprite.x) + (ww / 2.0), float(-sprite.y) + (wh / 2.0));
-            out.setOrigin(sprite.costumes[sprite.currentCostume].rotationCenterX,
-                          sprite.costumes[sprite.currentCostume].rotationCenterY);
-            out.setRotation(sprite.direction - 90.0);
-            if (sprite.effects["GHOST"] != 0) {
-                out.setColor(
-                    sf::Color(255, 255, 255, floor(abs(100 - sprite.effects["GHOST"])) * 2.55));
-            }
+            out.setPosition(float(sprite.x()) + (ww / 2.0), float(-sprite.y()) + (wh / 2.0));
+            out.setOrigin(sprite.costumes[sprite.currentCostume()].rotationCenterX,
+                          sprite.costumes[sprite.currentCostume()].rotationCenterY);
+            out.setRotation(sprite.direction() - 90.0f);
+            out.setColor(
+                sf::Color(255, 255, 255, floor(abs(100 - sprite.effects()["GHOST"])) * 2.55));
             window->draw(out);
 
             // draw dot at center the center of sprite

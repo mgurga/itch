@@ -1,6 +1,6 @@
 #include "Engine.hpp"
 
-Value EngineFunctions::Engine::compute_condition(std::string opid, ScratchSprite* s) {
+Value EngineFunctions::Engine::compute_condition(std::string opid, ScratchTarget* s) {
     Link& op = get_link_by_id(opid);
 
     if (op.opcode == OPCODE::KEY_PRESSED) {
