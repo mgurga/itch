@@ -27,6 +27,7 @@ public:
     void init();
     void draw();
 
+    void load_from_folder(std::filesystem::path sb3_folder);
     void load_from_file(std::filesystem::path sb3_file);
     void load_from_url(std::string project_url);
 

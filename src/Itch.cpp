@@ -2,13 +2,34 @@
 
 void Itch::init() {
     if (!headless) player = new Player(running);
-    std::cout << "cleaning up old files" << std::endl;
-    if (std::filesystem::exists(temp_dir)) std::filesystem::remove_all(temp_dir);
-    std::filesystem::create_directory(temp_dir);
+    // std::cout << "cleaning up old files" << std::endl;
+    // if (std::filesystem::exists(temp_dir)) std::filesystem::remove_all(temp_dir);
+    if (!std::filesystem::exists(temp_dir)) std::filesystem::create_directory(temp_dir);
     std::cout << "initialized itch" << std::endl;
 }
 
+void Itch::load_from_folder(std::filesystem::path sb3_folder) {
+    if (!std::filesystem::is_directory(sb3_folder)) {
+        std::cout << sb3_folder << " is not a directory" << std::endl;
+        exit(1);
+    }
+
+    if (!std::filesystem::exists(sb3_folder / "project.json")) {
+        std::cout << sb3_folder << " does not contain a project.json" << std::endl;
+        exit(1);
+    }
+
+    project = Project(sb3_folder);
+    project.load_from_project_json();
+
+    engine = EngineFunctions::Engine(project);
+}
+
 void Itch::load_from_file(std::filesystem::path sb3_file) {
+    if (std::filesystem::exists(temp_dir)) {
+        std::filesystem::remove_all(temp_dir);
+        std::filesystem::create_directory(temp_dir);
+    }
     std::cout << "got sb3 file: " << sb3_file << std::endl;
 
     FileHandler sb3 = FileHandler(sb3_file, temp_dir);
@@ -24,6 +45,11 @@ void Itch::load_from_file(std::filesystem::path sb3_file) {
 
 void Itch::load_from_url(std::string project_url) {
 #if BUILD_NETWORK_SUPPORT
+    if (std::filesystem::exists(temp_dir)) {
+        std::filesystem::remove_all(temp_dir);
+        std::filesystem::create_directory(temp_dir);
+    }
+
     std::stringstream urlss(project_url);
     std::string seg;
     std::vector<std::string> url_parts;
