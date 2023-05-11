@@ -114,6 +114,8 @@ public:
         return *this;
     }
 
+    bool operator==(const Value& other) const { return (value == other.value); }
+
     std::string debug_string() {
         std::string out;
         if (contains_string()) {
