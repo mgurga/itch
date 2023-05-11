@@ -37,8 +37,10 @@ public:
         values.insert(values.begin() + (pos - 1), v);
     }
 
-    Value at(int pos) {
+    Value& at(int pos) {
         if ((pos - 1) < 0) return Value("");
         return values.at(pos - 1);
     }
+
+    bool contains(Value v) { return std::find(values.begin(), values.end(), v) != values.end(); }
 };

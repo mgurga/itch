@@ -36,6 +36,8 @@ Value EngineFunctions::Engine::compute_condition(std::string opid, ScratchTarget
     case OPCODE::OPERATOR_EQUALS:
         return compute_input(op.inputs["OPERAND1"], s).get_number() ==
                compute_input(op.inputs["OPERAND2"], s).get_number();
+    case OPCODE::LIST_CONTAINS:
+        return get_list_by_name(op.fields["LIST"][0]).contains(compute_input(op.inputs["ITEM"], s));
     default: break;
     }
 
