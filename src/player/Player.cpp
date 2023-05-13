@@ -106,6 +106,7 @@ void Player::paint(Project& project) {
             out.setRotation(sprite.direction() - 90.0f);
             out.setColor(
                 sf::Color(255, 255, 255, floor(abs(100 - sprite.effects()["GHOST"])) * 2.55));
+            out.setScale(sprite.size() / 100, sprite.size() / 100);
             window->draw(out);
 
             // draw dot at center the center of sprite
