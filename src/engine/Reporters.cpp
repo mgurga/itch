@@ -63,6 +63,12 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget*
                                        std::chrono::high_resolution_clock::now() - timer)
                                        .count()) /
                1000;
+    case OPCODE::BACKDROP_NUM_NAME:
+        if (op.fields["NUMBER_NAME"][0] == "number") {
+            return prj->stage.currentCostume();
+        } else {
+            return prj->stage.costumes[prj->stage.currentCostume()].name;
+        }
     default:
         std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
         return Value("");
