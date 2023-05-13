@@ -4,7 +4,7 @@ ScratchCostume::ScratchCostume(json sc) :
     ScratchAsset(sc),
     rotationCenterX(sc["rotationCenterX"]),
     rotationCenterY(sc["rotationCenterY"]) {
-    bitmapResolution = sc.contains("bitmapResolution") ? int(sc["bitmapResolution"]) : -1;
+    bitmapResolution = sc.contains("bitmapResolution") ? int(sc["bitmapResolution"]) : 1;
 }
 
 void ScratchCostume::load_image(std::filesystem::path tempdir) {
