@@ -49,6 +49,9 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     broadcasts = queued_broadcasts;
     queued_broadcasts.clear();
 
+    fronts = 0;
+    backs = 0;
+
     pi = player_info;
 
     // delete old messages
@@ -70,6 +73,10 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     }
 
     broadcasts.clear();
+
+    // sort sprites based on layer. very shortsided solution, will have to change later
+    std::sort(prj->sprites.begin(), prj->sprites.end(),
+              [](ScratchSprite& a, ScratchSprite& b) { return a.layerOrder() < b.layerOrder(); });
 
     if (processed_chains == 0) {
         std::cout << "project is finished running" << std::endl;
@@ -216,6 +223,8 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
         s->effects() = {{"COLOR", 0},  {"FISHEYE", 0},    {"WHIRL", 0}, {"PIXELATE", 0},
                         {"MOSAIC", 0}, {"BRIGHTNESS", 0}, {"GHOST", 0}};
         break;
+    case OPCODE::GO_TO_LAYER: go_to_layer(link.fields["FRONT_BACK"][0], s); break;
+    case OPCODE::CHANGE_LAYER_BY: change_layer_by(link, s); break;
 
     // Sensing
     case OPCODE::RESET_TIMER: timer = std::chrono::high_resolution_clock::now(); break;

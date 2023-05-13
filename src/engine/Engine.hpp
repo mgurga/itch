@@ -26,6 +26,8 @@ public:
     bool finished = false;
     std::chrono::high_resolution_clock::time_point timer =
         std::chrono::high_resolution_clock::now();
+    int fronts = 0;
+    int backs = 0;
 
     void tick(PlayerInfo* player_info);
     bool process_chain(Chain& c, ScratchTarget* s, bool force_activate = false);
@@ -70,6 +72,8 @@ public:
     void say_for_sec(Link link, ScratchTarget* s, Chain& c, int& i);
     void switch_costume_to(Link link, ScratchTarget* s);
     void next_costume(ScratchTarget* s);
+    void go_to_layer(std::string fb, ScratchTarget* s);
+    void change_layer_by(Link link, ScratchTarget* s);
 
 private:
     static unsigned int count_chains(Project& project);

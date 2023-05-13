@@ -40,3 +40,21 @@ void EngineFunctions::Engine::next_costume(ScratchTarget *s) {
     s->currentCostume()++;
     if (s->currentCostume() == s->costumes.size()) s->currentCostume() = 0;
 }
+
+void EngineFunctions::Engine::go_to_layer(std::string frontorback, ScratchTarget *s) {
+    if (frontorback == "front") {
+        s->layerOrder() = 999 + fronts;
+        fronts++;
+    } else {
+        s->layerOrder() = -999 - backs;
+        backs++;
+    }
+}
+
+void EngineFunctions::Engine::change_layer_by(Link link, ScratchTarget *s) {
+    if (link.fields["FORWARD_BACKWARD"][0] == "forward") {
+        s->layerOrder() += compute_input(link.inputs["NUM"], s).get_number();
+    } else {
+        s->layerOrder() -= compute_input(link.inputs["NUM"], s).get_number();
+    }
+}
