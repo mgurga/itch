@@ -47,3 +47,10 @@ Chain& EngineFunctions::Engine::get_chain_by_link_id(std::string id, ScratchTarg
         if (gc.links.at(0).id == id) return gc;
     throw std::invalid_argument("chain with beginning link id '" + id + "' not found");
 }
+
+ScratchTarget& EngineFunctions::Engine::get_target_by_name(std::string name) {
+    if (name == "Stage") return prj->stage;
+    for (ScratchTarget& t : prj->sprites)
+        if (t.name() == name) return t;
+    throw std::invalid_argument("target with name '" + name + "' not found");
+}

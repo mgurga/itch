@@ -43,6 +43,7 @@ public:
     Link& get_link_by_id(std::string id);
     std::string variant_str(std::variant<std::string, double> varient);
     Chain& get_chain_by_link_id(std::string id, ScratchTarget* s);
+    ScratchTarget& get_target_by_name(std::string name);
 
     std::vector<Variable> variables;
     std::vector<List> lists;
