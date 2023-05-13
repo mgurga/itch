@@ -37,10 +37,36 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget*
         return static_cast<double>(r(rng));
     }
 
+    if (op.opcode.opcode == OPCODE::OF) {
+        std::string prop = op.fields["PROPERTY"][0];
+        Link& ofmenu = get_link_by_id(op.inputs["OBJECT"][1]);
+        std::string target = ofmenu.fields["OBJECT"][0];
+
+        if (target == "_stage_") {
+            if (prop == "backdrop #") return prj->stage.currentCostume() + 1;
+            if (prop == "backdrop name")
+                return prj->stage.costumes[prj->stage.currentCostume()].name;
+            if (prop == "volume") return prj->stage.volume();
+
+            return get_var_by_name(prop).val();
+        } else {
+            try {
+                ScratchTarget& t = get_target_by_name(target);
+                if (prop == "x position") return t.x();
+                if (prop == "y position") return t.y();
+                if (prop == "direction") return t.direction();
+                if (prop == "costume #") return t.currentCostume() + 1;
+                if (prop == "costume name") return t.costumes[t.currentCostume()].name;
+                if (prop == "size") return t.size();
+                if (prop == "volume") return t.volume();
+            } catch (std::invalid_argument e) { return Value(""); }
+        }
+    }
+
     switch (op.opcode.opcode) {
     case OPCODE::COSTUME_NUM_NAME:
         if (op.fields["NUMBER_NAME"][0] == "number") {
-            return s->currentCostume();
+            return s->currentCostume() + 1;
         } else {
             return s->costumes[s->currentCostume()].name;
         }
@@ -65,7 +91,7 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget*
                1000;
     case OPCODE::BACKDROP_NUM_NAME:
         if (op.fields["NUMBER_NAME"][0] == "number") {
-            return prj->stage.currentCostume();
+            return prj->stage.currentCostume() + 1;
         } else {
             return prj->stage.costumes[prj->stage.currentCostume()].name;
         }
