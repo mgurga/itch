@@ -32,6 +32,8 @@ public:
 
     std::vector<Chain> chains;
 
+    ScratchCostume& costume() { return costumes.at(m_currentCostume); }
+
     // target variables
     std::string& name() { return m_name; }
     bool isStage() { return m_isStage; }
@@ -41,52 +43,64 @@ public:
     std::unordered_map<std::string, double>& effects() { return m_effects; }
 
     // sprite variables
+    virtual bool get_visible() { return true; }
+    virtual void set_visible(bool b) {}
     virtual bool& visible() {
         bool v = true;
         return v;
     }
+
+    virtual double get_x() { return 0.0; }
+    virtual void set_x(double d) {}
     virtual double& x() {
         double x = 0.0;
         return x;
     }
+
+    virtual double get_y() { return 0.0; }
+    virtual void set_y(double d) {}
     virtual double& y() {
         double y = 0.0;
         return y;
     }
+
+    virtual int get_size() { return 100; }
+    virtual void set_size(int s) {}
     virtual double& size() {
         double s = 100;
         return s;
     }
+
+    virtual double get_direction() { return 90.0; }
+    virtual void set_direction(double d) {}
     virtual double& direction() {
         double d = 90;
         return d;
     }
+
+    virtual bool get_draggable() { return false; }
+    virtual void set_draggable(bool b) {}
     virtual bool& draggable() {
         bool d = false;
         return d;
     }
+
+    virtual RotationStyle get_rotation_style() { return RotationStyle::DONT_ROTATE; }
+    virtual void set_rotation_style(RotationStyle r) {}
     virtual RotationStyle& rotationStyle() {
         RotationStyle r = RotationStyle::DONT_ROTATE;
         return r;
     }
 
     // stage variables
-    virtual int& tempo() {
-        int t = 100;
-        return t;
-    }
-    virtual VideoState& videoState() {
-        VideoState v = VideoState::ON;
-        return v;
-    }
-    virtual int& videoTransparency() {
-        int v = 0;
-        return v;
-    }
-    virtual std::string& textToSpeechLanguage() {
-        std::string s = "";
-        return s;
-    }
+    virtual int get_tempo() { return 100; }
+    virtual void set_tempo(int t) {}
+    virtual VideoState get_video_state() { return VideoState::ON; }
+    virtual void set_video_state(VideoState s) {}
+    virtual int get_video_transparency() { return 0; }
+    virtual void set_video_transparency(int v) {}
+    virtual std::string get_tts_language() { return ""; }
+    virtual void set_tts_language(std::string t) {}
 
 private:
     bool m_isStage;
