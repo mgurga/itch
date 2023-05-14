@@ -61,11 +61,6 @@ public:
 
     virtual int get_size() { return 100; }
     virtual void set_size(int s) {}
-    virtual double& size() {
-        double s = 100;
-        return s;
-    }
-
     virtual double get_direction() { return 90.0; }
     virtual void set_direction(double d) {}
     virtual bool get_draggable() { return false; }
