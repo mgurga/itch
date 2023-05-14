@@ -1,7 +1,7 @@
 #include "Engine.hpp"
 
 void EngineFunctions::Engine::move_steps(double steps, ScratchTarget* s) {
-    double dir = (s->direction() + 90) * (3.141592653589793 / 180);
+    double dir = (s->get_direction() + 90) * (3.141592653589793 / 180);
     s->x() -= std::round((steps * cos(dir)) * 1000.0) / 1000.0;
     s->y() += std::round((steps * sin(dir)) * 1000.0) / 1000.0;
 }

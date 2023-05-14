@@ -68,11 +68,6 @@ public:
 
     virtual double get_direction() { return 90.0; }
     virtual void set_direction(double d) {}
-    virtual double& direction() {
-        double d = 90;
-        return d;
-    }
-
     virtual bool get_draggable() { return false; }
     virtual void set_draggable(bool b) {}
     virtual RotationStyle get_rotation_style() { return RotationStyle::DONT_ROTATE; }

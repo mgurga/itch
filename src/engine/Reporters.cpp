@@ -54,9 +54,9 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget*
                 ScratchTarget& t = get_target_by_name(target);
                 if (prop == "x position") return t.x();
                 if (prop == "y position") return t.y();
-                if (prop == "direction") return t.direction();
+                if (prop == "direction") return t.get_direction();
                 if (prop == "costume #") return t.currentCostume() + 1;
-                if (prop == "costume name") return t.costumes[t.currentCostume()].name;
+                if (prop == "costume name") return t.costume().name;
                 if (prop == "size") return t.size();
                 if (prop == "volume") return t.volume();
             } catch (std::invalid_argument e) { return Value(""); }
@@ -81,7 +81,7 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget*
     case OPCODE::MOUSE_Y: return pi->mouse_y;
     case OPCODE::X_POS: return s->x();
     case OPCODE::Y_POS: return s->y();
-    case OPCODE::DIRECTION: return s->direction();
+    case OPCODE::DIRECTION: return s->get_direction();
     case OPCODE::SIZE_VAL: return s->size();
     case OPCODE::LOUDNESS: return -1;
     case OPCODE::TIMER:
