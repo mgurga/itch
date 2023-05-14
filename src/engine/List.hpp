@@ -1,6 +1,7 @@
 #pragma once
 
 #include <deque>
+#include <stdexcept>
 #include <string>
 
 #include "../scratch/ScratchList.hpp"
@@ -38,10 +39,17 @@ public:
     }
 
     Value& at(int pos) {
-        Value e = Value("");
-        if ((pos - 1) < 0) return e;
+        if ((pos - 1) < 0)
+            throw std::underflow_error(
+                "error trying to get list item from a position less than 0, list name: " + name +
+                ", position: " + std::to_string(pos - 1));
         return values.at(pos - 1);
     }
 
     bool contains(Value v) { return std::find(values.begin(), values.end(), v) != values.end(); }
+
+    Value operator[](int pos) {
+        if ((pos - 1) < 0) return Value("");
+        return values.at(pos - 1);
+    }
 };

@@ -75,8 +75,8 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget*
                compute_input(op.inputs["STRING2"], s).get_string();
     case OPCODE::LIST_LENGTH: return get_list_by_name(op.fields["LIST"][0]).length();
     case OPCODE::LIST_ITEM:
-        return get_list_by_name(op.fields["LIST"][0])
-            .at(static_cast<int>(compute_input(op.inputs["INDEX"], s).get_number()));
+        return get_list_by_name(op.fields["LIST"][0])[static_cast<int>(
+            compute_input(op.inputs["INDEX"], s).get_number())];
     case OPCODE::MOUSE_X: return pi->mouse_x;
     case OPCODE::MOUSE_Y: return pi->mouse_y;
     case OPCODE::X_POS: return s->x();
