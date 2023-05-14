@@ -38,7 +38,8 @@ public:
     }
 
     Value& at(int pos) {
-        if ((pos - 1) < 0) return Value("");
+        Value e = Value("");
+        if ((pos - 1) < 0) return e;
         return values.at(pos - 1);
     }
 
