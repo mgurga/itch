@@ -178,16 +178,20 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
 
     // Motion
     case OPCODE::GO_TO: go_to_menu(link, s); break;
-    case OPCODE::SET_X_TO: s->x() = compute_input(link.inputs["X"], s); break;
-    case OPCODE::SET_Y_TO: s->y() = compute_input(link.inputs["Y"], s); break;
-    case OPCODE::CHANGE_Y_BY: s->y() += compute_input(link.inputs["DY"], s).get_number(); break;
-    case OPCODE::CHANGE_X_BY: s->x() += compute_input(link.inputs["DX"], s).get_number(); break;
+    case OPCODE::SET_X_TO: s->set_x(compute_input(link.inputs["X"], s)); break;
+    case OPCODE::SET_Y_TO: s->set_y(compute_input(link.inputs["Y"], s)); break;
+    case OPCODE::CHANGE_X_BY:
+        s->set_x(s->get_x() + compute_input(link.inputs["DX"], s).get_number());
+        break;
+    case OPCODE::CHANGE_Y_BY:
+        s->set_y(s->get_y() + compute_input(link.inputs["DY"], s).get_number());
+        break;
     case OPCODE::POINT_IN_DIRECTION:
         s->set_direction(compute_input(link.inputs["DIRECTION"], s));
         break;
     case OPCODE::GO_TO_XY:
-        s->x() = compute_input(link.inputs["X"], s);
-        s->y() = compute_input(link.inputs["Y"], s);
+        s->set_x(compute_input(link.inputs["X"], s));
+        s->set_y(compute_input(link.inputs["Y"], s));
         break;
     case OPCODE::TURN_LEFT:
         s->set_direction(s->get_direction() -

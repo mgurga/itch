@@ -47,18 +47,8 @@ public:
     virtual void set_visible(bool b) {}
     virtual double get_x() { return 0.0; }
     virtual void set_x(double d) {}
-    virtual double& x() {
-        double x = 0.0;
-        return x;
-    }
-
     virtual double get_y() { return 0.0; }
     virtual void set_y(double d) {}
-    virtual double& y() {
-        double y = 0.0;
-        return y;
-    }
-
     virtual int get_size() { return 100; }
     virtual void set_size(int s) {}
     virtual double get_direction() { return 90.0; }
