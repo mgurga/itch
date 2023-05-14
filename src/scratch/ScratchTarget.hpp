@@ -45,11 +45,6 @@ public:
     // sprite variables
     virtual bool get_visible() { return true; }
     virtual void set_visible(bool b) {}
-    virtual bool& visible() {
-        bool v = true;
-        return v;
-    }
-
     virtual double get_x() { return 0.0; }
     virtual void set_x(double d) {}
     virtual double& x() {
@@ -80,17 +75,8 @@ public:
 
     virtual bool get_draggable() { return false; }
     virtual void set_draggable(bool b) {}
-    virtual bool& draggable() {
-        bool d = false;
-        return d;
-    }
-
     virtual RotationStyle get_rotation_style() { return RotationStyle::DONT_ROTATE; }
     virtual void set_rotation_style(RotationStyle r) {}
-    virtual RotationStyle& rotationStyle() {
-        RotationStyle r = RotationStyle::DONT_ROTATE;
-        return r;
-    }
 
     // stage variables
     virtual int get_tempo() { return 100; }

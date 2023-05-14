@@ -208,8 +208,8 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     // Looks
     case OPCODE::SAY_FOR_SECS: say_for_sec(link, s, c, i); break;
     case OPCODE::SAY: say(link, s); break;
-    case OPCODE::SHOW: s->visible() = true; break;
-    case OPCODE::HIDE: s->visible() = false; break;
+    case OPCODE::SHOW: s->set_visible(true); break;
+    case OPCODE::HIDE: s->set_visible(false); break;
     case OPCODE::SWITCH_TO_COSTUME: switch_costume_to(link, s); break;
     case OPCODE::NEXT_COSTUME: next_costume(s); break;
     case OPCODE::SET_EFFECT_TO:
