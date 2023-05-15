@@ -7,7 +7,6 @@
 #include "../Project.hpp"
 #include "PlayerInfo.hpp"
 
-
 class Player {
 public:
     Player(bool& running);
@@ -19,6 +18,10 @@ public:
     bool& running;
 
 private:
+    void paint_sprite(ScratchSprite& sprite);
+
+    unsigned int ww, wh;
+
     std::vector<std::string> pressed;
     std::vector<std::string> keys_down;
     sf::Vector2i mouse_pos;

@@ -82,9 +82,8 @@ void Player::draw() {
 }
 
 void Player::paint(Project& project) {
-    unsigned int ww = window->getSize().x;  // window width
-    unsigned int wh = window->getSize().y;  // window height
-
+    ww = window->getSize().x;  // window width
+    wh = window->getSize().y;  // window height
     window->clear(sf::Color(255, 255, 255));
 
     sf::Sprite stagesprite;
@@ -92,37 +91,37 @@ void Player::paint(Project& project) {
     stagesprite.setPosition(0, 0);
     window->draw(stagesprite);
 
-    for (ScratchSprite sprite : project.sprites) {
-        if (sprite.get_visible() && sprite.effects()["GHOST"] != 100.0) {
-            sf::Sprite out;
-            sf::Texture& st = sprite.costumes[sprite.currentCostume()].texture;
-            // sf::Vector2u ss = st.getSize(); // sprite size
-
-            // draw sprite
-            out.setTexture(st, true);
-            out.setPosition(float(sprite.get_x()) + (ww / 2.0),
-                            float(-sprite.get_y()) + (wh / 2.0));
-            out.setOrigin(sprite.costumes[sprite.currentCostume()].rotationCenterX,
-                          sprite.costumes[sprite.currentCostume()].rotationCenterY);
-            out.setRotation(sprite.get_direction() - 90.0f);
-            out.setColor(
-                sf::Color(255, 255, 255, floor(abs(100 - sprite.effects()["GHOST"])) * 2.55));
-            out.setScale(static_cast<float>(sprite.get_size()) / 100,
-                         static_cast<float>(sprite.get_size()) / 100);
-            out.setScale(
-                out.getScale().x / sprite.costumes[sprite.currentCostume()].bitmapResolution,
-                out.getScale().y / sprite.costumes[sprite.currentCostume()].bitmapResolution);
-            window->draw(out);
-
-            // draw dot at center the center of sprite
-            // sf::CircleShape cs(3);
-            // cs.setPosition(out.getPosition().x, out.getPosition().y);
-            // cs.setFillColor(sf::Color(255, 0, 0));
-            // window->draw(cs);
-        }
-    }
+    for (ScratchSprite sprite : project.clones) { paint_sprite(sprite); }
+    for (ScratchSprite sprite : project.sprites) { paint_sprite(sprite); }
 
     window->display();
+}
+
+void Player::paint_sprite(ScratchSprite& sprite) {
+    if (sprite.get_visible() && sprite.effects()["GHOST"] != 100.0) {
+        sf::Sprite out;
+        sf::Texture& st = sprite.costumes[sprite.currentCostume()].texture;
+        // sf::Vector2u ss = st.getSize(); // sprite size
+
+        // draw sprite
+        out.setTexture(st, true);
+        out.setPosition(float(sprite.get_x()) + (ww / 2.0), float(-sprite.get_y()) + (wh / 2.0));
+        out.setOrigin(sprite.costumes[sprite.currentCostume()].rotationCenterX,
+                      sprite.costumes[sprite.currentCostume()].rotationCenterY);
+        out.setRotation(sprite.get_direction() - 90.0f);
+        out.setColor(sf::Color(255, 255, 255, floor(abs(100 - sprite.effects()["GHOST"])) * 2.55));
+        out.setScale(static_cast<float>(sprite.get_size()) / 100,
+                     static_cast<float>(sprite.get_size()) / 100);
+        out.setScale(out.getScale().x / sprite.costumes[sprite.currentCostume()].bitmapResolution,
+                     out.getScale().y / sprite.costumes[sprite.currentCostume()].bitmapResolution);
+        window->draw(out);
+
+        // draw dot at center the center of sprite
+        // sf::CircleShape cs(3);
+        // cs.setPosition(out.getPosition().x, out.getPosition().y);
+        // cs.setFillColor(sf::Color(255, 0, 0));
+        // window->draw(cs);
+    }
 }
 
 PlayerInfo Player::get_player_info() {
