@@ -51,8 +51,8 @@ TEST_F(MotionBlocksTest, UpPressTest) {
     engine->tick(&pi);
     pi.pressed.clear();
     engine->tick(&pi);  // second tick to process broadcasts
-    ASSERT_EQ(project->sprites.at(0).x(), 10.0);
-    ASSERT_EQ(project->sprites.at(0).y(), 20.0);
+    ASSERT_EQ(project->sprites.at(0).get_x(), 10.0);
+    ASSERT_EQ(project->sprites.at(0).get_y(), 20.0);
     ASSERT_TRUE(engine->say_logs.at(0).message.find("Going to x:") != std::string::npos);
     ASSERT_EQ(engine->say_logs.at(0).duration, 1);
 }
@@ -64,9 +64,9 @@ TEST_F(MotionBlocksTest, ResetTest) {
     engine->tick(&pi);
     pi.pressed.clear();
     engine->tick(&pi);
-    ASSERT_EQ(project->sprites.at(0).x(), 0.0);
-    ASSERT_EQ(project->sprites.at(0).y(), 0.0);
-    ASSERT_EQ(project->sprites.at(0).direction(), 90.0);
+    ASSERT_EQ(project->sprites.at(0).get_x(), 0.0);
+    ASSERT_EQ(project->sprites.at(0).get_y(), 0.0);
+    ASSERT_EQ(project->sprites.at(0).get_direction(), 90.0);
     ASSERT_EQ(engine->get_var_by_name("var").val().get_number(), 0);
 }
 
@@ -79,8 +79,8 @@ TEST_F(MotionBlocksTest, ThreeUpPressTest) {
     engine->tick(&pi);
     pi.pressed.clear();
     engine->tick(&pi);  // second tick to process broadcasts
-    ASSERT_EQ(project->sprites.at(0).x(), 30.0);
-    ASSERT_EQ(project->sprites.at(0).y(), 60.0);
+    ASSERT_EQ(project->sprites.at(0).get_x(), 30.0);
+    ASSERT_EQ(project->sprites.at(0).get_y(), 60.0);
 }
 
 TEST_F(MotionBlocksTest, ResetTest2) {
@@ -90,9 +90,9 @@ TEST_F(MotionBlocksTest, ResetTest2) {
     engine->tick(&pi);
     pi.pressed.clear();
     engine->tick(&pi);
-    ASSERT_EQ(project->sprites.at(0).x(), 0.0);
-    ASSERT_EQ(project->sprites.at(0).y(), 0.0);
-    ASSERT_EQ(project->sprites.at(0).direction(), 90.0);
+    ASSERT_EQ(project->sprites.at(0).get_x(), 0.0);
+    ASSERT_EQ(project->sprites.at(0).get_y(), 0.0);
+    ASSERT_EQ(project->sprites.at(0).get_direction(), 90.0);
     ASSERT_EQ(engine->get_var_by_name("var").val().get_number(), 0);
 }
 
@@ -105,8 +105,8 @@ TEST_F(MotionBlocksTest, GoToMouseTest) {
     engine->tick(&pi);
     pi.pressed.clear();
     engine->tick(&pi);
-    ASSERT_EQ(project->sprites.at(0).x(), 25.0);
-    ASSERT_EQ(project->sprites.at(0).y(), 25.0);
+    ASSERT_EQ(project->sprites.at(0).get_x(), 25.0);
+    ASSERT_EQ(project->sprites.at(0).get_y(), 25.0);
 }
 
 TEST_F(MotionBlocksTest, ChangeDirectionTest) {
@@ -120,11 +120,11 @@ TEST_F(MotionBlocksTest, ChangeDirectionTest) {
     engine->tick(&pi);
     pi.pressed.clear();
     engine->tick(&pi);
-    ASSERT_EQ(project->sprites.at(0).direction(), 120.0);
+    ASSERT_EQ(project->sprites.at(0).get_direction(), 120.0);
     pi.pressed.push_back("left arrow");
     engine->tick(&pi);
     engine->tick(&pi);
-    ASSERT_EQ(project->sprites.at(0).direction(), 90.0);
+    ASSERT_EQ(project->sprites.at(0).get_direction(), 90.0);
 }
 
 TEST_F(MotionBlocksTest, MoveStepsTest) {
@@ -133,8 +133,8 @@ TEST_F(MotionBlocksTest, MoveStepsTest) {
     pi.pressed.push_back("space");
     engine->tick(&pi);
     engine->tick(&pi);
-    ASSERT_EQ(project->sprites.at(0).x(), 20.0);
-    ASSERT_EQ(project->sprites.at(0).y(), 0.0);
+    ASSERT_EQ(project->sprites.at(0).get_x(), 20.0);
+    ASSERT_EQ(project->sprites.at(0).get_y(), 0.0);
 }
 
 TEST_F(MotionBlocksTest, RandomPositionTest) {
@@ -147,11 +147,14 @@ TEST_F(MotionBlocksTest, RandomPositionTest) {
     pi.pressed.push_back("r");
 
     engine->tick(&pi);
-    if (project->sprites.at(0).x() != 0.0 && project->sprites.at(0).y() != 0.0) changed = true;
+    if (project->sprites.at(0).get_x() != 0.0 && project->sprites.at(0).get_y() != 0.0)
+        changed = true;
     engine->tick(&pi);
-    if (project->sprites.at(0).x() != 0.0 && project->sprites.at(0).y() != 0.0) changed = true;
+    if (project->sprites.at(0).get_x() != 0.0 && project->sprites.at(0).get_y() != 0.0)
+        changed = true;
     engine->tick(&pi);
-    if (project->sprites.at(0).x() != 0.0 && project->sprites.at(0).y() != 0.0) changed = true;
+    if (project->sprites.at(0).get_x() != 0.0 && project->sprites.at(0).get_y() != 0.0)
+        changed = true;
 
     ASSERT_TRUE(changed);
 }

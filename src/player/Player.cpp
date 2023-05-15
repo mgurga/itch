@@ -93,20 +93,22 @@ void Player::paint(Project& project) {
     window->draw(stagesprite);
 
     for (ScratchSprite sprite : project.sprites) {
-        if (sprite.visible() && sprite.effects()["GHOST"] != 100.0) {
+        if (sprite.get_visible() && sprite.effects()["GHOST"] != 100.0) {
             sf::Sprite out;
             sf::Texture& st = sprite.costumes[sprite.currentCostume()].texture;
             // sf::Vector2u ss = st.getSize(); // sprite size
 
             // draw sprite
             out.setTexture(st, true);
-            out.setPosition(float(sprite.x()) + (ww / 2.0), float(-sprite.y()) + (wh / 2.0));
+            out.setPosition(float(sprite.get_x()) + (ww / 2.0),
+                            float(-sprite.get_y()) + (wh / 2.0));
             out.setOrigin(sprite.costumes[sprite.currentCostume()].rotationCenterX,
                           sprite.costumes[sprite.currentCostume()].rotationCenterY);
-            out.setRotation(sprite.direction() - 90.0f);
+            out.setRotation(sprite.get_direction() - 90.0f);
             out.setColor(
                 sf::Color(255, 255, 255, floor(abs(100 - sprite.effects()["GHOST"])) * 2.55));
-            out.setScale(sprite.size() / 100, sprite.size() / 100);
+            out.setScale(static_cast<float>(sprite.get_size()) / 100,
+                         static_cast<float>(sprite.get_size()) / 100);
             out.setScale(
                 out.getScale().x / sprite.costumes[sprite.currentCostume()].bitmapResolution,
                 out.getScale().y / sprite.costumes[sprite.currentCostume()].bitmapResolution);
