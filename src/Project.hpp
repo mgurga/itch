@@ -1,16 +1,16 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <iostream>
-#include <nlohmann/json.hpp>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
+#include <nlohmann/json.hpp>
+#include <string>
+#include <vector>
 
-#include "scratch/ScratchStage.hpp"
-#include "scratch/ScratchSprite.hpp"
 #include "scratch/ScratchMeta.hpp"
 #include "scratch/ScratchMonitor.hpp"
+#include "scratch/ScratchSprite.hpp"
+#include "scratch/ScratchStage.hpp"
 
 using json = nlohmann::json;
 
@@ -26,6 +26,7 @@ public:
 
     ScratchStage stage;
     std::vector<ScratchSprite> sprites;
+    std::vector<ScratchSprite> clones;  // NOT A PART OF project.json.
     std::vector<ScratchMonitor> monitors;
     std::vector<std::string> extensions;
     ScratchMeta meta;

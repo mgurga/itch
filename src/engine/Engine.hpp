@@ -24,6 +24,7 @@ public:
 
     unsigned int TOTAL_CHAINS;
     bool finished = false;
+    bool processing_clones = false;
     std::chrono::high_resolution_clock::time_point timer =
         std::chrono::high_resolution_clock::now();
     int fronts = 0;
@@ -52,6 +53,7 @@ public:
     std::vector<std::string> broadcasts;
     std::vector<std::string> queued_broadcasts;
     std::vector<SpriteMessage> say_logs;
+    std::vector<ScratchSprite> clones;
 
     Project* prj;
     PlayerInfo* pi;
@@ -67,6 +69,7 @@ public:
     void if_statement(Link link, ScratchTarget* s);
     void if_else_statement(Link link, ScratchTarget* s);
     void repeat_loop(Link link, Chain& c, ScratchTarget* s, int& i);
+    void create_clone_of(Link link, ScratchTarget* s);
 
     // looks helpers
     void say(Link link, ScratchTarget* s);

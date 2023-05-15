@@ -61,6 +61,7 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
                    say_logs.end());
 
     int processed_chains = 0;
+    processing_clones = false;
     // hack to treat ScratchStage as a ScratchSprite
     for (Chain& chain : prj->stage.chains) {
         if (process_chain(chain, dynamic_cast<ScratchTarget*>(&prj->stage))) { processed_chains++; }
@@ -71,6 +72,18 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
             if (process_chain(chain, &sprite)) { processed_chains++; }
         }
     }
+
+    // loop through clones and run their chains
+    processing_clones = true;
+    for (ScratchSprite& sprite : clones) {
+        for (Chain& chain : sprite.chains) {
+            if (process_chain(chain, &sprite)) { processed_chains++; }
+        }
+    }
+    clones.erase(std::remove_if(clones.begin(), clones.end(),
+                                [](ScratchSprite ss) { return ss.name() == ""; }),
+                 clones.end());
+    prj->clones = clones;
 
     broadcasts.clear();
 
@@ -210,6 +223,17 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     case OPCODE::IF: if_statement(link, s); break;
     case OPCODE::IF_ELSE: if_else_statement(link, s); break;
     case OPCODE::REPEAT: repeat_loop(link, c, s, i); break;
+    case OPCODE::CREATE_CLONE_OF: create_clone_of(link, s); break;
+    case OPCODE::START_AS_CLONE:
+        if (processing_clones) {
+            c.activatable = false;
+        } else {
+            i = -1;
+        }
+        break;
+    case OPCODE::DELETE_THIS_CLONE:
+        if (processing_clones) s->name() = "";
+        break;
 
     // Looks
     case OPCODE::SAY_FOR_SECS: say_for_sec(link, s, c, i); break;
