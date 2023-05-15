@@ -33,7 +33,7 @@ public:
         case Positive_Number:
         case Integer:
         case Angle:
-            if (!(sb[1].get<std::string>() == "")) num_val = std::stoi(sb[1].get<std::string>());
+            if (!(sb[1].get<std::string>() == "")) num_val = std::stod(sb[1].get<std::string>());
             break;
         case Color:
         case String: str_value = sb[1]; break;
