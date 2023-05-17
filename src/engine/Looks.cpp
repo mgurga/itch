@@ -29,11 +29,14 @@ void EngineFunctions::Engine::say_for_sec(Link link, ScratchTarget *s, Chain &c,
 }
 
 void EngineFunctions::Engine::switch_costume_to(Link link, ScratchTarget *s) {
-    Link &costume_shadow = get_link_by_id(link.inputs["COSTUME"][1]);
-    std::string new_costume_name = costume_shadow.fields["COSTUME"][0];
+    Value new_costume = compute_input(link.inputs["COSTUME"], s);
 
-    for (int i = 0; i < s->costumes.size(); i++)
-        if (s->costumes.at(i).name == new_costume_name) s->currentCostume() = i;
+    if (new_costume.contains_string()) {
+        for (int i = 0; i < s->costumes.size(); i++)
+            if (s->costumes.at(i).name == new_costume.get_string()) s->currentCostume() = i;
+    } else {
+        s->currentCostume() = new_costume.get_number() - 1;
+    }
 }
 
 void EngineFunctions::Engine::next_costume(ScratchTarget *s) {
