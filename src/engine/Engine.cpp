@@ -215,6 +215,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
                          compute_input(link.inputs["DEGREES"], s).get_number());
         break;
     case OPCODE::MOVE_STEPS: move_steps(compute_input(link.inputs["STEPS"], s), s); break;
+    case OPCODE::SET_ROTATION_STYLE: set_rotation_style(link.fields["STYLE"][0], s); break;
 
     // Control
     case OPCODE::WAIT: wait(compute_input(link.inputs["DURATION"], s).get_number(), c, i); break;

@@ -61,6 +61,7 @@ public:
     // motion helpers
     void move_steps(double steps, ScratchTarget* s);
     void go_to_menu(Link link, ScratchTarget* s);
+    void set_rotation_style(std::string rs, ScratchTarget* s);
 
     // control helpers
     void wait(double duration, Chain& c, int& i);

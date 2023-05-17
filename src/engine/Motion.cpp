@@ -32,3 +32,13 @@ void EngineFunctions::Engine::go_to_menu(Link link, ScratchTarget* s) {
         }
     }
 }
+
+void EngineFunctions::Engine::set_rotation_style(std::string rs, ScratchTarget* s) {
+    if (rs == "don't rotate") {
+        s->set_rotation_style(RotationStyle::DONT_ROTATE);
+    } else if (rs == "left-right") {
+        s->set_rotation_style(RotationStyle::LEFT_RIGHT);
+    } else {
+        s->set_rotation_style(RotationStyle::ALL_AROUND);
+    }
+}
