@@ -56,6 +56,8 @@ void Itch::load_from_url(std::string project_url) {
 
     while (std::getline(urlss, seg, '/')) { url_parts.push_back(seg); }
 
+    if (url_parts.back() == "editor") url_parts.pop_back();
+
     std::string pid = url_parts.back();
     std::cout << "project id is " << pid << std::endl;
 
