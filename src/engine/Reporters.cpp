@@ -63,6 +63,29 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget*
         }
     }
 
+    if (op.opcode.opcode == OPCODE::OPERATOR_MATHOP) {
+        std::string mathop = op.fields["OPERATOR"][0];
+        Value in = compute_input(op.inputs["NUM"], s);
+
+        if (mathop == "abs") return std::abs(in.get_number());
+        if (mathop == "floor") return std::floor(in.get_number());
+        if (mathop == "ceiling") return std::ceil(in.get_number());
+        if (mathop == "sqrt") return std::sqrt(in.get_number());
+        if (mathop == "sin") return std::sin(in.get_number());
+        if (mathop == "cos") return std::cos(in.get_number());
+        if (mathop == "tan") return std::tan(in.get_number());
+        if (mathop == "asin") return std::asin(in.get_number());
+        if (mathop == "acos") return std::acos(in.get_number());
+        if (mathop == "atan") return std::atan(in.get_number());
+        if (mathop == "ln") return std::log(in.get_number());
+        if (mathop == "log") return std::log10(in.get_number());
+        if (mathop == "e ^") return std::exp(in.get_number());
+        if (mathop == "10 ^") return std::pow(in.get_number(), 10);
+
+        std::cout << "unknown mathop operation: " << mathop << " returning 0" << std::endl;
+        return Value(0);
+    }
+
     switch (op.opcode.opcode) {
     case OPCODE::COSTUME_NUM_NAME:
         if (op.fields["NUMBER_NAME"][0] == "number") {
