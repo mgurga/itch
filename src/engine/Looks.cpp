@@ -58,3 +58,27 @@ void EngineFunctions::Engine::change_layer_by(Link link, ScratchTarget *s) {
         s->layerOrder() -= compute_input(link.inputs["NUM"], s).get_number();
     }
 }
+
+void EngineFunctions::Engine::set_effect_to(Link link, ScratchTarget *s) {
+    std::string effect = link.fields["EFFECT"][0];
+    std::transform(effect.begin(), effect.end(), effect.begin(), ::toupper);
+
+    try {
+        s->effects()[effect] = compute_input(link.inputs["VALUE"], s);
+    } catch (const std::exception &e) {
+        std::cout << "failed to set effect: '" << effect << "' ";
+        std::cout << "with error: " << e.what() << std::endl;
+    }
+}
+
+void EngineFunctions::Engine::change_effect_by(Link link, ScratchTarget *s) {
+    std::string effect = link.fields["EFFECT"][0];
+    std::transform(effect.begin(), effect.end(), effect.begin(), ::toupper);
+
+    try {
+        s->effects()[effect] += compute_input(link.inputs["VALUE"], s).get_number();
+    } catch (const std::exception &e) {
+        std::cout << "failed to change effect: '" << effect << "' ";
+        std::cout << "with error: " << e.what() << std::endl;
+    }
+}

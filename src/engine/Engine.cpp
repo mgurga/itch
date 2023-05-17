@@ -242,13 +242,8 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     case OPCODE::HIDE: s->set_visible(false); break;
     case OPCODE::SWITCH_TO_COSTUME: switch_costume_to(link, s); break;
     case OPCODE::NEXT_COSTUME: next_costume(s); break;
-    case OPCODE::SET_EFFECT_TO:
-        s->effects()[link.fields["EFFECT"][0]] = compute_input(link.inputs["VALUE"], s);
-        break;
-    case OPCODE::CHANGE_EFFECT_BY:
-        s->effects()[link.fields["EFFECT"][0]] +=
-            compute_input(link.inputs["CHANGE"], s).get_number();
-        break;
+    case OPCODE::SET_EFFECT_TO: set_effect_to(link, s); break;
+    case OPCODE::CHANGE_EFFECT_BY: change_effect_by(link, s); break;
     case OPCODE::CLEAR_GRAPHIC_EFFECTS:
         s->effects() = {{"COLOR", 0},  {"FISHEYE", 0},    {"WHIRL", 0}, {"PIXELATE", 0},
                         {"MOSAIC", 0}, {"BRIGHTNESS", 0}, {"GHOST", 0}};
