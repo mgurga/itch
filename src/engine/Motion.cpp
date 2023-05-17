@@ -22,6 +22,13 @@ void EngineFunctions::Engine::go_to_menu(Link link, ScratchTarget* s) {
         s->set_x(static_cast<double>(pi->mouse_x));
         s->set_y(static_cast<double>(pi->mouse_y));
     } else {
-        std::cout << "unknown go_to_menu entry: " << target << std::endl;
+        try {
+            ScratchTarget& t = get_target_by_name(target);
+
+            s->set_x(t.get_x());
+            s->set_y(t.get_y());
+        } catch (const std::exception& e) {
+            std::cout << "unknown go_to_menu entry: " << target << std::endl;
+        }
     }
 }
