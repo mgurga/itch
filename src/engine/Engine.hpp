@@ -16,9 +16,11 @@
 #include "SpriteMessage.hpp"
 #include "Variable.hpp"
 
-static const double pi = std::acos(-1);  // TODO: Use std::numbers::pi in C++20
 
 namespace EngineFunctions {
+
+static const double PI = std::acos(-1);  // TODO: Use std::numbers::pi in C++20
+
 class Engine {
 public:
     Engine() : TOTAL_CHAINS(0){};

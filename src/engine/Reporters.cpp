@@ -71,12 +71,12 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget*
         if (mathop == "floor") return std::floor(in.get_number());
         if (mathop == "ceiling") return std::ceil(in.get_number());
         if (mathop == "sqrt") return std::sqrt(in.get_number());
-        if (mathop == "sin") return std::sin(in.get_number() * pi / 180);
-        if (mathop == "cos") return std::cos(in.get_number() * pi / 180);
-        if (mathop == "tan") return std::tan(in.get_number() * pi / 180);
-        if (mathop == "asin") return std::asin(in.get_number() * 180 / pi);
-        if (mathop == "acos") return std::acos(in.get_number() * 180 / pi);
-        if (mathop == "atan") return std::atan(in.get_number() * 180 / pi);
+        if (mathop == "sin") return std::sin(in.get_number() * PI / 180);
+        if (mathop == "cos") return std::cos(in.get_number() * PI / 180);
+        if (mathop == "tan") return std::tan(in.get_number() * PI / 180);
+        if (mathop == "asin") return std::asin(in.get_number() * 180 / PI);
+        if (mathop == "acos") return std::acos(in.get_number() * 180 / PI);
+        if (mathop == "atan") return std::atan(in.get_number() * 180 / PI);
         if (mathop == "ln") return std::log(in.get_number());
         if (mathop == "log") return std::log10(in.get_number());
         if (mathop == "e ^") return std::exp(in.get_number());
