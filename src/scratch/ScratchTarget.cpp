@@ -28,10 +28,10 @@ ScratchTarget::ScratchTarget(json st, std::filesystem::path temp_dir, bool heavy
     }
 
     std::cout << "loading blocks..." << std::endl;
-    for (auto sb : st["blocks"].items()) {
-        blocks.push_back(ScratchBlock(sb.value(), sb.key()));
-        links.push_back(ScratchBlock(sb.value(), sb.key()));
-    }
+    for (auto sb : st["blocks"].items()) blocks.push_back(ScratchBlock(sb.value(), sb.key()));
+
+    std::cout << "loading block links..." << std::endl;
+    for (auto sb : blocks) links.push_back(sb);
 
     std::cout << "creating chains..." << std::endl;
     chains = Chain::create_chains(blocks);

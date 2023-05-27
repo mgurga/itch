@@ -20,6 +20,7 @@ public:
         }
 
         for (auto in : b.inputs.items()) {
+            if (in.value()[1].is_null()) continue;
             if (in.value()[1].is_string()) {
                 ScratchArrayBlock sab;
                 sab.type = BlockType::Uninitialized;
