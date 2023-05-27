@@ -109,7 +109,10 @@ void Player::paint_sprite(ScratchSprite& sprite) {
         out.setOrigin(sprite.costumes[sprite.currentCostume()].rotationCenterX,
                       sprite.costumes[sprite.currentCostume()].rotationCenterY);
         out.setRotation(sprite.get_direction() - 90.0f);
-        out.setColor(sf::Color(255, 255, 255, floor(abs(100 - sprite.effects()["GHOST"])) * 2.55));
+
+        double ghost = sprite.effects()["GHOST"];
+        if (ghost < 0) ghost = 0;
+        out.setColor(sf::Color(255, 255, 255, floor(abs(100 - ghost)) * 2.55));
         out.setScale(static_cast<float>(sprite.get_size()) / 100,
                      static_cast<float>(sprite.get_size()) / 100);
         out.setScale(out.getScale().x / sprite.costumes[sprite.currentCostume()].bitmapResolution,
