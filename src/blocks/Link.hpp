@@ -12,6 +12,8 @@
 
 class Link {
 public:
+    Link(std::string opcode) :
+        string_opcode(opcode), opcode(Opcodes::opcode_to_enum(opcode)), id("") {}
     Link(ScratchBlock b) :
         string_opcode(b.opcode), opcode(Opcodes::opcode_to_enum(b.opcode)), id(b.id) {
         for (auto fl : b.fields.items()) {

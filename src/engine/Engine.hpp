@@ -16,7 +16,6 @@
 #include "SpriteMessage.hpp"
 #include "Variable.hpp"
 
-
 namespace EngineFunctions {
 
 static const double PI = std::acos(-1);  // TODO: Use std::numbers::pi in C++20
@@ -38,8 +37,8 @@ public:
     bool process_chain(Chain& c, ScratchTarget* s, bool force_activate = false);
     void process_link(Link& link, Chain& chain, ScratchTarget* sprite, int& i);
     Value compute_input(LinkInput block, ScratchTarget* sprite);
-    Value compute_reporter(std::string opid, ScratchTarget* sprite);
-    Value compute_condition(std::string opid, ScratchTarget* sprite);
+    Value compute_reporter(Link op, ScratchTarget* sprite = nullptr);
+    Value compute_condition(Link op, ScratchTarget* sprite);
 
     // utility functions
     Variable& get_var_by_name(std::string name);

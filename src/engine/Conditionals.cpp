@@ -1,8 +1,6 @@
 #include "Engine.hpp"
 
-Value EngineFunctions::Engine::compute_condition(std::string opid, ScratchTarget* s) {
-    Link& op = get_link_by_id(opid);
-
+Value EngineFunctions::Engine::compute_condition(Link op, ScratchTarget* s) {
     if (op.opcode == OPCODE::KEY_PRESSED) {
         Link& ko = get_link_by_id(op.inputs["KEY_OPTION"][1]);
         std::string key = ko.fields["KEY_OPTION"][0];
@@ -16,17 +14,19 @@ Value EngineFunctions::Engine::compute_condition(std::string opid, ScratchTarget
     case OPCODE::OPERATOR_AND:
         if (!op.inputs_contains("OPERAND1") && !op.inputs_contains("OPERAND2")) return false;
         if (!op.inputs_contains("OPERAND1") || !op.inputs_contains("OPERAND2")) return false;
-        return compute_condition(op.inputs["OPERAND1"][1], s).get_bool() &&
-               compute_condition(op.inputs["OPERAND2"][1], s).get_bool();
+        return compute_condition(get_link_by_id(op.inputs["OPERAND1"][1]), s).get_bool() &&
+               compute_condition(get_link_by_id(op.inputs["OPERAND2"][1]), s).get_bool();
     case OPCODE::OPERATOR_OR:
         if (!op.inputs_contains("OPERAND1") && !op.inputs_contains("OPERAND2")) return false;
-        if (!op.inputs_contains("OPERAND1")) return compute_condition(op.inputs["OPERAND2"][1], s);
-        if (!op.inputs_contains("OPERAND2")) return compute_condition(op.inputs["OPERAND1"][1], s);
-        return compute_condition(op.inputs["OPERAND1"][1], s).get_bool() ||
-               compute_condition(op.inputs["OPERAND2"][1], s).get_bool();
+        if (!op.inputs_contains("OPERAND1"))
+            return compute_condition(get_link_by_id(op.inputs["OPERAND2"][1]), s);
+        if (!op.inputs_contains("OPERAND2"))
+            return compute_condition(get_link_by_id(op.inputs["OPERAND1"][1]), s);
+        return compute_condition(get_link_by_id(op.inputs["OPERAND1"][1]), s).get_bool() ||
+               compute_condition(get_link_by_id(op.inputs["OPERAND2"][1]), s).get_bool();
     case OPCODE::OPERATOR_NOT:
         if (!op.inputs_contains("OPERAND")) return true;
-        return !compute_condition(op.inputs["OPERAND"][1], s).get_bool();
+        return !compute_condition(get_link_by_id(op.inputs["OPERAND"][1]), s).get_bool();
     case OPCODE::OPERATOR_LESS_THAN:
         return compute_input(op.inputs["OPERAND1"], s).get_number() <
                compute_input(op.inputs["OPERAND2"], s).get_number();

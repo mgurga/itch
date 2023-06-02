@@ -91,6 +91,41 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     std::sort(prj->sprites.begin(), prj->sprites.end(),
               [](ScratchSprite& a, ScratchSprite& b) { return a.layerOrder() < b.layerOrder(); });
 
+    // update monitor values
+    for (ScratchMonitor& monitor : prj->monitors) {
+        ScratchTarget* target =
+            monitor.spriteName == "" ? nullptr : &get_target_by_name(monitor.spriteName);
+        if (monitor.opcode == "data_variable") {
+            monitor.value = get_var_by_name(monitor.variable).val().get_string();
+            monitor.display_name = monitor.variable;
+        } else if (monitor.opcode == "sensing_timer") {
+            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.display_name = "timer";
+        } else if (monitor.opcode == "motion_xposition") {
+            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.display_name = monitor.spriteName + ": x position";
+        } else if (monitor.opcode == "motion_yposition") {
+            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.display_name = monitor.spriteName + ": y position";
+        } else if (monitor.opcode == "motion_direction") {
+            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.display_name = monitor.spriteName + ": direction";
+        } else if (monitor.opcode == "sound_volume") {
+            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.display_name = "volume";
+        } else if (monitor.opcode == "looks_size") {
+            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.display_name = monitor.spriteName + ": size";
+        } else if (monitor.opcode == "sensing_username") {
+            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.display_name = "username";
+        } else {
+            monitor.value = "unknown opcode";
+            monitor.display_name = monitor.opcode;
+        }
+    }
+
+    // check if all chains have completely stopped running
     if (processed_chains == 0) {
         std::cout << "project is finished running" << std::endl;
         finished = true;
@@ -98,7 +133,8 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
 }
 
 Value EngineFunctions::Engine::compute_input(LinkInput input, ScratchTarget* sprite) {
-    if (input.reporter_id.has_value()) return compute_reporter(input.reporter_id.value(), sprite);
+    if (input.reporter_id.has_value())
+        return compute_reporter(get_reporter_by_id(input.reporter_id.value()), sprite);
 
     ScratchArrayBlock sab = input.sab.sab;
 

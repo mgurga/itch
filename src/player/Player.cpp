@@ -9,6 +9,10 @@ Player::Player(bool& r) : running(r) {
     // v.setCenter(float(window->getSize().x) / 2.0, float(window->getSize().y) / 2.0);
     // v.setSize(window->getSize().x, window->getSize().y);
     // window->setView(v);
+    if (!font.loadFromFile("NotoSans-Regular.ttf")) {
+        std::cout << "font not found" << std::endl;
+        exit(1);
+    }
 }
 
 void Player::draw() {
@@ -91,8 +95,9 @@ void Player::paint(Project& project) {
     stagesprite.setPosition(0, 0);
     window->draw(stagesprite);
 
-    for (ScratchSprite sprite : project.clones) { paint_sprite(sprite); }
-    for (ScratchSprite sprite : project.sprites) { paint_sprite(sprite); }
+    for (ScratchSprite& sprite : project.clones) paint_sprite(sprite);
+    for (ScratchSprite& sprite : project.sprites) paint_sprite(sprite);
+    for (ScratchMonitor& monitor : project.monitors) paint_monitor(monitor);
 
     window->display();
 }
@@ -127,6 +132,176 @@ void Player::paint_sprite(ScratchSprite& sprite) {
     }
 }
 
-PlayerInfo Player::get_player_info() {
-    return {pressed, keys_down, mouse_pos.x, mouse_pos.y, mouse_pressed};
+void Player::paint_monitor(ScratchMonitor& monitor) {
+    switch (monitor.mode) {
+    case MonitorMode::DEFAULT: paint_default_monitor(monitor); return;
+    case MonitorMode::LARGE: paint_large_monitor(monitor); return;
+    case MonitorMode::SLIDER: paint_slider_monitor(monitor); return;
+    default: return;
+    }
+}
+
+void Player::paint_default_monitor(ScratchMonitor& monitor) {
+    float monitor_width = 8;
+    sf::Text display_name_text;
+    display_name_text.setString(monitor.display_name);
+    display_name_text.setFont(font);
+    display_name_text.setCharacterSize(MONITOR_FONT_SIZE);
+    display_name_text.setFillColor(sf::Color::Black);
+    display_name_text.setOutlineThickness(0.3);
+    display_name_text.setPosition(monitor.x + monitor_width, monitor.y + 3);
+    monitor_width += display_name_text.getGlobalBounds().width;
+    monitor_width += 10;
+
+    sf::Text value_text;
+    value_text.setString(monitor.value);
+    value_text.setFont(font);
+    value_text.setCharacterSize(MONITOR_FONT_SIZE);
+    value_text.setFillColor(sf::Color::White);
+    value_text.setOutlineColor(sf::Color::White);
+    value_text.setOutlineThickness(0.2);
+    value_text.setPosition(monitor.x + monitor_width +
+                               (std::max(40.0f, value_text.getGlobalBounds().width) / 2) -
+                               (value_text.getGlobalBounds().width / 2),
+                           monitor.y + 3.5);
+    monitor_width += std::max(40.0f, value_text.getGlobalBounds().width);
+    monitor_width += 10;
+
+    sf::RectangleShape background;
+    background.setSize({monitor_width, 20.0});
+    background.setPosition({static_cast<float>(monitor.x), static_cast<float>(monitor.y)});
+    background.setFillColor(sf::Color(220, 220, 220));
+
+    sf::RectangleShape value_background;
+    value_background.setSize({std::max(40.0f, value_text.getGlobalBounds().width), 14.0});
+    value_background.setPosition(
+        {monitor.x + monitor_width - (std::max(40.0f, value_text.getGlobalBounds().width) + 10),
+         monitor.y + 3.0f});
+    if (monitor.opcode.substr(0, 5) == "data_")
+        value_background.setFillColor(sf::Color(255, 140, 26));
+    else if (monitor.opcode.substr(0, 8) == "sensing_")
+        value_background.setFillColor(sf::Color(92, 177, 214));
+    else if (monitor.opcode.substr(0, 7) == "motion_")
+        value_background.setFillColor(sf::Color(76, 151, 255));
+    else if (monitor.opcode.substr(0, 6) == "looks_")
+        value_background.setFillColor(sf::Color(153, 102, 255));
+    else if (monitor.opcode.substr(0, 6) == "sound_")
+        value_background.setFillColor(sf::Color(207, 99, 207));
+    else
+        value_background.setFillColor(sf::Color::Red);
+
+    window->draw(background);
+    window->draw(value_background);
+    window->draw(display_name_text);
+    window->draw(value_text);
+}
+
+void Player::paint_large_monitor(ScratchMonitor& monitor) {
+    sf::Text value_text;
+    value_text.setString(monitor.value);
+    value_text.setFont(font);
+    value_text.setCharacterSize(MONITOR_FONT_SIZE + 2);
+    value_text.setFillColor(sf::Color::White);
+    value_text.setOutlineColor(sf::Color::White);
+    value_text.setOutlineThickness(0.2);
+    value_text.setPosition(monitor.x + (std::max(40.0f, value_text.getGlobalBounds().width) / 2) -
+                               (value_text.getGlobalBounds().width / 2),
+                           monitor.y + 1);
+
+    sf::RectangleShape value_background;
+    value_background.setSize({std::max(40.0f, value_text.getGlobalBounds().width), 20.0});
+    value_background.setPosition({static_cast<float>(monitor.x), static_cast<float>(monitor.y)});
+    if (monitor.opcode.substr(0, 5) == "data_")
+        value_background.setFillColor(sf::Color(255, 140, 26));
+    else if (monitor.opcode.substr(0, 8) == "sensing_")
+        value_background.setFillColor(sf::Color(92, 177, 214));
+    else if (monitor.opcode.substr(0, 7) == "motion_")
+        value_background.setFillColor(sf::Color(76, 151, 255));
+    else if (monitor.opcode.substr(0, 6) == "looks_")
+        value_background.setFillColor(sf::Color(153, 102, 255));
+    else if (monitor.opcode.substr(0, 6) == "sound_")
+        value_background.setFillColor(sf::Color(207, 99, 207));
+    else
+        value_background.setFillColor(sf::Color::Red);
+
+    window->draw(value_background);
+    window->draw(value_text);
+}
+
+void Player::paint_slider_monitor(ScratchMonitor& monitor) {
+    float monitor_width = 8;
+    sf::Text display_name_text;
+    display_name_text.setString(monitor.display_name);
+    display_name_text.setFont(font);
+    display_name_text.setCharacterSize(MONITOR_FONT_SIZE);
+    display_name_text.setFillColor(sf::Color::Black);
+    display_name_text.setOutlineThickness(0.3);
+    display_name_text.setPosition(monitor.x + monitor_width, monitor.y + 3);
+    monitor_width += display_name_text.getGlobalBounds().width;
+    monitor_width += 10;
+
+    sf::Text value_text;
+    value_text.setString(monitor.value);
+    value_text.setFont(font);
+    value_text.setCharacterSize(MONITOR_FONT_SIZE);
+    value_text.setFillColor(sf::Color::White);
+    value_text.setOutlineColor(sf::Color::White);
+    value_text.setOutlineThickness(0.2);
+    value_text.setPosition(monitor.x + monitor_width +
+                               (std::max(40.0f, value_text.getGlobalBounds().width) / 2) -
+                               (value_text.getGlobalBounds().width / 2),
+                           monitor.y + 3.5);
+    monitor_width += std::max(40.0f, value_text.getGlobalBounds().width);
+    monitor_width += 10;
+
+    sf::RectangleShape background;
+    background.setSize({monitor_width, 40.0});
+    background.setPosition({static_cast<float>(monitor.x), static_cast<float>(monitor.y)});
+    background.setFillColor(sf::Color(220, 220, 220));
+
+    sf::RectangleShape value_background;
+    value_background.setSize({std::max(40.0f, value_text.getGlobalBounds().width), 14.0});
+    value_background.setPosition(
+        {monitor.x + monitor_width - (std::max(40.0f, value_text.getGlobalBounds().width) + 10),
+         monitor.y + 3.0f});
+    if (monitor.opcode.substr(0, 5) == "data_")
+        value_background.setFillColor(sf::Color(255, 140, 26));
+    else if (monitor.opcode.substr(0, 8) == "sensing_")
+        value_background.setFillColor(sf::Color(92, 177, 214));
+    else if (monitor.opcode.substr(0, 7) == "motion_")
+        value_background.setFillColor(sf::Color(76, 151, 255));
+    else if (monitor.opcode.substr(0, 6) == "looks_")
+        value_background.setFillColor(sf::Color(153, 102, 255));
+    else if (monitor.opcode.substr(0, 6) == "sound_")
+        value_background.setFillColor(sf::Color(207, 99, 207));
+    else
+        value_background.setFillColor(sf::Color::Red);
+
+    sf::RectangleShape slider_background;
+    slider_background.setSize({monitor_width - 20, 5});
+    slider_background.setPosition({monitor.x + 10.0f, monitor.y + 25.0f});
+    slider_background.setFillColor(sf::Color(229, 229, 229));
+
+    sf::RectangleShape slider_handle;
+    float handle_x = 0;
+    handle_x += (std::stof(monitor.value)) * ((monitor_width - 20)) /
+                (monitor.sliderMax - monitor.sliderMin);
+    handle_x = std::max(0.0f, handle_x);
+    handle_x = std::min(handle_x, (monitor_width - 20));
+    slider_handle.setSize({10.0f, 10.0f});
+    slider_handle.setPosition({monitor.x + 5.0f + handle_x, monitor.y + 22.5f});
+    slider_handle.setFillColor(sf::Color(0, 92, 200));
+
+    sf::RectangleShape slider_progress_background;
+    slider_progress_background.setSize({handle_x, 5});
+    slider_progress_background.setPosition({monitor.x + 10.0f, monitor.y + 25.0f});
+    slider_progress_background.setFillColor(sf::Color(0, 92, 200));
+
+    window->draw(background);
+    window->draw(value_background);
+    window->draw(display_name_text);
+    window->draw(value_text);
+    window->draw(slider_background);
+    window->draw(slider_progress_background);
+    window->draw(slider_handle);
 }

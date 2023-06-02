@@ -1,9 +1,12 @@
 #include "Engine.hpp"
 
-Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget* s) {
-    Link op = get_reporter_by_id(opid);
-
-    if (op.opcode == OPTYPE::CONDITIONAL) return compute_condition(opid, s);
+// always pass a scratch target when possible.
+// only pass a nullptr when you know 100% the target is not used.
+// for example:
+// sensing_timer - does not need a target
+// motion_xposition - needs a target
+Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
+    if (op.opcode == OPTYPE::CONDITIONAL) return compute_condition(op, s);
 
     // basic math operations: add, subtract, multiple, divide, modulo
     if ((op.opcode.opcode >= 400 && op.opcode.opcode <= 403) ||
@@ -118,8 +121,9 @@ Value EngineFunctions::Engine::compute_reporter(std::string opid, ScratchTarget*
         } else {
             return prj->stage.costumes[prj->stage.currentCostume()].name;
         }
+    case OPCODE::USERNAME: return Value();
     default:
         std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
-        return Value("");
+        return Value();
     }
 }
