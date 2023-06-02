@@ -26,7 +26,7 @@ public:
     Value(int i) : value(static_cast<double>(i)){};
     Value(unsigned int i) : value(static_cast<double>(i)){};
     Value(bool b) : value(b){};
-    Value(){};
+    Value() : value(""){};
 
     operator std::string() { return get_string(); }
     operator double() { return get_number(); }
