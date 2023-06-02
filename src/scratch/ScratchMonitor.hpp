@@ -1,18 +1,12 @@
 #pragma once
 
-#include <string>
 #include <iostream>
-#include <stdlib.h>
 #include <nlohmann/json.hpp>
+#include <string>
 
 using json = nlohmann::json;
 
-enum MonitorMode {
-    DEFAULT,
-    LARGE,
-    SLIDER,
-    LIST
-};
+enum MonitorMode { DEFAULT, LARGE, SLIDER, LIST };
 
 class ScratchMonitor {
 public:
@@ -23,10 +17,12 @@ public:
     std::string opcode;
     std::string variable;
     std::string spriteName;
-    std::string value;
     int height, width;
     int x, y;
     bool visible;
+
+    std::string display_name;
+    std::string value;
 
     // monitors that are NOT lists have these variables
     int sliderMin, sliderMax;

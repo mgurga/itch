@@ -1,6 +1,6 @@
 #include "ScratchMonitor.hpp"
 
-ScratchMonitor::ScratchMonitor(json sm):
+ScratchMonitor::ScratchMonitor(json sm) :
     id(sm["id"]),
     opcode(sm["opcode"]),
     spriteName(sm["spriteName"].is_null() ? "" : sm["spriteName"]),
@@ -9,8 +9,7 @@ ScratchMonitor::ScratchMonitor(json sm):
     height(sm["height"]),
     x(sm["x"]),
     y(sm["y"]),
-    visible(sm["visible"])
-{
+    visible(sm["visible"]) {
     if (sm["mode"] == "default") {
         mode = DEFAULT;
     } else if (sm["mode"] == "large") {
