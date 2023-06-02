@@ -121,9 +121,10 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
         } else {
             return prj->stage.costumes[prj->stage.currentCostume()].name;
         }
-    case OPCODE::USERNAME: return Value();
+    case OPCODE::USERNAME: return Value();  // empty string
+    case OPCODE::VOLUME: return s->volume();
     default:
         std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
-        return Value();
+        return Value();  // empty string
     }
 }
