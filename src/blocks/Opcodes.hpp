@@ -1,156 +1,167 @@
 #pragma once
 
-#include <string>
 #include <iostream>
+#include <string>
 #include <unordered_map>
 
-enum OPTYPE {
-    BLOCK,
-    REPORTER,
-    CONDITIONAL
-};
+enum OPTYPE { BLOCK, REPORTER, CONDITIONAL };
 
 enum OPCODE {
     VARIABLE = -2,
     UNKNOWN = -1,
 
     // Event Blocks
-    WHEN_FLAG_CLICKED = 0, // "event_whenflagclicked"
-    WHEN_KEY_PRESSED = 1, // "event_whenkeypressed"
-    WHEN_THIS_SPRITE_CLICKED = 2, // "event_whenthisspriteclicked"
-    WHEN_GREATER_THAN = 3, // "event_whengreaterthan"
-    WHEN_BROADCAST_RECEIVED = 4, // "event_whenbroadcastreceived"
-    BROADCAST = 5, // "event_broadcast"
-    BROADCAST_AND_WAIT = 6, // "event_broadcastandwait"
+    WHEN_FLAG_CLICKED = 0,         // "event_whenflagclicked"
+    WHEN_KEY_PRESSED = 1,          // "event_whenkeypressed"
+    WHEN_THIS_SPRITE_CLICKED = 2,  // "event_whenthisspriteclicked"
+    WHEN_GREATER_THAN = 3,         // "event_whengreaterthan"
+    WHEN_BROADCAST_RECEIVED = 4,   // "event_whenbroadcastreceived"
+    BROADCAST = 5,                 // "event_broadcast"
+    BROADCAST_AND_WAIT = 6,        // "event_broadcastandwait"
 
     // Motion Blocks
-    MOVE_STEPS = 100, // "motion_movesteps"
-    TURN_RIGHT = 101, // "motion_turnright"
-    TURN_LEFT = 102, // "motion_turnleft"
-    GO_TO = 103, // "motion_goto"
-    GO_TO_XY = 104, // "motion_gotoxy"
-    GLIDE_TO = 105, // "motion_glideto"
-    GLIDE_TO_XY = 106, // "motion_glidesecstoxy"
-    POINT_IN_DIRECTION = 107, // "motion_pointindirection"
-    POINT_TOWARDS = 108, // "motion_pointtowards"
-    CHANGE_X_BY = 109, // "motion_changexby"
-    SET_X_TO = 110, // "motion_setx"
-    CHANGE_Y_BY = 111, // "motion_changeyby"
-    SET_Y_TO = 112, // "motion_sety"
-    IF_ON_EDGE_BOUNCE = 113, // "motion_ifonedgebounce"
-    SET_ROTATION_STYLE = 114, // "motion_setrotationstyle"
-    X_POS = 115, // "motion_xposition"
-    Y_POS = 116, // "motion_yposition"
-    DIRECTION = 117, // "motion_direction"
+    MOVE_STEPS = 100,          // "motion_movesteps"
+    TURN_RIGHT = 101,          // "motion_turnright"
+    TURN_LEFT = 102,           // "motion_turnleft"
+    GO_TO = 103,               // "motion_goto"
+    GO_TO_XY = 104,            // "motion_gotoxy"
+    GLIDE_TO = 105,            // "motion_glideto"
+    GLIDE_TO_XY = 106,         // "motion_glidesecstoxy"
+    POINT_IN_DIRECTION = 107,  // "motion_pointindirection"
+    POINT_TOWARDS = 108,       // "motion_pointtowards"
+    CHANGE_X_BY = 109,         // "motion_changexby"
+    SET_X_TO = 110,            // "motion_setx"
+    CHANGE_Y_BY = 111,         // "motion_changeyby"
+    SET_Y_TO = 112,            // "motion_sety"
+    IF_ON_EDGE_BOUNCE = 113,   // "motion_ifonedgebounce"
+    SET_ROTATION_STYLE = 114,  // "motion_setrotationstyle"
+    X_POS = 115,               // "motion_xposition"
+    Y_POS = 116,               // "motion_yposition"
+    DIRECTION = 117,           // "motion_direction"
 
     // Looks Blocks
-    SAY_FOR_SECS = 200, // "looks_sayforsecs"
-    SAY = 201, // "looks_say"
-    THINK_FOR_SECS = 202, // "looks_thinkforsecs"
-    THINK = 203, // "looks_think"
-    SWITCH_TO_COSTUME = 204, // "looks_switchcostumeto"
-    NEXT_COSTUME = 205, // "looks_nextcostume"
-    SWITCH_TO_BACKDROP = 206, // "looks_switchbackdropto"
-    NEXT_BACKDROP = 207, // "looks_nextbackdrop"
-    CHANGE_SIZE_BY = 208, // "looks_changesizeby"
-    SET_SIZE_TO = 209, // "looks_setsizeto"
-    CHANGE_EFFECT_BY = 210, // "looks_changeeffectby"
-    SET_EFFECT_TO = 211, // "looks_seteffectto"
-    CLEAR_GRAPHIC_EFFECTS = 212, // "looks_cleargraphiceffects"
-    SHOW = 213, // "looks_show"
-    HIDE = 214, // "looks_hide"
-    GO_TO_LAYER = 215, // "looks_gotofrontback"
-    CHANGE_LAYER_BY = 216, // "looks_goforwardbackwardlayers"
-    COSTUME_NUM_NAME = 217, // "looks_costumenumbername"
-    BACKDROP_NUM_NAME = 218, // "looks_backdropnumbername"
-    SIZE_VAL = 219, // "looks_size"
+    SAY_FOR_SECS = 200,           // "looks_sayforsecs"
+    SAY = 201,                    // "looks_say"
+    THINK_FOR_SECS = 202,         // "looks_thinkforsecs"
+    THINK = 203,                  // "looks_think"
+    SWITCH_TO_COSTUME = 204,      // "looks_switchcostumeto"
+    NEXT_COSTUME = 205,           // "looks_nextcostume"
+    SWITCH_TO_BACKDROP = 206,     // "looks_switchbackdropto"
+    NEXT_BACKDROP = 207,          // "looks_nextbackdrop"
+    CHANGE_SIZE_BY = 208,         // "looks_changesizeby"
+    SET_SIZE_TO = 209,            // "looks_setsizeto"
+    CHANGE_EFFECT_BY = 210,       // "looks_changeeffectby"
+    SET_EFFECT_TO = 211,          // "looks_seteffectto"
+    CLEAR_GRAPHIC_EFFECTS = 212,  // "looks_cleargraphiceffects"
+    SHOW = 213,                   // "looks_show"
+    HIDE = 214,                   // "looks_hide"
+    GO_TO_LAYER = 215,            // "looks_gotofrontback"
+    CHANGE_LAYER_BY = 216,        // "looks_goforwardbackwardlayers"
+    COSTUME_NUM_NAME = 217,       // "looks_costumenumbername"
+    BACKDROP_NUM_NAME = 218,      // "looks_backdropnumbername"
+    SIZE_VAL = 219,               // "looks_size"
 
     // Variables and Lists
-    SET_VARIABLE_TO = 300, // "data_setvariableto"
-    CHANGE_VARIABLE_BY = 301, // "data_changevariableby"
-    SHOW_VARIABLE = 302, // "data_showvariable"
-    HIDE_VARIABLE = 303, // "data_hidevariable"
-    ADD_TO_LIST = 304, // "data_addtolist"
-    DELETE_OF = 305, // "data_deleteoflist"
-    DELETE_ALL = 306, // "data_deletealloflist"
-    INSERT_AT = 307, // "data_insertatlist"
-    REPLACE_ITEM = 308, // "data_replaceitemoflist"
-    LIST_ITEM = 309, // "data_itemoflist"
-    ITEM_NUM_IN_LIST = 310, // "data_itemnumoflist"
-    LIST_LENGTH = 311, // "data_lengthoflist"
-    LIST_CONTAINS = 312, // "data_listcontainsitem"
-    SHOW_LIST = 313, // "data_showlist"
-    HIDE_LIST = 314, // "data_hidelist"
+    SET_VARIABLE_TO = 300,     // "data_setvariableto"
+    CHANGE_VARIABLE_BY = 301,  // "data_changevariableby"
+    SHOW_VARIABLE = 302,       // "data_showvariable"
+    HIDE_VARIABLE = 303,       // "data_hidevariable"
+    ADD_TO_LIST = 304,         // "data_addtolist"
+    DELETE_OF = 305,           // "data_deleteoflist"
+    DELETE_ALL = 306,          // "data_deletealloflist"
+    INSERT_AT = 307,           // "data_insertatlist"
+    REPLACE_ITEM = 308,        // "data_replaceitemoflist"
+    LIST_ITEM = 309,           // "data_itemoflist"
+    ITEM_NUM_IN_LIST = 310,    // "data_itemnumoflist"
+    LIST_LENGTH = 311,         // "data_lengthoflist"
+    LIST_CONTAINS = 312,       // "data_listcontainsitem"
+    SHOW_LIST = 313,           // "data_showlist"
+    HIDE_LIST = 314,           // "data_hidelist"
 
     // Operator Symbols
-    OPERATOR_ADD = 400, // "operator_add"
-    OPERATOR_SUBTRACT = 401, // "operator_subtract"
-    OPERATOR_MULTIPLY = 402, // "operator_multiply"
-    OPERATOR_DIVIDE = 403, // "operator_divide"
-    OPERATOR_RANDOM = 404, // "operator_random"
-    OPERATOR_GREATER_THAN = 405, // "operator_gt"
-    OPERATOR_LESS_THAN = 406, // "operator_lt"
-    OPERATOR_EQUALS = 407, // "operator_equals"
-    OPERATOR_AND = 408, // "operator_and"
-    OPERATOR_OR = 409, // "operator_or"
-    OPERATOR_NOT = 410, // "operator_not"
-    OPERATOR_JOIN = 411, // "operator_join"
-    OPERATOR_LETTER_OF = 412, // "operator_letter_of"
-    OPERATOR_LENGTH = 413, // "operator_length"
-    OPERATOR_CONTAINS = 414, // "operator_contains"
-    OPERATOR_MOD = 415, // "operator_mod"
-    OPERATOR_ROUND = 416, // "operator_round"
-    OPERATOR_MATHOP = 417, // "operator_mathop"
+    OPERATOR_ADD = 400,           // "operator_add"
+    OPERATOR_SUBTRACT = 401,      // "operator_subtract"
+    OPERATOR_MULTIPLY = 402,      // "operator_multiply"
+    OPERATOR_DIVIDE = 403,        // "operator_divide"
+    OPERATOR_RANDOM = 404,        // "operator_random"
+    OPERATOR_GREATER_THAN = 405,  // "operator_gt"
+    OPERATOR_LESS_THAN = 406,     // "operator_lt"
+    OPERATOR_EQUALS = 407,        // "operator_equals"
+    OPERATOR_AND = 408,           // "operator_and"
+    OPERATOR_OR = 409,            // "operator_or"
+    OPERATOR_NOT = 410,           // "operator_not"
+    OPERATOR_JOIN = 411,          // "operator_join"
+    OPERATOR_LETTER_OF = 412,     // "operator_letter_of"
+    OPERATOR_LENGTH = 413,        // "operator_length"
+    OPERATOR_CONTAINS = 414,      // "operator_contains"
+    OPERATOR_MOD = 415,           // "operator_mod"
+    OPERATOR_ROUND = 416,         // "operator_round"
+    OPERATOR_MATHOP = 417,        // "operator_mathop"
 
     // Control Blocks
-    WAIT = 500, // "control_wait"
-    REPEAT = 501, // "control_repeat"
-    FOREVER = 502, // "control_forever"
-    IF = 503, // "control_if"
-    IF_ELSE = 504, // "control_if_else"
-    WAIT_UNTIL = 505, // "control_wait_until"
-    REPEAT_UNTIL = 506, // "control_repeat_until"
-    STOP = 507, // "control_stop"
-    START_AS_CLONE = 508, // "control_start_as_clone"
-    CREATE_CLONE_OF = 509, // "control_create_clone_of"
-    DELETE_THIS_CLONE = 510, // "control_delete_this_clone"
+    WAIT = 500,               // "control_wait"
+    REPEAT = 501,             // "control_repeat"
+    FOREVER = 502,            // "control_forever"
+    IF = 503,                 // "control_if"
+    IF_ELSE = 504,            // "control_if_else"
+    WAIT_UNTIL = 505,         // "control_wait_until"
+    REPEAT_UNTIL = 506,       // "control_repeat_until"
+    STOP = 507,               // "control_stop"
+    START_AS_CLONE = 508,     // "control_start_as_clone"
+    CREATE_CLONE_OF = 509,    // "control_create_clone_of"
+    DELETE_THIS_CLONE = 510,  // "control_delete_this_clone"
 
     // Sensing Blocks
-    TOUCHING_OBJECT = 600, // "sensing_touchingobject"
-    TOUCHING_OBJECT_MENU = 601, // "sensing_touchingobjectmenu"
-    TOUCHING_COLOR = 602, // "sensing_touchingcolor"
-    COLOR_TOUCHING_COLOR = 603, // "sensing_coloristouchingcolor"
-    DISTANCE_TO = 604, // "sensing_distanceto"
-    DISTANCE_TO_MENU = 605, // "sensing_distancetomenu"
-    ASK_AND_WAIT = 606, // "sensing_askandwait"
-    ANSWER = 607, // "sensing_answer"
-    KEY_PRESSED = 608, // "sensing_keypressed"
-    KEY_OPTIONS = 609, // "sensing_keyoptions"
-    MOUSE_DOWN = 610, // "sensing_mousedown"
-    MOUSE_X = 611, // "sensing_mousex"
-    MOUSE_Y = 612, // "sensing_mousey"
-    SET_DRAG_MODE = 613, // "sensing_setdragmode"
-    LOUDNESS = 614, // "sensing_loudness"
-    TIMER = 615, // "sensing_timer"
-    RESET_TIMER = 616, // "sensing_resettimer"
-    OF = 617, // "sensing_of"
-    OF_MENU = 618, // "sensing_of_object_menu"
-    CURRENT_TIME = 619, // "sensing_current"
-    DAYS_SINCE_2000 = 620, // "sensing_dayssince2000"
-    USERNAME = 621, // "sensing_username"
+    TOUCHING_OBJECT = 600,       // "sensing_touchingobject"
+    TOUCHING_OBJECT_MENU = 601,  // "sensing_touchingobjectmenu"
+    TOUCHING_COLOR = 602,        // "sensing_touchingcolor"
+    COLOR_TOUCHING_COLOR = 603,  // "sensing_coloristouchingcolor"
+    DISTANCE_TO = 604,           // "sensing_distanceto"
+    DISTANCE_TO_MENU = 605,      // "sensing_distancetomenu"
+    ASK_AND_WAIT = 606,          // "sensing_askandwait"
+    ANSWER = 607,                // "sensing_answer"
+    KEY_PRESSED = 608,           // "sensing_keypressed"
+    KEY_OPTIONS = 609,           // "sensing_keyoptions"
+    MOUSE_DOWN = 610,            // "sensing_mousedown"
+    MOUSE_X = 611,               // "sensing_mousex"
+    MOUSE_Y = 612,               // "sensing_mousey"
+    SET_DRAG_MODE = 613,         // "sensing_setdragmode"
+    LOUDNESS = 614,              // "sensing_loudness"
+    TIMER = 615,                 // "sensing_timer"
+    RESET_TIMER = 616,           // "sensing_resettimer"
+    OF = 617,                    // "sensing_of"
+    OF_MENU = 618,               // "sensing_of_object_menu"
+    CURRENT_TIME = 619,          // "sensing_current"
+    DAYS_SINCE_2000 = 620,       // "sensing_dayssince2000"
+    USERNAME = 621,              // "sensing_username"
+
+    // Sound Blocks
+    PLAY_UNTIL_DONE = 700,         // "sound_playuntildone"
+    SOUNDS_MENU = 701,             // "sound_sounds_menu"
+    PLAY = 702,                    // "sound_play"
+    STOP_ALL_SOUNDS = 703,         // "sound_stopallsounds"
+    CHANGE_SOUND_EFFECT_BY = 704,  // "sound_changeeffectby"
+    SET_SOUND_EFFECT_TO = 705,     // "sound_seteffectto"
+    CLEAR_SOUND_EFFECTS = 706,     // "sound_cleareffects"
+    CHANGE_VOLUME_BY = 707,        // "sound_changevolumeby"
+    SET_VOLUME_TO = 708,           // "sound_setvolumeto"
+    VOLUME = 709,                  // "sound_volume"
 };
 
 struct OPCODETYPE {
     OPCODE opcode;
     OPTYPE optype;
 
-    OPCODETYPE(OPCODE opc, OPTYPE opt) { opcode = opc; optype = opt; }
+    OPCODETYPE(OPCODE opc, OPTYPE opt) {
+        opcode = opc;
+        optype = opt;
+    }
 
     operator OPCODE() { return opcode; }
     operator OPTYPE() { return optype; }
 };
 
-const std::unordered_map<std::string, OPCODETYPE> opcodeenum {
+const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"event_whenflagclicked", OPCODETYPE(OPCODE::WHEN_FLAG_CLICKED, OPTYPE::BLOCK)},
     {"event_whenkeypressed", OPCODETYPE(OPCODE::WHEN_KEY_PRESSED, OPTYPE::BLOCK)},
     {"event_whenthisspriteclicked", OPCODETYPE(OPCODE::WHEN_THIS_SPRITE_CLICKED, OPTYPE::BLOCK)},
@@ -267,15 +278,25 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum {
     {"sensing_dayssince2000", OPCODETYPE(OPCODE::DAYS_SINCE_2000, OPTYPE::REPORTER)},
     {"sensing_username", OPCODETYPE(OPCODE::USERNAME, OPTYPE::REPORTER)},
 
-    {"variable", OPCODETYPE(OPCODE::VARIABLE, OPTYPE::REPORTER)}
-};
+    {"sound_playuntildone", OPCODETYPE(OPCODE::PLAY_UNTIL_DONE, OPTYPE::BLOCK)},
+    {"sound_sounds_menu", OPCODETYPE(OPCODE::SOUNDS_MENU, OPTYPE::CONDITIONAL)},
+    {"sound_play", OPCODETYPE(OPCODE::PLAY, OPTYPE::BLOCK)},
+    {"sound_stopallsounds", OPCODETYPE(OPCODE::STOP_ALL_SOUNDS, OPTYPE::BLOCK)},
+    {"sound_changeeffectby", OPCODETYPE(OPCODE::CHANGE_EFFECT_BY, OPTYPE::BLOCK)},
+    {"sound_seteffectto", OPCODETYPE(OPCODE::SET_EFFECT_TO, OPTYPE::BLOCK)},
+    {"sound_cleareffects", OPCODETYPE(OPCODE::CLEAR_SOUND_EFFECTS, OPTYPE::BLOCK)},
+    {"sound_changevolumeby", OPCODETYPE(OPCODE::CHANGE_VOLUME_BY, OPTYPE::BLOCK)},
+    {"sound_setvolumeto", OPCODETYPE(OPCODE::SET_VOLUME_TO, OPTYPE::BLOCK)},
+    {"sound_volume", OPCODETYPE(OPCODE::VOLUME, OPTYPE::REPORTER)},
+
+    {"variable", OPCODETYPE(OPCODE::VARIABLE, OPTYPE::REPORTER)}};
 
 class Opcodes {
 public:
     static OPCODETYPE opcode_to_enum(std::string opcode) {
         try {
             return opcodeenum.at(opcode);
-        } catch(std::exception e) {
+        } catch (std::exception e) {
             std::cout << "unknown opcode detected: '" << opcode << "'" << std::endl;
             return {OPCODE::UNKNOWN, OPTYPE::BLOCK};
         }
