@@ -66,6 +66,21 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
         }
     }
 
+    if (op.opcode.opcode == OPCODE::CURRENT_TIME) {
+        std::string period = op.fields["CURRENTMENU"][0];
+        auto curtime = std::chrono::system_clock::now();
+        time_t t = std::chrono::system_clock::to_time_t(curtime);
+        auto tm = localtime(&t);
+
+        if (period == "DATE") return tm->tm_mday;
+        if (period == "YEAR") return 1900 + tm->tm_year;
+        if (period == "MONTH") return tm->tm_mon + 1;
+        if (period == "DAYOFWEEK") return tm->tm_wday + 1;
+        if (period == "HOUR") return tm->tm_hour;
+        if (period == "MINUTE") return tm->tm_min;
+        if (period == "SECOND") return tm->tm_sec;
+    }
+
     if (op.opcode.opcode == OPCODE::OPERATOR_MATHOP) {
         std::string mathop = op.fields["OPERATOR"][0];
         Value in = compute_input(op.inputs["NUM"], s);
