@@ -22,15 +22,7 @@ ScratchMonitor::ScratchMonitor(json sm) :
         mode = DEFAULT;
     }
 
-    if (sm["params"].empty()) {
-        variable = "";
-    } else if (!sm["params"]["VARIABLE"].is_null()) {
-        variable = sm["params"]["VARIABLE"];
-    } else if (!sm["params"]["LIST"].is_null()) {
-        variable = sm["params"]["LIST"];
-    } else {
-        variable = "";
-    }
+    for (auto p : sm["params"].items()) params[p.key()] = p.value();
 
     if (mode != LIST) {
         sliderMin = sm["sliderMin"];

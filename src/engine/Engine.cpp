@@ -96,8 +96,8 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
         ScratchTarget* target =
             monitor.spriteName == "" ? nullptr : &get_target_by_name(monitor.spriteName);
         if (monitor.opcode == "data_variable") {
-            monitor.value = get_var_by_name(monitor.variable).val().get_string();
-            monitor.display_name = monitor.variable;
+            monitor.value = get_var_by_name(monitor.params["VARIABLE"]).val().get_string();
+            monitor.display_name = monitor.params["VARIABLE"];
         } else if (monitor.opcode == "sensing_timer") {
             monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
             monitor.display_name = "timer";
@@ -119,6 +119,17 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
         } else if (monitor.opcode == "sensing_username") {
             monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
             monitor.display_name = "username";
+        } else if (monitor.opcode == "sensing_current") {
+            Link l(monitor.opcode);
+            l.fields["CURRENTMENU"].push_back(monitor.params["CURRENTMENU"]);
+            monitor.value = compute_reporter(l, target).get_string();
+            if (monitor.params["CURRENTMENU"] == "YEAR") monitor.display_name = "year";
+            if (monitor.params["CURRENTMENU"] == "MONTH") monitor.display_name = "month";
+            if (monitor.params["CURRENTMENU"] == "DAYOFWEEK") monitor.display_name = "day of week";
+            if (monitor.params["CURRENTMENU"] == "HOUR") monitor.display_name = "hour";
+            if (monitor.params["CURRENTMENU"] == "SECOND") monitor.display_name = "second";
+            if (monitor.params["CURRENTMENU"] == "MINUTE") monitor.display_name = "minute";
+            if (monitor.params["CURRENTMENU"] == "DATE") monitor.display_name = "date";
         } else {
             monitor.value = "unknown opcode";
             monitor.display_name = monitor.opcode;

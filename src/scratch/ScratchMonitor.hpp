@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <map>
 #include <nlohmann/json.hpp>
 #include <string>
 
@@ -15,11 +16,11 @@ public:
     std::string id;
     MonitorMode mode;
     std::string opcode;
-    std::string variable;
     std::string spriteName;
     int height, width;
     int x, y;
     bool visible;
+    std::map<std::string, std::string> params;
 
     std::string display_name;
     std::string value;
