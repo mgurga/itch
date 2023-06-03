@@ -97,7 +97,8 @@ void Player::paint(Project& project) {
 
     for (ScratchSprite& sprite : project.clones) paint_sprite(sprite);
     for (ScratchSprite& sprite : project.sprites) paint_sprite(sprite);
-    for (ScratchMonitor& monitor : project.monitors) paint_monitor(monitor);
+    for (ScratchMonitor& monitor : project.monitors)
+        if (monitor.visible) paint_monitor(monitor);
 
     window->display();
 }

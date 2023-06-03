@@ -93,6 +93,7 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
 
     // update monitor values
     for (ScratchMonitor& monitor : prj->monitors) {
+        if (!monitor.visible) continue;
         ScratchTarget* target =
             monitor.spriteName == "" ? nullptr : &get_target_by_name(monitor.spriteName);
         if (monitor.opcode == "data_variable") {
