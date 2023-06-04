@@ -25,6 +25,7 @@ private:
     void paint_default_monitor(ScratchMonitor& monitor);
     void paint_large_monitor(ScratchMonitor& monitor);
     void paint_slider_monitor(ScratchMonitor& monitor);
+    void paint_list_monitor(ScratchMonitor& monitor);
 
     unsigned int ww, wh;
 

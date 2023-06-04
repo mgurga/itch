@@ -1,7 +1,5 @@
 #include "Player.hpp"
 
-#include <math.h>
-
 Player::Player(bool& r) : running(r) {
     window = new sf::RenderWindow(sf::VideoMode(480, 360), "Itch");
     window->setKeyRepeatEnabled(false);
@@ -138,6 +136,7 @@ void Player::paint_monitor(ScratchMonitor& monitor) {
     case MonitorMode::DEFAULT: paint_default_monitor(monitor); return;
     case MonitorMode::LARGE: paint_large_monitor(monitor); return;
     case MonitorMode::SLIDER: paint_slider_monitor(monitor); return;
+    case MonitorMode::LIST: paint_list_monitor(monitor); return;
     default: return;
     }
 }
@@ -155,7 +154,7 @@ void Player::paint_default_monitor(ScratchMonitor& monitor) {
     monitor_width += 10;
 
     sf::Text value_text;
-    value_text.setString(monitor.value);
+    value_text.setString(monitor.values.at(0));
     value_text.setFont(font);
     value_text.setCharacterSize(MONITOR_FONT_SIZE);
     value_text.setFillColor(sf::Color::White);
@@ -199,7 +198,7 @@ void Player::paint_default_monitor(ScratchMonitor& monitor) {
 
 void Player::paint_large_monitor(ScratchMonitor& monitor) {
     sf::Text value_text;
-    value_text.setString(monitor.value);
+    value_text.setString(monitor.values.at(0));
     value_text.setFont(font);
     value_text.setCharacterSize(MONITOR_FONT_SIZE + 2);
     value_text.setFillColor(sf::Color::White);
@@ -242,7 +241,7 @@ void Player::paint_slider_monitor(ScratchMonitor& monitor) {
     monitor_width += 10;
 
     sf::Text value_text;
-    value_text.setString(monitor.value);
+    value_text.setString(monitor.values.at(0));
     value_text.setFont(font);
     value_text.setCharacterSize(MONITOR_FONT_SIZE);
     value_text.setFillColor(sf::Color::White);
@@ -285,7 +284,7 @@ void Player::paint_slider_monitor(ScratchMonitor& monitor) {
 
     sf::RectangleShape slider_handle;
     float handle_x = 0;
-    handle_x += (std::stof(monitor.value)) * ((monitor_width - 20)) /
+    handle_x += (std::stof(monitor.values.at(0))) * ((monitor_width - 20)) /
                 (monitor.sliderMax - monitor.sliderMin);
     handle_x = std::max(0.0f, handle_x);
     handle_x = std::min(handle_x, (monitor_width - 20));
@@ -305,4 +304,87 @@ void Player::paint_slider_monitor(ScratchMonitor& monitor) {
     window->draw(slider_background);
     window->draw(slider_progress_background);
     window->draw(slider_handle);
+}
+
+void Player::paint_list_monitor(ScratchMonitor& monitor) {
+    sf::RectangleShape background;
+    background.setPosition({static_cast<float>(monitor.x), static_cast<float>(monitor.y)});
+    background.setSize({static_cast<float>(monitor.width), static_cast<float>(monitor.height)});
+    background.setFillColor(sf::Color(220, 220, 220));
+
+    sf::RectangleShape list_name_background;
+    list_name_background.setPosition(
+        {static_cast<float>(monitor.x) + 1, static_cast<float>(monitor.y) + 1});
+    list_name_background.setSize({static_cast<float>(monitor.width) - 2, 20.0f});
+    list_name_background.setFillColor(sf::Color::White);
+
+    sf::Text list_name_text;
+    list_name_text.setString(monitor.display_name);
+    list_name_text.setFont(font);
+    list_name_text.setCharacterSize(MONITOR_FONT_SIZE);
+    list_name_text.setFillColor(sf::Color::Black);
+    list_name_text.setOutlineThickness(0.3);
+    list_name_text.setPosition(
+        monitor.x + (monitor.width / 2.0f) - (list_name_text.getGlobalBounds().width / 2.0f),
+        monitor.y + 4);
+
+    window->draw(background);
+    window->draw(list_name_background);
+    window->draw(list_name_text);
+
+    float item_y = 3;
+    int index = 1;
+    for (std::string s : monitor.values) {
+        if (item_y + monitor.y + 20 > 360) break;
+
+        sf::RectangleShape item_background;
+        item_background.setFillColor(sf::Color(252, 102, 44));
+        item_background.setPosition(monitor.x + 20.0f, monitor.y + 20 + item_y);
+        item_background.setSize({monitor.width - 23.0f, 20});
+
+        sf::Text item_text;
+        item_text.setString(s);
+        item_text.setFont(font);
+        item_text.setCharacterSize(MONITOR_FONT_SIZE + 2);
+        item_text.setFillColor(sf::Color::White);
+        item_text.setOutlineColor(sf::Color::White);
+        item_text.setOutlineThickness(0.2);
+        item_text.setPosition(monitor.x + 25.0f, monitor.y + 22 + item_y);
+
+        sf::Text item_index_text;
+        item_index_text.setString(std::to_string(index));
+        item_index_text.setFont(font);
+        item_index_text.setCharacterSize(MONITOR_FONT_SIZE + 2);
+        item_index_text.setFillColor(sf::Color::Black);
+        item_index_text.setOutlineColor(sf::Color::Black);
+        item_index_text.setOutlineThickness(0.2);
+        item_index_text.setPosition(
+            monitor.x + 8.0f - (item_index_text.getGlobalBounds().width / 2.0f),
+            monitor.y + 22 + item_y);
+
+        index++;
+        item_y += 22;
+        window->draw(item_background);
+        window->draw(item_index_text);
+        window->draw(item_text);
+    }
+
+    sf::RectangleShape list_length_background;
+    list_length_background.setPosition({static_cast<float>(monitor.x) + 1,
+                                        static_cast<float>(monitor.y) + monitor.height - 21.0f});
+    list_length_background.setSize({static_cast<float>(monitor.width) - 2, 20.0f});
+    list_length_background.setFillColor(sf::Color::White);
+
+    sf::Text list_length_text;
+    list_length_text.setString("length " + std::to_string(monitor.values.size()));
+    list_length_text.setFont(font);
+    list_length_text.setCharacterSize(MONITOR_FONT_SIZE);
+    list_length_text.setFillColor(sf::Color::Black);
+    list_length_text.setOutlineThickness(0.3);
+    list_length_text.setPosition(
+        monitor.x + (monitor.width / 2.0f) - (list_length_text.getGlobalBounds().width / 2.0f),
+        monitor.y + monitor.height - 18.0f);
+
+    window->draw(list_length_background);
+    window->draw(list_length_text);
 }

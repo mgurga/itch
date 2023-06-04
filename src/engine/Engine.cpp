@@ -94,66 +94,72 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     // update monitor values
     for (ScratchMonitor& monitor : prj->monitors) {
         if (!monitor.visible) continue;
+        monitor.values.clear();
         ScratchTarget* target =
             monitor.spriteName == "" ? nullptr : &get_target_by_name(monitor.spriteName);
         if (monitor.opcode == "data_variable") {
-            monitor.value = get_var_by_name(monitor.params["VARIABLE"]).val().get_string();
+            monitor.values.push_back(
+                get_var_by_name(monitor.params["VARIABLE"]).val().get_string());
             monitor.display_name = monitor.params["VARIABLE"];
+        } else if (monitor.opcode == "data_listcontents") {
+            for (Value v : get_list_by_name(monitor.params["LIST"]).values)
+                monitor.values.push_back(v);
+            monitor.display_name = monitor.params["LIST"];
         } else if (monitor.opcode == "sensing_timer") {
-            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
             monitor.display_name = "timer";
         } else if (monitor.opcode == "motion_xposition") {
-            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
             monitor.display_name = monitor.spriteName + ": x position";
         } else if (monitor.opcode == "motion_yposition") {
-            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
             monitor.display_name = monitor.spriteName + ": y position";
         } else if (monitor.opcode == "motion_direction") {
-            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
             monitor.display_name = monitor.spriteName + ": direction";
         } else if (monitor.opcode == "sound_volume") {
-            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
             monitor.display_name = "volume";
         } else if (monitor.opcode == "looks_size") {
-            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
             monitor.display_name = monitor.spriteName + ": size";
         } else if (monitor.opcode == "sensing_username") {
-            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
             monitor.display_name = "username";
         } else if (monitor.opcode == "sensing_loudness") {
-            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
             monitor.display_name = "loudness";
         } else if (monitor.opcode == "sensing_answer") {
-            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
             monitor.display_name = "answer";
         } else if (monitor.opcode == "looks_costumenumbername") {
             if (monitor.params["NUMBER_NAME"] == "number") {
                 Link l(monitor.opcode);
                 l.fields["NUMBER_NAME"].push_back("number");
-                monitor.value = compute_reporter(l, target).get_string();
+                monitor.values.push_back(compute_reporter(l, target).get_string());
                 monitor.display_name = monitor.spriteName + ": costume number";
             } else {
                 Link l(monitor.opcode);
                 l.fields["NUMBER_NAME"].push_back("name");
-                monitor.value = compute_reporter(l, target).get_string();
+                monitor.values.push_back(compute_reporter(l, target).get_string());
                 monitor.display_name = monitor.spriteName + ": costume name";
             }
         } else if (monitor.opcode == "looks_backdropnumbername") {
             if (monitor.params["NUMBER_NAME"] == "number") {
                 Link l(monitor.opcode);
                 l.fields["NUMBER_NAME"].push_back("number");
-                monitor.value = compute_reporter(l, target).get_string();
+                monitor.values.push_back(compute_reporter(l, target).get_string());
                 monitor.display_name = "backdrop number";
             } else {
                 Link l(monitor.opcode);
                 l.fields["NUMBER_NAME"].push_back("name");
-                monitor.value = compute_reporter(l, target).get_string();
+                monitor.values.push_back(compute_reporter(l, target).get_string());
                 monitor.display_name = "backdrop name";
             }
         } else if (monitor.opcode == "sensing_current") {
             Link l(monitor.opcode);
             l.fields["CURRENTMENU"].push_back(monitor.params["CURRENTMENU"]);
-            monitor.value = compute_reporter(l, target).get_string();
+            monitor.values.push_back(compute_reporter(l, target).get_string());
             if (monitor.params["CURRENTMENU"] == "YEAR") monitor.display_name = "year";
             if (monitor.params["CURRENTMENU"] == "MONTH") monitor.display_name = "month";
             if (monitor.params["CURRENTMENU"] == "DAYOFWEEK") monitor.display_name = "day of week";
@@ -162,7 +168,7 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
             if (monitor.params["CURRENTMENU"] == "MINUTE") monitor.display_name = "minute";
             if (monitor.params["CURRENTMENU"] == "DATE") monitor.display_name = "date";
         } else {
-            monitor.value = "unknown opcode";
+            monitor.values.push_back("unknown opcode");
             monitor.display_name = monitor.opcode;
         }
     }

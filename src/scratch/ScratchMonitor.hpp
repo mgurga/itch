@@ -1,9 +1,9 @@
 #pragma once
 
-#include <iostream>
 #include <map>
 #include <nlohmann/json.hpp>
 #include <string>
+#include <vector>
 
 using json = nlohmann::json;
 
@@ -23,7 +23,7 @@ public:
     std::map<std::string, std::string> params;
 
     std::string display_name;
-    std::string value;
+    std::vector<std::string> values;
 
     // monitors that are NOT lists have these variables
     int sliderMin, sliderMax;
