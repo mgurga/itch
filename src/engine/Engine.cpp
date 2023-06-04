@@ -123,6 +123,9 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
         } else if (monitor.opcode == "sensing_loudness") {
             monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
             monitor.display_name = "loudness";
+        } else if (monitor.opcode == "sensing_answer") {
+            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.display_name = "answer";
         } else if (monitor.opcode == "looks_costumenumbername") {
             if (monitor.params["NUMBER_NAME"] == "number") {
                 Link l(monitor.opcode);

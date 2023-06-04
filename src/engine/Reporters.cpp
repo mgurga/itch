@@ -138,6 +138,7 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
         }
     case OPCODE::USERNAME: return Value();  // empty string
     case OPCODE::VOLUME: return s->volume();
+    case OPCODE::ANSWER: return Value();
     default:
         std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
         return Value();  // empty string
