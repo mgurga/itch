@@ -120,6 +120,9 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
         } else if (monitor.opcode == "sensing_username") {
             monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
             monitor.display_name = "username";
+        } else if (monitor.opcode == "sensing_loudness") {
+            monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
+            monitor.display_name = "loudness";
         } else if (monitor.opcode == "sensing_current") {
             Link l(monitor.opcode);
             l.fields["CURRENTMENU"].push_back(monitor.params["CURRENTMENU"]);
