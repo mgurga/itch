@@ -123,6 +123,30 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
         } else if (monitor.opcode == "sensing_loudness") {
             monitor.value = compute_reporter(Link(monitor.opcode), target).get_string();
             monitor.display_name = "loudness";
+        } else if (monitor.opcode == "looks_costumenumbername") {
+            if (monitor.params["NUMBER_NAME"] == "number") {
+                Link l(monitor.opcode);
+                l.fields["NUMBER_NAME"].push_back("number");
+                monitor.value = compute_reporter(l, target).get_string();
+                monitor.display_name = monitor.spriteName + ": costume number";
+            } else {
+                Link l(monitor.opcode);
+                l.fields["NUMBER_NAME"].push_back("name");
+                monitor.value = compute_reporter(l, target).get_string();
+                monitor.display_name = monitor.spriteName + ": costume name";
+            }
+        } else if (monitor.opcode == "looks_backdropnumbername") {
+            if (monitor.params["NUMBER_NAME"] == "number") {
+                Link l(monitor.opcode);
+                l.fields["NUMBER_NAME"].push_back("number");
+                monitor.value = compute_reporter(l, target).get_string();
+                monitor.display_name = "backdrop number";
+            } else {
+                Link l(monitor.opcode);
+                l.fields["NUMBER_NAME"].push_back("name");
+                monitor.value = compute_reporter(l, target).get_string();
+                monitor.display_name = "backdrop name";
+            }
         } else if (monitor.opcode == "sensing_current") {
             Link l(monitor.opcode);
             l.fields["CURRENTMENU"].push_back(monitor.params["CURRENTMENU"]);
