@@ -119,7 +119,7 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
             monitor.display_name = monitor.spriteName + ": direction";
         } else if (monitor.opcode == "sound_volume") {
             monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
-            monitor.display_name = "volume";
+            monitor.display_name = monitor.spriteName + ": volume";
         } else if (monitor.opcode == "looks_size") {
             monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
             monitor.display_name = monitor.spriteName + ": size";
