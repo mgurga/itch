@@ -1,5 +1,6 @@
 #pragma once
 
+#include <exception>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
@@ -10,10 +11,9 @@ class ScratchList {
 public:
     ScratchList(json sv, std::string id) : name(sv[0].get<std::string>()), id(id) {
         for (auto v : sv[1]) {
-            if (v.type() == nlohmann::detail::value_t::string)
+            try {
                 values.push_back(v.get<std::string>());
-            else
-                values.push_back(v.dump());
+            } catch (std::exception e) { values.push_back(v.dump()); }
         }
     };
 
