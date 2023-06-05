@@ -82,7 +82,7 @@ TEST_F(MonitorTest, SensingMonitorTest) {
     ASSERT_NEAR(std::stod(get_monitor_by_name("year").values.at(0)), 2023.0, 100.0);
     ASSERT_NEAR(std::stod(get_monitor_by_name("month").values.at(0)), 6.0, 7.0);
     ASSERT_NEAR(std::stod(get_monitor_by_name("day of week").values.at(0)), 4.0, 5.0);
-    ASSERT_NEAR(std::stod(get_monitor_by_name("hour").values.at(0)), 6.0, 7.0);
+    ASSERT_NEAR(std::stod(get_monitor_by_name("hour").values.at(0)), 12.0, 12.0);
     ASSERT_NEAR(std::stod(get_monitor_by_name("minute").values.at(0)), 30.0, 31.0);
     ASSERT_EQ(get_monitor_by_name("answer").values.at(0), "");
     ASSERT_EQ(get_monitor_by_name("loudness").values.at(0), "-1");
