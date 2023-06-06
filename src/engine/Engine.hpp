@@ -82,7 +82,6 @@ public:
     void next_costume(ScratchTarget* s);
     void go_to_layer(std::string fb, ScratchTarget* s);
     void change_layer_by(Link link, ScratchTarget* s);
-    void set_effect_to(Link link, ScratchTarget* s);
     void change_effect_by(Link link, ScratchTarget* s);
 
 private:

@@ -15,7 +15,7 @@ public:
                  std::chrono::seconds(static_cast<long>(dur))) {}
 
     friend std::ostream& operator<<(std::ostream& os, const SpriteMessage& sm) {
-        os << sm.messager->name() << " says \"" << sm.message << "\"";
+        os << sm.messager->get_name() << " says \"" << sm.message << "\"";
         if (sm.duration != 0) {
             os << " for " << sm.duration;
             if (sm.duration > 1.0) {

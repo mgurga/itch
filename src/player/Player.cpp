@@ -89,7 +89,7 @@ void Player::paint(Project& project) {
     window->clear(sf::Color(255, 255, 255));
 
     sf::Sprite stagesprite;
-    stagesprite.setTexture(project.stage.costumes[project.stage.currentCostume()].texture);
+    stagesprite.setTexture(project.stage.costume().texture);
     stagesprite.setPosition(0, 0);
     window->draw(stagesprite);
 
@@ -102,25 +102,24 @@ void Player::paint(Project& project) {
 }
 
 void Player::paint_sprite(ScratchSprite& sprite) {
-    if (sprite.get_visible() && sprite.effects()["GHOST"] != 100.0) {
+    if (sprite.get_visible() && sprite.get_effect("GHOST") != 100.0) {
         sf::Sprite out;
-        sf::Texture& st = sprite.costumes[sprite.currentCostume()].texture;
+        sf::Texture& st = sprite.costume().texture;
         // sf::Vector2u ss = st.getSize(); // sprite size
 
         // draw sprite
         out.setTexture(st, true);
         out.setPosition(float(sprite.get_x()) + (ww / 2.0), float(-sprite.get_y()) + (wh / 2.0));
-        out.setOrigin(sprite.costumes[sprite.currentCostume()].rotationCenterX,
-                      sprite.costumes[sprite.currentCostume()].rotationCenterY);
+        out.setOrigin(sprite.costume().rotationCenterX, sprite.costume().rotationCenterY);
         out.setRotation(sprite.get_direction() - 90.0f);
 
-        double ghost = sprite.effects()["GHOST"];
+        double ghost = sprite.get_effect("GHOST");
         if (ghost < 0) ghost = 0;
         out.setColor(sf::Color(255, 255, 255, floor(abs(100 - ghost)) * 2.55));
         out.setScale(static_cast<float>(sprite.get_size()) / 100,
                      static_cast<float>(sprite.get_size()) / 100);
-        out.setScale(out.getScale().x / sprite.costumes[sprite.currentCostume()].bitmapResolution,
-                     out.getScale().y / sprite.costumes[sprite.currentCostume()].bitmapResolution);
+        out.setScale(out.getScale().x / sprite.costume().bitmapResolution,
+                     out.getScale().y / sprite.costume().bitmapResolution);
         window->draw(out);
 
         // draw dot at center the center of sprite

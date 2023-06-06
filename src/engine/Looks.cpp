@@ -33,55 +33,39 @@ void EngineFunctions::Engine::switch_costume_to(Link link, ScratchTarget *s) {
 
     if (new_costume.contains_string()) {
         for (int i = 0; i < s->costumes.size(); i++)
-            if (s->costumes.at(i).name == new_costume.get_string()) s->currentCostume() = i;
+            if (s->costumes.at(i).name == new_costume.get_string()) s->set_current_costume(i);
     } else {
-        s->currentCostume() = new_costume.get_number() - 1;
+        s->set_current_costume(new_costume.get_number() - 1);
     }
 }
 
 void EngineFunctions::Engine::next_costume(ScratchTarget *s) {
-    s->currentCostume()++;
-    if (s->currentCostume() == s->costumes.size()) s->currentCostume() = 0;
+    s->set_current_costume(s->get_current_costume() + 1);
+    if (s->get_current_costume() == s->costumes.size()) s->set_current_costume(0);
 }
 
 void EngineFunctions::Engine::go_to_layer(std::string frontorback, ScratchTarget *s) {
     if (frontorback == "front") {
-        s->layerOrder() = 999 + fronts;
+        s->set_layer_order(999 + fronts);
         fronts++;
     } else {
-        s->layerOrder() = -999 - backs;
+        s->set_layer_order(-999 - backs);
         backs++;
     }
 }
 
 void EngineFunctions::Engine::change_layer_by(Link link, ScratchTarget *s) {
     if (link.fields["FORWARD_BACKWARD"][0] == "forward") {
-        s->layerOrder() += compute_input(link.inputs["NUM"], s).get_number();
+        s->set_layer_order(s->get_layer_order() +
+                           compute_input(link.inputs["NUM"], s).get_number());
     } else {
-        s->layerOrder() -= compute_input(link.inputs["NUM"], s).get_number();
-    }
-}
-
-void EngineFunctions::Engine::set_effect_to(Link link, ScratchTarget *s) {
-    std::string effect = link.fields["EFFECT"][0];
-    std::transform(effect.begin(), effect.end(), effect.begin(), ::toupper);
-
-    try {
-        s->effects()[effect] = compute_input(link.inputs["VALUE"], s);
-    } catch (const std::exception &e) {
-        std::cout << "failed to set effect: '" << effect << "' ";
-        std::cout << "with error: " << e.what() << std::endl;
+        s->set_layer_order(s->get_layer_order() -
+                           compute_input(link.inputs["NUM"], s).get_number());
     }
 }
 
 void EngineFunctions::Engine::change_effect_by(Link link, ScratchTarget *s) {
     std::string effect = link.fields["EFFECT"][0];
-    std::transform(effect.begin(), effect.end(), effect.begin(), ::toupper);
-
-    try {
-        s->effects()[effect] += compute_input(link.inputs["VALUE"], s).get_number();
-    } catch (const std::exception &e) {
-        std::cout << "failed to change effect: '" << effect << "' ";
-        std::cout << "with error: " << e.what() << std::endl;
-    }
+    s->set_effect(effect,
+                  s->get_effect(effect) + compute_input(link.inputs["VALUE"], s).get_number());
 }

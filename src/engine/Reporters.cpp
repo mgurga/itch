@@ -46,10 +46,9 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
         std::string target = ofmenu.fields["OBJECT"][0];
 
         if (target == "_stage_") {
-            if (prop == "backdrop #") return prj->stage.currentCostume() + 1;
-            if (prop == "backdrop name")
-                return prj->stage.costumes[prj->stage.currentCostume()].name;
-            if (prop == "volume") return prj->stage.volume();
+            if (prop == "backdrop #") return prj->stage.get_current_costume() + 1;
+            if (prop == "backdrop name") return prj->stage.costume().name;
+            if (prop == "volume") return prj->stage.get_volume();
 
             return get_var_by_name(prop).val();
         } else {
@@ -58,10 +57,10 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
                 if (prop == "x position") return t.get_x();
                 if (prop == "y position") return t.get_y();
                 if (prop == "direction") return t.get_direction();
-                if (prop == "costume #") return t.currentCostume() + 1;
+                if (prop == "costume #") return t.get_current_costume() + 1;
                 if (prop == "costume name") return t.costume().name;
                 if (prop == "size") return t.get_size();
-                if (prop == "volume") return t.volume();
+                if (prop == "volume") return t.get_volume();
             } catch (std::invalid_argument e) { return Value(""); }
         }
     }
@@ -107,9 +106,9 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
     switch (op.opcode.opcode) {
     case OPCODE::COSTUME_NUM_NAME:
         if (op.fields["NUMBER_NAME"][0] == "number") {
-            return s->currentCostume() + 1;
+            return s->get_current_costume() + 1;
         } else {
-            return s->costumes[s->currentCostume()].name;
+            return s->costume().name;
         }
     case OPCODE::OPERATOR_JOIN:
         return compute_input(op.inputs["STRING1"], s).get_string() +
@@ -132,12 +131,12 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
                1000;
     case OPCODE::BACKDROP_NUM_NAME:
         if (op.fields["NUMBER_NAME"][0] == "number") {
-            return prj->stage.currentCostume() + 1;
+            return prj->stage.get_current_costume() + 1;
         } else {
-            return prj->stage.costumes[prj->stage.currentCostume()].name;
+            return prj->stage.costume().name;
         }
     case OPCODE::USERNAME: return Value();  // empty string
-    case OPCODE::VOLUME: return s->volume();
+    case OPCODE::VOLUME: return s->get_volume();
     case OPCODE::ANSWER: return Value();
     default:
         std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;

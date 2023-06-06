@@ -9,12 +9,12 @@ EngineFunctions::Engine::Engine(Project& project) :
     for (ScratchSprite sprite : project.sprites) {
         for (ScratchVariable sv : sprite.variables) {
             Variable newvar = Variable(sv);
-            newvar.make_local(sprite.name());
+            newvar.make_local(sprite.get_name());
             variables.push_back(newvar);
         }
         for (ScratchList sl : sprite.lists) {
             List newlist = List(sl);
-            newlist.make_local(sprite.name());
+            newlist.make_local(sprite.get_name());
             lists.push_back(newlist);
         }
         for (Link l : sprite.links) links.push_back(l);
@@ -81,15 +81,16 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
         }
     }
     clones.erase(std::remove_if(clones.begin(), clones.end(),
-                                [](ScratchSprite ss) { return ss.name() == ""; }),
+                                [](ScratchSprite ss) { return ss.get_name() == ""; }),
                  clones.end());
     prj->clones = clones;
 
     broadcasts.clear();
 
     // sort sprites based on layer. very shortsided solution, will have to change later
-    std::sort(prj->sprites.begin(), prj->sprites.end(),
-              [](ScratchSprite& a, ScratchSprite& b) { return a.layerOrder() < b.layerOrder(); });
+    std::sort(prj->sprites.begin(), prj->sprites.end(), [](ScratchSprite& a, ScratchSprite& b) {
+        return a.get_layer_order() < b.get_layer_order();
+    });
 
     // update monitor values
     for (ScratchMonitor& monitor : prj->monitors) {
@@ -317,7 +318,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
         }
         break;
     case OPCODE::DELETE_THIS_CLONE:
-        if (processing_clones) s->name() = "";
+        if (processing_clones) s->set_name("");
         break;
 
     // Looks
@@ -327,12 +328,11 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     case OPCODE::HIDE: s->set_visible(false); break;
     case OPCODE::SWITCH_TO_COSTUME: switch_costume_to(link, s); break;
     case OPCODE::NEXT_COSTUME: next_costume(s); break;
-    case OPCODE::SET_EFFECT_TO: set_effect_to(link, s); break;
-    case OPCODE::CHANGE_EFFECT_BY: change_effect_by(link, s); break;
-    case OPCODE::CLEAR_GRAPHIC_EFFECTS:
-        s->effects() = {{"COLOR", 0},  {"FISHEYE", 0},    {"WHIRL", 0}, {"PIXELATE", 0},
-                        {"MOSAIC", 0}, {"BRIGHTNESS", 0}, {"GHOST", 0}};
+    case OPCODE::SET_EFFECT_TO:
+        s->set_effect(link.fields["EFFECT"][0], compute_input(link.inputs["VALUE"], s));
         break;
+    case OPCODE::CHANGE_EFFECT_BY: change_effect_by(link, s); break;
+    case OPCODE::CLEAR_GRAPHIC_EFFECTS: s->reset_effects(); break;
     case OPCODE::GO_TO_LAYER: go_to_layer(link.fields["FRONT_BACK"][0], s); break;
     case OPCODE::CHANGE_LAYER_BY: change_layer_by(link, s); break;
     case OPCODE::SET_SIZE_TO: s->set_size(compute_input(link.inputs["SIZE"], s)); break;

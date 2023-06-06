@@ -37,10 +37,10 @@ TEST_F(BasicMovementTest, MetaTest) { ASSERT_EQ(project->meta.semver, "3.0.0"); 
 
 TEST_F(BasicMovementTest, TargetTest) {
     ASSERT_EQ(project->stage.isStage(), true);
-    ASSERT_EQ(project->stage.name(), "Stage");
+    ASSERT_EQ(project->stage.get_name(), "Stage");
 
     ASSERT_EQ(project->sprites[0].isStage(), false);
-    ASSERT_EQ(project->sprites[0].name(), "Sprite1");
+    ASSERT_EQ(project->sprites[0].get_name(), "Sprite1");
 }
 
 TEST_F(BasicMovementTest, SoundTest) {

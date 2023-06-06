@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <filesystem>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -35,12 +36,33 @@ public:
     ScratchCostume& costume() { return costumes.at(m_currentCostume); }
 
     // target variables
-    std::string& name() { return m_name; }
+    std::string get_name() { return m_name; }
+    void set_name(std::string s) { m_name = s; }
     bool isStage() { return m_isStage; }
-    unsigned int& volume() { return m_volume; }
-    int& layerOrder() { return m_layerOrder; }
-    unsigned int& currentCostume() { return m_currentCostume; }
-    std::unordered_map<std::string, double>& effects() { return m_effects; }
+    unsigned int get_volume() { return m_volume; }
+    void set_volume(unsigned int v) { m_volume = v; }
+    int get_layer_order() { return m_layerOrder; }
+    void set_layer_order(int l) { m_layerOrder = l; }
+    unsigned int get_current_costume() { return m_currentCostume; }
+    void set_current_costume(unsigned int c) { m_currentCostume = c; }
+
+    double get_effect(std::string e) {
+        std::transform(e.begin(), e.end(), e.begin(), ::toupper);
+        try {
+            return m_effects.at(e);
+        } catch (std::exception ex) {
+            std::cout << "could not find effect: '" << e << "'" << std::endl;
+            return 0.0;
+        }
+    }
+    void set_effect(std::string e, double strength) {
+        std::transform(e.begin(), e.end(), e.begin(), ::toupper);
+        m_effects.at(e) = strength;
+    }
+    void reset_effects() {
+        m_effects = {{"COLOR", 0},  {"FISHEYE", 0},    {"WHIRL", 0}, {"PIXELATE", 0},
+                     {"MOSAIC", 0}, {"BRIGHTNESS", 0}, {"GHOST", 0}};
+    }
 
     // sprite variables
     virtual bool get_visible() { return true; }
