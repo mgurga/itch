@@ -12,6 +12,7 @@
 #include "../Project.hpp"
 #include "../blocks/Link.hpp"
 #include "../player/PlayerInfo.hpp"
+#include "GlideProgress.hpp"
 #include "List.hpp"
 #include "SpriteMessage.hpp"
 #include "Variable.hpp"
@@ -57,6 +58,7 @@ public:
     std::vector<std::string> queued_broadcasts;
     std::vector<SpriteMessage> say_logs;
     std::vector<ScratchSprite> clones;
+    std::vector<GlideProgress> glide_progresses;
 
     Project* prj;
     PlayerInfo* pi;
@@ -65,6 +67,7 @@ public:
     void move_steps(double steps, ScratchTarget* s);
     void go_to_menu(Link link, ScratchTarget* s);
     void set_rotation_style(std::string rs, ScratchTarget* s);
+    void glide_for_secs(Link link, ScratchTarget* s, Chain& c, int& i);
 
     // control helpers
     void wait(double duration, Chain& c, int& i);
@@ -87,4 +90,4 @@ public:
 private:
     static unsigned int count_chains(Project& project);
 };
-}  // namespace EngineFunctions
+}
