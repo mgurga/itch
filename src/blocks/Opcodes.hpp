@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-enum OPTYPE { BLOCK, REPORTER, CONDITIONAL };
+enum OPTYPE { BLOCK, REPORTER, CONDITIONAL, SHADOW };
 
 enum OPCODE {
     VARIABLE = -2,
@@ -146,6 +146,13 @@ enum OPCODE {
     CHANGE_VOLUME_BY = 707,        // "sound_changevolumeby"
     SET_VOLUME_TO = 708,           // "sound_setvolumeto"
     VOLUME = 709,                  // "sound_volume"
+
+    // Procedure Blocks
+    ARG_STRING_NUM = 800,  // "argument_reporter_string_number"
+    ARG_BOOLEAN = 801,     // "argument_reporter_boolean"
+    DEFINITION = 802,      // "procedures_definition"
+    PROTOTYPE = 803,       // "procedures_prototype"
+    CALL = 804,            // "procedures_call"
 };
 
 struct OPCODETYPE {
@@ -256,7 +263,7 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"control_delete_this_clone", OPCODETYPE(OPCODE::DELETE_THIS_CLONE, OPTYPE::BLOCK)},
 
     {"sensing_touchingobject", OPCODETYPE(OPCODE::TOUCHING_OBJECT, OPTYPE::CONDITIONAL)},
-    {"sensing_touchingobjectmenu", OPCODETYPE(OPCODE::TOUCHING_OBJECT_MENU, OPTYPE::CONDITIONAL)},
+    {"sensing_touchingobjectmenu", OPCODETYPE(OPCODE::TOUCHING_OBJECT_MENU, OPTYPE::SHADOW)},
     {"sensing_touchingcolor", OPCODETYPE(OPCODE::TOUCHING_COLOR, OPTYPE::CONDITIONAL)},
     {"sensing_coloristouchingcolor", OPCODETYPE(OPCODE::COLOR_TOUCHING_COLOR, OPTYPE::CONDITIONAL)},
     {"sensing_distanceto", OPCODETYPE(OPCODE::DISTANCE_TO, OPTYPE::REPORTER)},
@@ -289,7 +296,11 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"sound_setvolumeto", OPCODETYPE(OPCODE::SET_VOLUME_TO, OPTYPE::BLOCK)},
     {"sound_volume", OPCODETYPE(OPCODE::VOLUME, OPTYPE::REPORTER)},
 
-    {"variable", OPCODETYPE(OPCODE::VARIABLE, OPTYPE::REPORTER)}};
+    {"argument_reporter_string_number", OPCODETYPE(OPCODE::ARG_STRING_NUM, OPTYPE::REPORTER)},
+    {"argument_reporter_boolean", OPCODETYPE(OPCODE::ARG_BOOLEAN, OPTYPE::REPORTER)},
+    {"procedures_definition", OPCODETYPE(OPCODE::DEFINITION, OPTYPE::BLOCK)},
+    {"procedures_prototype", OPCODETYPE(OPCODE::PROTOTYPE, OPTYPE::SHADOW)},
+    {"procedures_call", OPCODETYPE(OPCODE::CALL, OPTYPE::BLOCK)}};
 
 class Opcodes {
 public:
