@@ -43,16 +43,16 @@ public:
 
     // utility functions
     Variable& get_var_by_name(std::string name);
+    Variable& get_proc_var_by_name(std::string name);
     List& get_list_by_name(std::string name);
-    Link get_reporter_by_id(std::string id);
     Link& get_link_by_id(std::string id);
     std::string variant_str(std::variant<std::string, double> varient);
     Chain& get_chain_by_link_id(std::string id, ScratchTarget* s);
     ScratchTarget& get_target_by_name(std::string name);
 
     std::vector<Variable> variables;
+    std::vector<Variable> procedure_variables;
     std::vector<List> lists;
-    std::vector<Link> reporters;
     std::vector<Link> links;
     std::vector<std::string> broadcasts;
     std::vector<std::string> queued_broadcasts;
@@ -86,6 +86,9 @@ public:
     void go_to_layer(std::string fb, ScratchTarget* s);
     void change_layer_by(Link link, ScratchTarget* s);
     void change_effect_by(Link link, ScratchTarget* s);
+
+    // procedure helper
+    void call_procedure(Link link, ScratchTarget* s);
 
 private:
     static unsigned int count_chains(Project& project);

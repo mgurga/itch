@@ -26,12 +26,6 @@ List& EngineFunctions::Engine::get_list_by_name(std::string name) {
     throw std::invalid_argument("list '" + name + "' not found");
 }
 
-Link EngineFunctions::Engine::get_reporter_by_id(std::string id) {
-    for (Link& op : reporters)
-        if (op.id == id) return op;
-    throw std::invalid_argument("operator with id '" + id + "' not found");
-}
-
 std::string EngineFunctions::Engine::variant_str(std::variant<std::string, double> varient) {
     if (std::holds_alternative<double>(varient)) {
         return std::to_string(std::get<double>(varient));
@@ -53,4 +47,10 @@ ScratchTarget& EngineFunctions::Engine::get_target_by_name(std::string name) {
     for (ScratchTarget& t : prj->sprites)
         if (t.get_name() == name) return t;
     throw std::invalid_argument("target with name '" + name + "' not found");
+}
+
+Variable& EngineFunctions::Engine::get_proc_var_by_name(std::string name) {
+    for (Variable& var : procedure_variables)
+        if (var.name == name) return var;
+    throw std::invalid_argument("procedure variable '" + name + "' not found");
 }

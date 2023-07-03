@@ -28,19 +28,7 @@ EngineFunctions::Engine::Engine(Project& project) :
     for (List l : lists) { std::cout << "'" << l.name << "', "; }
     std::cout << std::endl;
 
-    for (ScratchBlock& b : project.stage.blocks) {
-        OPCODETYPE bop = Opcodes::opcode_to_enum(b.opcode);
-        if (bop == OPTYPE::REPORTER) reporters.push_back(b);
-    }
-
-    for (ScratchSprite& sprite : project.sprites) {
-        for (ScratchBlock& b : sprite.blocks) {
-            OPCODETYPE bop = Opcodes::opcode_to_enum(b.opcode);
-            if (bop == OPTYPE::REPORTER) reporters.push_back(b);
-        }
-    }
-
-    std::cout << "found " << reporters.size() << " reporters(s)" << std::endl;
+    std::cout << "found " << links.size() << " link(s)" << std::endl;
     std::cout << "finished initializing engine" << std::endl;
 }
 
@@ -183,7 +171,7 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
 
 Value EngineFunctions::Engine::compute_input(LinkInput input, ScratchTarget* sprite) {
     if (input.reporter_id.has_value())
-        return compute_reporter(get_reporter_by_id(input.reporter_id.value()), sprite);
+        return compute_reporter(get_link_by_id(input.reporter_id.value()), sprite);
 
     ScratchArrayBlock sab = input.sab.sab;
 
@@ -343,6 +331,10 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
 
     // Sensing
     case OPCODE::RESET_TIMER: timer = std::chrono::high_resolution_clock::now(); break;
+
+    // Procedures
+    case OPCODE::DEFINITION: break;
+    case OPCODE::CALL: call_procedure(link, s); break;
 
     default:
         std::cout << "unknown opcode detected in engine: '" << link.string_opcode << "'"

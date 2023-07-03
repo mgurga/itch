@@ -38,6 +38,7 @@ Value EngineFunctions::Engine::compute_condition(Link op, ScratchTarget* s) {
                compute_input(op.inputs["OPERAND2"], s).get_number();
     case OPCODE::LIST_CONTAINS:
         return get_list_by_name(op.fields["LIST"][0]).contains(compute_input(op.inputs["ITEM"], s));
+    case OPCODE::ARG_BOOLEAN: return get_proc_var_by_name(op.fields["VALUE"][0]).val().get_bool();
     default: break;
     }
 

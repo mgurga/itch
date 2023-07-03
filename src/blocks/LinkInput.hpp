@@ -26,7 +26,7 @@ class LinkInput {
 public:
     LinkInput() {}
     LinkInput(int s, ScratchArrayBlock sab) : sab({s, sab}) {
-        if (s == 3 && sab.type == BlockType::Uninitialized)
+        if ((s == 3 || s == 2) && sab.type == BlockType::Uninitialized)
             reporter_id = sab.str_value;
         else
             reporter_id = {};

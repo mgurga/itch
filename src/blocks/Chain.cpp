@@ -14,11 +14,11 @@ std::vector<Chain> Chain::create_chains(std::vector<ScratchBlock> blocks) {
         OPCODE bop = Opcodes::opcode_to_enum(b.opcode);
         bool createchain = false;
 
+        if (bop == DEFINITION) start_ids.push_back(b.id);
         if ((WHEN_FLAG_CLICKED <= bop && bop <= WHEN_BROADCAST_RECEIVED) || bop == START_AS_CLONE)
             start_ids.push_back(b.id);
-        if (bop == FOREVER && !b.inputs.empty() && !b.inputs["SUBSTACK"][1].is_null()) {
+        if (bop == FOREVER && !b.inputs.empty() && !b.inputs["SUBSTACK"][1].is_null())
             start_ids.push_back(b.inputs["SUBSTACK"][1]);
-        }
         if (bop == IF && !b.inputs.empty()) {
             if (b.inputs.contains("CONDITION")) start_ids.push_back(b.inputs["CONDITION"][1]);
             if (b.inputs.contains("SUBSTACK") && !b.inputs["SUBSTACK"][1].is_null())
