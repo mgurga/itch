@@ -267,7 +267,7 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"sensing_touchingcolor", OPCODETYPE(OPCODE::TOUCHING_COLOR, OPTYPE::CONDITIONAL)},
     {"sensing_coloristouchingcolor", OPCODETYPE(OPCODE::COLOR_TOUCHING_COLOR, OPTYPE::CONDITIONAL)},
     {"sensing_distanceto", OPCODETYPE(OPCODE::DISTANCE_TO, OPTYPE::REPORTER)},
-    {"sensing_distancetomenu", OPCODETYPE(OPCODE::DISTANCE_TO_MENU, OPTYPE::REPORTER)},
+    {"sensing_distancetomenu", OPCODETYPE(OPCODE::DISTANCE_TO_MENU, OPTYPE::SHADOW)},
     {"sensing_askandwait", OPCODETYPE(OPCODE::ASK_AND_WAIT, OPTYPE::BLOCK)},
     {"sensing_answer", OPCODETYPE(OPCODE::ANSWER, OPTYPE::REPORTER)},
     {"sensing_keypressed", OPCODETYPE(OPCODE::KEY_PRESSED, OPTYPE::CONDITIONAL)},
@@ -280,13 +280,13 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"sensing_timer", OPCODETYPE(OPCODE::TIMER, OPTYPE::REPORTER)},
     {"sensing_resettimer", OPCODETYPE(OPCODE::RESET_TIMER, OPTYPE::BLOCK)},
     {"sensing_of", OPCODETYPE(OPCODE::OF, OPTYPE::REPORTER)},
-    {"sensing_of_object_menu", OPCODETYPE(OPCODE::OF_MENU, OPTYPE::REPORTER)},
+    {"sensing_of_object_menu", OPCODETYPE(OPCODE::OF_MENU, OPTYPE::SHADOW)},
     {"sensing_current", OPCODETYPE(OPCODE::CURRENT_TIME, OPTYPE::REPORTER)},
     {"sensing_dayssince2000", OPCODETYPE(OPCODE::DAYS_SINCE_2000, OPTYPE::REPORTER)},
     {"sensing_username", OPCODETYPE(OPCODE::USERNAME, OPTYPE::REPORTER)},
 
     {"sound_playuntildone", OPCODETYPE(OPCODE::PLAY_UNTIL_DONE, OPTYPE::BLOCK)},
-    {"sound_sounds_menu", OPCODETYPE(OPCODE::SOUNDS_MENU, OPTYPE::CONDITIONAL)},
+    {"sound_sounds_menu", OPCODETYPE(OPCODE::SOUNDS_MENU, OPTYPE::SHADOW)},
     {"sound_play", OPCODETYPE(OPCODE::PLAY, OPTYPE::BLOCK)},
     {"sound_stopallsounds", OPCODETYPE(OPCODE::STOP_ALL_SOUNDS, OPTYPE::BLOCK)},
     {"sound_changeeffectby", OPCODETYPE(OPCODE::CHANGE_EFFECT_BY, OPTYPE::BLOCK)},
@@ -297,7 +297,7 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"sound_volume", OPCODETYPE(OPCODE::VOLUME, OPTYPE::REPORTER)},
 
     {"argument_reporter_string_number", OPCODETYPE(OPCODE::ARG_STRING_NUM, OPTYPE::REPORTER)},
-    {"argument_reporter_boolean", OPCODETYPE(OPCODE::ARG_BOOLEAN, OPTYPE::REPORTER)},
+    {"argument_reporter_boolean", OPCODETYPE(OPCODE::ARG_BOOLEAN, OPTYPE::CONDITIONAL)},
     {"procedures_definition", OPCODETYPE(OPCODE::DEFINITION, OPTYPE::BLOCK)},
     {"procedures_prototype", OPCODETYPE(OPCODE::PROTOTYPE, OPTYPE::SHADOW)},
     {"procedures_call", OPCODETYPE(OPCODE::CALL, OPTYPE::BLOCK)}};
