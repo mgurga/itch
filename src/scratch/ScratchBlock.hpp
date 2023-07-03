@@ -1,15 +1,16 @@
 #pragma once
 
-#include <string>
 #include <nlohmann/json.hpp>
+#include <optional>
+#include <string>
+
 #include "ScratchArrayBlock.hpp"
 
 using json = nlohmann::json;
 
-class ScratchBlock
-{
+class ScratchBlock {
 public:
-    ScratchBlock() {};
+    ScratchBlock(){};
     ScratchBlock(json sb, std::string id);
 
     std::string id;
@@ -19,6 +20,7 @@ public:
     std::string parent;
     json inputs;
     json fields;
+    std::optional<json> mutations;
     bool shadow, topLevel;
     int x, y;
 

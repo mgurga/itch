@@ -32,6 +32,19 @@ public:
                 inputs[in.key()] = LinkInput(in.value()[0], ScratchArrayBlock(in.value()[1]));
             }
         }
+
+        if (b.mutations.has_value()) {
+            for (auto in : b.mutations.value().items()) {
+                if (in.key() == "children") continue;
+                if (in.key() != "argumentids" && in.key() != "argumentnames" &&
+                    in.key() != "argumentdefaults") {
+                    mutations[in.key()].push_back(in.value());
+                } else {
+                    json arr = json::parse(in.value().get<std::string>());
+                    for (auto i : arr) mutations[in.key()].push_back(i);
+                }
+            }
+        }
     }
 
     friend std::ostream& operator<<(std::ostream& os, Link link) {
@@ -55,4 +68,5 @@ public:
     std::string string_opcode;
     std::map<std::string, std::vector<std::string>> fields;
     std::map<std::string, LinkInput> inputs;
+    std::map<std::string, std::vector<std::string>> mutations;
 };
