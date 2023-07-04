@@ -85,7 +85,6 @@ public:
     void next_costume(ScratchTarget* s);
     void go_to_layer(std::string fb, ScratchTarget* s);
     void change_layer_by(Link link, ScratchTarget* s);
-    void change_effect_by(Link link, ScratchTarget* s);
 
     // procedure helper
     void call_procedure(Link link, ScratchTarget* s);
@@ -93,4 +92,4 @@ public:
 private:
     static unsigned int count_chains(Project& project);
 };
-}
+}  // namespace EngineFunctions

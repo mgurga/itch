@@ -63,9 +63,3 @@ void EngineFunctions::Engine::change_layer_by(Link link, ScratchTarget *s) {
                            compute_input(link.inputs["NUM"], s).get_number());
     }
 }
-
-void EngineFunctions::Engine::change_effect_by(Link link, ScratchTarget *s) {
-    std::string effect = link.fields["EFFECT"][0];
-    s->set_effect(effect,
-                  s->get_effect(effect) + compute_input(link.inputs["VALUE"], s).get_number());
-}
