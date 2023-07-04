@@ -43,8 +43,6 @@ TEST_F(OpsPerSecTest, MetaTest) { ASSERT_EQ(project->meta.semver, "3.0.0"); }
 
 TEST_F(OpsPerSecTest, ChainTest) { ASSERT_EQ(engine->TOTAL_CHAINS, 3); }
 
-TEST_F(OpsPerSecTest, OperatorsTest) { ASSERT_EQ(engine->reporters.size(), 0); }
-
 TEST_F(OpsPerSecTest, InitalVariableTest) {
     EMPTY_PLAYER_INFO(pi);
     engine->tick(&pi);

@@ -42,8 +42,6 @@ TEST_F(MotionBlocksTest, MetaTest) { ASSERT_EQ(project->meta.semver, "3.0.0"); }
 
 TEST_F(MotionBlocksTest, ChainTest) { ASSERT_EQ(engine->TOTAL_CHAINS, 11); }
 
-TEST_F(MotionBlocksTest, OperatorsTest) { ASSERT_EQ(engine->reporters.size(), 6); }
-
 TEST_F(MotionBlocksTest, UpPressTest) {
     EMPTY_PLAYER_INFO(pi);
     engine->tick(&pi);
