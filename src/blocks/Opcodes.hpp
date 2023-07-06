@@ -7,7 +7,8 @@
 enum OPTYPE { BLOCK, REPORTER, CONDITIONAL, SHADOW };
 
 enum OPCODE {
-    VARIABLE = -2,
+    LIST_REPORTER = -3,
+    VARIABLE_REPORTER = -2,
     UNKNOWN = -1,
 
     // Event Blocks
@@ -38,6 +39,9 @@ enum OPCODE {
     X_POS = 115,               // "motion_xposition"
     Y_POS = 116,               // "motion_yposition"
     DIRECTION = 117,           // "motion_direction"
+    GO_TO_MENU = 118,          // "motion_goto_menu"
+    GLIDE_TO_MENU = 119,       // "motion_glideto_menu"
+    POINT_TOWARDS_MENU = 120,  // "motion_pointtowards_menu"
 
     // Looks Blocks
     SAY_FOR_SECS = 200,           // "looks_sayforsecs"
@@ -99,17 +103,18 @@ enum OPCODE {
     OPERATOR_MATHOP = 417,        // "operator_mathop"
 
     // Control Blocks
-    WAIT = 500,               // "control_wait"
-    REPEAT = 501,             // "control_repeat"
-    FOREVER = 502,            // "control_forever"
-    IF = 503,                 // "control_if"
-    IF_ELSE = 504,            // "control_if_else"
-    WAIT_UNTIL = 505,         // "control_wait_until"
-    REPEAT_UNTIL = 506,       // "control_repeat_until"
-    STOP = 507,               // "control_stop"
-    START_AS_CLONE = 508,     // "control_start_as_clone"
-    CREATE_CLONE_OF = 509,    // "control_create_clone_of"
-    DELETE_THIS_CLONE = 510,  // "control_delete_this_clone"
+    WAIT = 500,                  // "control_wait"
+    REPEAT = 501,                // "control_repeat"
+    FOREVER = 502,               // "control_forever"
+    IF = 503,                    // "control_if"
+    IF_ELSE = 504,               // "control_if_else"
+    WAIT_UNTIL = 505,            // "control_wait_until"
+    REPEAT_UNTIL = 506,          // "control_repeat_until"
+    STOP = 507,                  // "control_stop"
+    START_AS_CLONE = 508,        // "control_start_as_clone"
+    CREATE_CLONE_OF = 509,       // "control_create_clone_of"
+    CREATE_CLONE_OF_MENU = 510,  // "control_create_clone_of_menu"
+    DELETE_THIS_CLONE = 511,     // "control_delete_this_clone"
 
     // Sensing Blocks
     TOUCHING_OBJECT = 600,       // "sensing_touchingobject"
@@ -152,7 +157,7 @@ enum OPCODE {
     ARG_BOOLEAN = 801,     // "argument_reporter_boolean"
     DEFINITION = 802,      // "procedures_definition"
     PROTOTYPE = 803,       // "procedures_prototype"
-    CALL = 804,            // "procedures_call"
+    CALL = 804             // "procedures_call"
 };
 
 struct OPCODETYPE {
@@ -181,11 +186,14 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"motion_turnright", OPCODETYPE(OPCODE::TURN_RIGHT, OPTYPE::BLOCK)},
     {"motion_turnleft", OPCODETYPE(OPCODE::TURN_LEFT, OPTYPE::BLOCK)},
     {"motion_goto", OPCODETYPE(OPCODE::GO_TO, OPTYPE::BLOCK)},
+    {"motion_goto_menu", OPCODETYPE(OPCODE::GO_TO_MENU, OPTYPE::SHADOW)},
     {"motion_gotoxy", OPCODETYPE(OPCODE::GO_TO_XY, OPTYPE::BLOCK)},
     {"motion_glideto", OPCODETYPE(OPCODE::GLIDE_TO, OPTYPE::BLOCK)},
+    {"motion_glideto_menu", OPCODETYPE(OPCODE::GLIDE_TO_MENU, OPTYPE::SHADOW)},
     {"motion_glidesecstoxy", OPCODETYPE(OPCODE::GLIDE_TO_XY, OPTYPE::BLOCK)},
     {"motion_pointindirection", OPCODETYPE(OPCODE::POINT_IN_DIRECTION, OPTYPE::BLOCK)},
     {"motion_pointtowards", OPCODETYPE(OPCODE::POINT_TOWARDS, OPTYPE::BLOCK)},
+    {"motion_pointtowards_menu", OPCODETYPE(OPCODE::POINT_TOWARDS_MENU, OPTYPE::SHADOW)},
     {"motion_changexby", OPCODETYPE(OPCODE::CHANGE_X_BY, OPTYPE::BLOCK)},
     {"motion_setx", OPCODETYPE(OPCODE::SET_X_TO, OPTYPE::BLOCK)},
     {"motion_changeyby", OPCODETYPE(OPCODE::CHANGE_Y_BY, OPTYPE::BLOCK)},
@@ -219,6 +227,8 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
 
     {"data_setvariableto", OPCODETYPE(OPCODE::SET_VARIABLE_TO, OPTYPE::BLOCK)},
     {"data_changevariableby", OPCODETYPE(OPCODE::CHANGE_VARIABLE_BY, OPTYPE::BLOCK)},
+    {"data_showvariable", OPCODETYPE(OPCODE::SHOW_VARIABLE, OPTYPE::BLOCK)},
+    {"data_hidevariable", OPCODETYPE(OPCODE::HIDE_VARIABLE, OPTYPE::BLOCK)},
     {"data_addtolist", OPCODETYPE(OPCODE::ADD_TO_LIST, OPTYPE::BLOCK)},
     {"data_insertatlist", OPCODETYPE(OPCODE::INSERT_AT, OPTYPE::BLOCK)},
     {"data_deleteoflist", OPCODETYPE(OPCODE::DELETE_OF, OPTYPE::BLOCK)},
@@ -260,6 +270,7 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"control_stop", OPCODETYPE(OPCODE::STOP, OPTYPE::BLOCK)},
     {"control_start_as_clone", OPCODETYPE(OPCODE::START_AS_CLONE, OPTYPE::BLOCK)},
     {"control_create_clone_of", OPCODETYPE(OPCODE::CREATE_CLONE_OF, OPTYPE::BLOCK)},
+    {"control_create_clone_of_menu", OPCODETYPE(OPCODE::CREATE_CLONE_OF_MENU, OPTYPE::SHADOW)},
     {"control_delete_this_clone", OPCODETYPE(OPCODE::DELETE_THIS_CLONE, OPTYPE::BLOCK)},
 
     {"sensing_touchingobject", OPCODETYPE(OPCODE::TOUCHING_OBJECT, OPTYPE::CONDITIONAL)},
@@ -300,7 +311,10 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"argument_reporter_boolean", OPCODETYPE(OPCODE::ARG_BOOLEAN, OPTYPE::CONDITIONAL)},
     {"procedures_definition", OPCODETYPE(OPCODE::DEFINITION, OPTYPE::BLOCK)},
     {"procedures_prototype", OPCODETYPE(OPCODE::PROTOTYPE, OPTYPE::SHADOW)},
-    {"procedures_call", OPCODETYPE(OPCODE::CALL, OPTYPE::BLOCK)}};
+    {"procedures_call", OPCODETYPE(OPCODE::CALL, OPTYPE::BLOCK)},
+
+    {"variable", OPCODETYPE(OPCODE::VARIABLE_REPORTER, OPTYPE::REPORTER)},
+    {"list", OPCODETYPE(OPCODE::LIST_REPORTER, OPTYPE::REPORTER)}};
 
 class Opcodes {
 public:

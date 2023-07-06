@@ -4,6 +4,15 @@ ScratchBlock::ScratchBlock(json sb, std::string id) : array_block(ScratchArrayBl
     if (sb.is_array()) {
         this->is_array_block = true;
         this->array_block = ScratchArrayBlock(sb, id);
+        if (this->array_block.type == BlockType::VariableType) {
+            this->opcode = "variable";
+            this->x = array_block.x;
+            this->y = array_block.y;
+        } else if (this->array_block.type == BlockType::ListType) {
+            this->opcode = "list";
+            this->x = array_block.x;
+            this->y = array_block.y;
+        }
     } else {
         this->is_array_block = false;
         this->id = id;
