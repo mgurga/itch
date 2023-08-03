@@ -16,6 +16,7 @@ Player::Player(bool& r) : running(r) {
 void Player::draw() {
     if (window->isOpen()) {
         sf::Event event;
+        mouse_pressed = false;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window->close();
@@ -69,12 +70,14 @@ void Player::draw() {
                                     keys_down.end());
             }
 
-            if (event.type == sf::Event::MouseButtonPressed)
-                if (event.mouseButton.button == sf::Mouse::Left && mouse_pressed != true)
-                    mouse_pressed = true;
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left && mouse_down != true)
+                    mouse_down = true;
+                mouse_pressed = true;
+            }
 
             if (event.type == sf::Event::MouseButtonReleased)
-                if (event.mouseButton.button == sf::Mouse::Left) mouse_pressed = false;
+                if (event.mouseButton.button == sf::Mouse::Left) mouse_down = false;
 
             mouse_pos = sf::Mouse::getPosition(*window);
             mouse_pos.x -= 240;
@@ -92,6 +95,8 @@ void Player::paint(Project& project) {
     stagesprite.setTexture(project.stage.costume().texture);
     stagesprite.setPosition(0, 0);
     window->draw(stagesprite);
+
+    clicked_sprites.clear();
 
     for (ScratchSprite& sprite : project.clones) paint_sprite(sprite);
     for (ScratchSprite& sprite : project.sprites) paint_sprite(sprite);
@@ -113,9 +118,17 @@ void Player::paint_sprite(ScratchSprite& sprite) {
         out.setOrigin(sprite.costume().rotationCenterX, sprite.costume().rotationCenterY);
         out.setRotation(sprite.get_direction() - 90.0f);
 
+        // check if mouse is over the sprite and clicked
+        sf::Vector2i mousevec = sf::Mouse::getPosition(*window);
+        if (out.getGlobalBounds().contains(mousevec.x, mousevec.y) && mouse_pressed)
+            clicked_sprites.push_back(sprite.get_name());
+
+        // apply effects
         double ghost = sprite.get_effect("GHOST");
         if (ghost < 0) ghost = 0;
-        out.setColor(sf::Color(255, 255, 255, floor(abs(100 - ghost)) * 2.55));
+        out.setColor(sf::Color(255, 255, 255, floor(std::abs(100 - ghost)) * 2.55));
+
+        // apply size
         out.setScale(static_cast<float>(sprite.get_size()) / 100,
                      static_cast<float>(sprite.get_size()) / 100);
         out.setScale(out.getScale().x / sprite.costume().bitmapResolution,
@@ -124,7 +137,7 @@ void Player::paint_sprite(ScratchSprite& sprite) {
 
         // draw dot at center the center of sprite
         // sf::CircleShape cs(3);
-        // cs.setPosition(out.getPosition().x, out.getPosition().y);
+        // cs.setPosition(sprite.get_x(), sprite.get_y());
         // cs.setFillColor(sf::Color(255, 0, 0));
         // window->draw(cs);
     }

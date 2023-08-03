@@ -261,6 +261,11 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     case OPCODE::BROADCAST:
         queued_broadcasts.push_back(compute_input(link.inputs["BROADCAST_INPUT"], s).get_string());
         break;
+    case OPCODE::WHEN_THIS_SPRITE_CLICKED:
+        if (!(std::find(pi->clicked_sprites.begin(), pi->clicked_sprites.end(), s->get_name()) !=
+              pi->clicked_sprites.end()))
+            i = -1;
+        break;
 
     // Motion
     case OPCODE::GO_TO: go_to_menu(link, s); break;

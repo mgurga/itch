@@ -14,7 +14,8 @@ public:
     void draw();
     void paint(Project& project);
     PlayerInfo get_player_info() {
-        return {pressed, keys_down, mouse_pos.x, mouse_pos.y, mouse_pressed};
+        return {pressed,     keys_down,  clicked_sprites, mouse_pos.x,
+                mouse_pos.y, mouse_down, mouse_pressed};
     }
 
     bool& running;
@@ -33,7 +34,9 @@ private:
     const unsigned MONITOR_FONT_SIZE = 11;
     std::vector<std::string> pressed;
     std::vector<std::string> keys_down;
+    std::vector<std::string> clicked_sprites;
     sf::Vector2i mouse_pos;
+    bool mouse_down = false;
     bool mouse_pressed = false;
     sf::RenderWindow* window;
 };
