@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "../Project.hpp"
+#include "../Utils.hpp"
 #include "../blocks/Link.hpp"
 #include "../player/PlayerInfo.hpp"
 #include "GlideProgress.hpp"

@@ -243,16 +243,14 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     // Events
     case OPCODE::WHEN_FLAG_CLICKED: c.activatable = false; break;
     case OPCODE::WHEN_KEY_PRESSED:
-        if (!(std::find(pi->pressed.begin(), pi->pressed.end(), link.fields["KEY_OPTION"][0]) !=
-              pi->pressed.end())) {
+        if (!Utils::contains(pi->pressed, link.fields["KEY_OPTION"][0])) {
             i = -1;
         } else {
             c.continue_at.clear();
         }
         break;
     case OPCODE::WHEN_BROADCAST_RECEIVED:
-        if (!(std::find(broadcasts.begin(), broadcasts.end(), link.fields["BROADCAST_OPTION"][0]) !=
-              broadcasts.end())) {
+        if (!Utils::contains(broadcasts, link.fields["BROADCAST_OPTION"][0])) {
             i = -1;
         } else {
             c.continue_at.clear();
@@ -262,9 +260,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
         queued_broadcasts.push_back(compute_input(link.inputs["BROADCAST_INPUT"], s).get_string());
         break;
     case OPCODE::WHEN_THIS_SPRITE_CLICKED:
-        if (!(std::find(pi->clicked_sprites.begin(), pi->clicked_sprites.end(), s->get_name()) !=
-              pi->clicked_sprites.end()))
-            i = -1;
+        if (!Utils::contains(pi->clicked_sprites, s->get_name())) i = -1;
         break;
 
     // Motion
