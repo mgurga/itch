@@ -55,16 +55,16 @@ TEST_F(BasicMovementTest, SoundTest) {
 TEST_F(BasicMovementTest, ChainTest) {
     ASSERT_EQ(project->sprites[0].chains.size(), 4);
 
-    ASSERT_EQ(project->sprites[0].chains[0].activatable, true);
-    ASSERT_EQ(project->sprites[0].chains[1].activatable, true);
-    ASSERT_EQ(project->sprites[0].chains[2].activatable, true);
-    ASSERT_EQ(project->sprites[0].chains[3].activatable, true);
+    ASSERT_EQ(project->sprites[0].chains[0].is_activatable(), true);
+    ASSERT_EQ(project->sprites[0].chains[1].is_activatable(), true);
+    ASSERT_EQ(project->sprites[0].chains[2].is_activatable(), true);
+    ASSERT_EQ(project->sprites[0].chains[3].is_activatable(), true);
 
-    ASSERT_EQ(project->sprites[0].chains[0].links[0].opcode.opcode, WHEN_KEY_PRESSED);
-    ASSERT_THAT(project->sprites[0].chains[0].links[1].opcode.opcode,
+    ASSERT_EQ(project->sprites[0].chains[0].get_header().opcode.opcode, WHEN_KEY_PRESSED);
+    ASSERT_THAT(project->sprites[0].chains[0].get_link(1).opcode.opcode,
                 AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
 
-    ASSERT_EQ(project->sprites[0].chains[1].links[0].opcode.opcode, WHEN_KEY_PRESSED);
-    ASSERT_THAT(project->sprites[0].chains[1].links[1].opcode.opcode,
+    ASSERT_EQ(project->sprites[0].chains[1].get_header().opcode.opcode, WHEN_KEY_PRESSED);
+    ASSERT_THAT(project->sprites[0].chains[1].get_link(1).opcode.opcode,
                 AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
 }

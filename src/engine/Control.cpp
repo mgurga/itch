@@ -38,25 +38,25 @@ void EngineFunctions::Engine::stop_menu(Link link, Chain& c, ScratchTarget* s, i
     if (stopop == "all") {
         for (ScratchSprite& ss : prj->sprites) {
             for (Chain& cc : ss.chains) {
-                cc.activatable = false;
+                cc.set_activatable(false);
                 cc.continue_at.clear();
             }
         }
 
         for (Chain& cc : prj->stage.chains) {
-            cc.activatable = false;
+            cc.set_activatable(false);
             cc.continue_at.clear();
         }
 
         i = -1;
     } else if (stopop == "this script") {
-        c.activatable = false;
+        c.set_activatable(false);
         c.continue_at.clear();
         i = -1;
     } else if (stopop == "other scripts in sprite") {
         for (Chain& cc : s->chains) {
-            if (cc.links.at(0).id != c.links.at(0).id) {
-                cc.activatable = false;
+            if (cc.get_header().id != c.get_header().id) {
+                cc.set_activatable(false);
                 cc.continue_at.clear();
             }
         }
@@ -125,20 +125,20 @@ void EngineFunctions::Engine::create_clone_of(Link link, ScratchTarget* s) {
     if (clone_target == "_myself_") {
         ScratchSprite st_copy = *dynamic_cast<ScratchSprite*>(s);
         for (Chain& c : st_copy.chains) {
-            if (c.links.at(0).opcode != OPCODE::START_AS_CLONE)
-                c.activatable = false;
+            if (c.get_header().opcode != OPCODE::START_AS_CLONE)
+                c.set_activatable(false);
             else
-                c.activatable = true;
+                c.set_activatable(true);
             c.continue_at = {};
         }
         clones.push_back(st_copy);
     } else {
         ScratchSprite st_copy = *dynamic_cast<ScratchSprite*>(&get_target_by_name(clone_target));
         for (Chain& c : st_copy.chains) {
-            if (c.links.at(0).opcode != OPCODE::START_AS_CLONE)
-                c.activatable = false;
+            if (c.get_header().opcode != OPCODE::START_AS_CLONE)
+                c.set_activatable(false);
             else
-                c.activatable = true;
+                c.set_activatable(true);
             c.continue_at = {};
         }
         clones.push_back(st_copy);

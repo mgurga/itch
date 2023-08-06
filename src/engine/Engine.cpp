@@ -183,13 +183,13 @@ Value EngineFunctions::Engine::compute_input(LinkInput input, ScratchTarget* spr
 }
 
 bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchTarget* s, bool force_activate) {
-    if ((chain.activatable || !chain.continue_at.empty()) || force_activate) {
+    if ((chain.is_activatable() || !chain.continue_at.empty()) || force_activate) {
         // used to interrupt continue_at if WHEN_KEY_CLICKED, BROADCAST_RECIEVED, or other special
         // events activate
-        if (chain.links.at(0).opcode >= WHEN_FLAG_CLICKED &&
-            chain.links.at(0).opcode <= BROADCAST_AND_WAIT) {
+        if (chain.get_header().opcode >= WHEN_FLAG_CLICKED &&
+            chain.get_header().opcode <= BROADCAST_AND_WAIT) {
             int init_link = 0;
-            process_link(chain.links.at(0), chain, s, init_link);
+            process_link(chain.get_header(), chain, s, init_link);
         }
 
         // resume i to continue_at if set
@@ -197,8 +197,8 @@ bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchTarget* s, bool
         if (!chain.continue_at.empty()) start_link = chain.continue_at.back().link_num;
 
         // process all other links in chain
-        for (int i = start_link; i < chain.links.size(); i++) {
-            process_link(chain.links.at(i), chain, s, i);
+        for (int i = start_link; i < chain.size(); i++) {
+            process_link(chain.get_link(i), chain, s, i);
             if (i == -1) break;
         }
         return true;
@@ -241,7 +241,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
         break;
 
     // Events
-    case OPCODE::WHEN_FLAG_CLICKED: c.activatable = false; break;
+    case OPCODE::WHEN_FLAG_CLICKED: c.set_activatable(false); break;
     case OPCODE::WHEN_KEY_PRESSED:
         if (!Utils::contains(pi->pressed, link.fields["KEY_OPTION"][0])) {
             i = -1;
@@ -302,7 +302,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     case OPCODE::CREATE_CLONE_OF: create_clone_of(link, s); break;
     case OPCODE::START_AS_CLONE:
         if (processing_clones) {
-            c.activatable = false;
+            c.set_activatable(false);
         } else {
             i = -1;
         }

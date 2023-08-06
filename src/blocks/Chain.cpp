@@ -6,7 +6,8 @@ std::vector<Chain> Chain::create_chains(std::vector<ScratchBlock> blocks) {
     auto by_id = [&](std::string id) -> ScratchBlock {
         for (ScratchBlock b : blocks)
             if (b.id == id) return b;
-        return ScratchBlock();
+        throw std::invalid_argument("ScratchBlock with id '" + id +
+                                    "' not found when creating chains");
     };
 
     std::vector<std::string> start_ids;
@@ -42,7 +43,7 @@ std::vector<Chain> Chain::create_chains(std::vector<ScratchBlock> blocks) {
         ScratchBlock b = by_id(sid);
         tempchain = new Chain();
         Link l = Link(b);
-        tempchain->links.push_back(l);
+        tempchain->add_link(l);
         tempchain->activatable =
             (WHEN_FLAG_CLICKED <= l.opcode && l.opcode <= WHEN_BROADCAST_RECEIVED) ||
             l.opcode == START_AS_CLONE;
@@ -50,13 +51,11 @@ std::vector<Chain> Chain::create_chains(std::vector<ScratchBlock> blocks) {
         ScratchBlock curBlock = b;
         while (curBlock.next != "") {
             curBlock = by_id(curBlock.next);
-            tempchain->links.push_back(Link(curBlock));
+            tempchain->add_link(Link(curBlock));
         }
 
-        if (curBlock.next == "") {
-            out.push_back(*tempchain);
-            delete tempchain;
-        }
+        out.push_back(*tempchain);
+        delete tempchain;
     }
 
     return out;
