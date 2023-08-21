@@ -37,9 +37,6 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     broadcasts = queued_broadcasts;
     queued_broadcasts.clear();
 
-    fronts = 0;
-    backs = 0;
-
     pi = player_info;
 
     // delete old messages

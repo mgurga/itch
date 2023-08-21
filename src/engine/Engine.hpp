@@ -32,8 +32,6 @@ public:
     bool processing_clones = false;
     std::chrono::high_resolution_clock::time_point timer =
         std::chrono::high_resolution_clock::now();
-    int fronts = 0;
-    int backs = 0;
 
     void tick(PlayerInfo* player_info);
     bool process_chain(Chain& c, ScratchTarget* s, bool force_activate = false);
