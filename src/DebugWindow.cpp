@@ -10,14 +10,14 @@ void DebugWindow::draw() {
                 window.close();
                 running = false;
             }
-
-            ImGui::SFML::Update(window, clock.getElapsedTime());
-            draw_imgui();
-
-            window.clear();
-            ImGui::SFML::Render(window);
-            window.display();
         }
+
+        ImGui::SFML::Update(window, clock.getElapsedTime());
+        draw_imgui();
+
+        window.clear();
+        ImGui::SFML::Render(window);
+        window.display();
     }
 }
 
@@ -36,5 +36,11 @@ void DebugWindow::draw_imgui() {
         EMPTY_PLAYER_INFO(pi);
         for (int i = 0; i < 10; i++) eng->tick(&pi);
     }
+    if (tps_clock.getElapsedTime().asSeconds() >= 1) {
+        tps = eng->ticks - ticks_delta;
+        tps_clock.restart();
+        ticks_delta = eng->ticks;
+    }
+    ImGui::Text("ticks: %llu   ticks per second: %d", eng->ticks, tps);
     ImGui::End();
 }

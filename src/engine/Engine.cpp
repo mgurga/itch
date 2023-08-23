@@ -164,6 +164,8 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
         std::cout << "project is finished running" << std::endl;
         finished = true;
     }
+
+    ticks++;
 }
 
 Value EngineFunctions::Engine::compute_input(LinkInput input, ScratchTarget* sprite) {

@@ -45,7 +45,6 @@ void EngineFunctions::Engine::next_costume(ScratchTarget *s) {
 }
 
 void EngineFunctions::Engine::go_to_layer(std::string frontorback, ScratchTarget *s) {
-    std::cout << "going to layer: " << frontorback << " " << s->get_name() << std::endl;
     if (frontorback == "front") {
         int largest_layer = s->get_layer_order();
         for (ScratchSprite &l : prj->sprites) {

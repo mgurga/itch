@@ -28,6 +28,9 @@ private:
     Project* prj;
     sf::RenderWindow window;
     sf::Clock clock;
+    sf::Clock tps_clock;
+    unsigned long long ticks_delta = 0;
+    int tps = 0;
     bool& running;
     bool& pause_engine;
 };
