@@ -14,6 +14,7 @@ using json = nlohmann::json;
 #include <cpr/cpr.h>
 #endif
 
+#include "DebugWindow.hpp"
 #include "FileHandler.hpp"
 #include "Project.hpp"
 #include "engine/Engine.hpp"
@@ -22,7 +23,10 @@ using json = nlohmann::json;
 class Itch {
 public:
     Itch(){};
-    ~Itch() { delete player; }
+    ~Itch() {
+        delete player;
+        delete debug_window;
+    }
 
     void init();
     void draw();
@@ -34,8 +38,10 @@ public:
     Project project;
     EngineFunctions::Engine engine;
     Player* player = nullptr;
+    DebugWindow* debug_window = nullptr;
 
     bool running = true;
     bool headless = false;  // run without rendering code (engine only)
+    bool pause_engine = false;
     const std::filesystem::path temp_dir{"temp"};
 };

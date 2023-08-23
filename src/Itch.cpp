@@ -5,6 +5,7 @@ void Itch::init() {
     // std::cout << "cleaning up old files" << std::endl;
     // if (std::filesystem::exists(temp_dir)) std::filesystem::remove_all(temp_dir);
     if (!std::filesystem::exists(temp_dir)) std::filesystem::create_directory(temp_dir);
+    debug_window = new DebugWindow(&engine, &project, pause_engine, running);
     std::cout << "initialized itch" << std::endl;
 }
 
@@ -126,8 +127,9 @@ void Itch::draw() {
 
         if (engine.finished) running = false;
     } else {
+        debug_window->draw();
         PlayerInfo pi = player->get_player_info();
-        engine.tick(&pi);
+        if (!pause_engine) engine.tick(&pi);
         pi.pressed.clear();
         player->draw();
         player->paint(project);

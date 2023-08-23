@@ -51,6 +51,26 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(zip)
 message("finished fetching zip")
 
+message("fetching imgui...")
+FetchContent_Declare(
+    imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui/
+    GIT_TAG v1.89.8)
+FetchContent_MakeAvailable(imgui)
+message("finished fetching imgui")
+
+message("fetching imgui-sfml...")
+FetchContent_Declare(
+    imgui-sfml
+    GIT_REPOSITORY https://github.com/SFML/imgui-sfml.git
+    GIT_TAG        master
+)
+set(IMGUI_DIR ${imgui_SOURCE_DIR})
+option(IMGUI_SFML_FIND_SFML "Use find_package to find SFML" OFF)
+option(IMGUI_SFML_IMGUI_DEMO "Build imgui_demo.cpp" ON)
+FetchContent_MakeAvailable(imgui-sfml)
+message("finished fetching imgui-sfml")
+
 if (BUILD_NETWORK_SUPPORT)
     message("fetching cpr...")
     FetchContent_Declare(
@@ -64,7 +84,14 @@ endif()
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
-target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json sfml-system sfml-audio sfml-graphics sfml-window CLI11::CLI11 zip)
+target_link_libraries(${PROJECT_NAME} 
+    nlohmann_json::nlohmann_json 
+    sfml-system 
+    sfml-audio 
+    sfml-graphics 
+    sfml-window 
+    CLI11::CLI11 zip
+    ImGui-SFML::ImGui-SFML)
 if (BUILD_NETWORK_SUPPORT)
     target_link_libraries(${PROJECT_NAME} cpr::cpr)
 endif()
