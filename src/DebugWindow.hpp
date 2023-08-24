@@ -2,10 +2,12 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window.hpp>
+#include <cstring>
 #include <iostream>
 
 #include "Project.hpp"
 #include "engine/Engine.hpp"
+#include "engine/Variable.hpp"
 #include "imgui-SFML.h"
 #include "imgui.h"
 

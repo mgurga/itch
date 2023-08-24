@@ -22,7 +22,9 @@ void DebugWindow::draw() {
 }
 
 void DebugWindow::draw_imgui() {
-    ImGui::SetNextWindowPos({5, 5}, ImGuiCond_FirstUseEver);
+    float height_offset = 5;
+
+    ImGui::SetNextWindowPos({5, height_offset}, ImGuiCond_FirstUseEver);
     ImGui::Begin("Engine Playback");
     if (ImGui::Button(pause_engine ? "Resume Engine" : "Pause Engine"))
         pause_engine = !pause_engine;
@@ -42,5 +44,28 @@ void DebugWindow::draw_imgui() {
         ticks_delta = eng->ticks;
     }
     ImGui::Text("ticks: %llu   ticks per second: %d", eng->ticks, tps);
+    height_offset += ImGui::GetWindowHeight() + 5;
+    ImGui::End();
+
+    ImGui::SetNextWindowPos({5, height_offset});
+    ImGui::SetNextWindowSize({290, 120});
+    ImGui::Begin("Variables");
+    for (Variable& var : eng->variables) {
+        ImGui::PushItemWidth(40.0f);
+        ImGui::Text("%s", var.name.c_str());
+        ImGui::SameLine();
+        std::string display_val = var.val().get_string();
+        display_val.resize(100);
+        std::string type = var.val().contains_string()   ? "string"
+                           : var.val().contains_number() ? "double"
+                                                         : "bool";
+        type += ", " + var.get_id().value_or("none");
+        if (ImGui::InputText(type.c_str(), display_val.data(), IM_ARRAYSIZE(display_val.c_str()),
+                             ImGuiInputTextFlags_EnterReturnsTrue)) {
+            display_val.erase(std::find(display_val.begin(), display_val.end(), '\0'),
+                              display_val.end());
+            var = Value(display_val);
+        }
+    }
     ImGui::End();
 }
