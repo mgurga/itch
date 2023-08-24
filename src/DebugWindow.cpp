@@ -25,6 +25,7 @@ void DebugWindow::draw_imgui() {
     float height_offset = 5;
 
     ImGui::SetNextWindowPos({5, height_offset}, ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize({290, 71}, ImGuiCond_FirstUseEver);
     ImGui::Begin("Engine Playback");
     if (ImGui::Button(pause_engine ? "Resume Engine" : "Pause Engine"))
         pause_engine = !pause_engine;
@@ -47,8 +48,8 @@ void DebugWindow::draw_imgui() {
     height_offset += ImGui::GetWindowHeight() + 5;
     ImGui::End();
 
-    ImGui::SetNextWindowPos({5, height_offset});
-    ImGui::SetNextWindowSize({290, 120});
+    ImGui::SetNextWindowPos({5, height_offset}, ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize({290, 120}, ImGuiCond_FirstUseEver);
     ImGui::Begin("Variables");
     for (Variable& var : eng->variables) {
         ImGui::PushItemWidth(40.0f);
@@ -65,6 +66,59 @@ void DebugWindow::draw_imgui() {
             display_val.erase(std::find(display_val.begin(), display_val.end(), '\0'),
                               display_val.end());
             var = Value(display_val);
+        }
+    }
+    height_offset += ImGui::GetWindowHeight() + 5;
+    ImGui::End();
+
+    ImGui::SetNextWindowPos({5, height_offset}, ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize({290, 120}, ImGuiCond_FirstUseEver);
+    ImGui::Begin("Sprites");
+    for (ScratchSprite& spr : prj->sprites) {
+        if (ImGui::CollapsingHeader(spr.get_name().c_str())) {
+            ImGui::PushItemWidth(50.0f);
+            ImGui::Text("x");
+            ImGui::SameLine();
+            float xpos = spr.get_x();
+            if (ImGui::DragFloat(" ", &xpos)) spr.set_x(xpos);
+            ImGui::SameLine();
+            ImGui::Text("y");
+            ImGui::SameLine();
+            float ypos = spr.get_y();
+            if (ImGui::DragFloat("##ypos ", &ypos)) spr.set_y(ypos);
+            ImGui::SameLine();
+            ImGui::Text(" visible");
+            ImGui::SameLine();
+            bool visible = spr.get_visible();
+            if (ImGui::Checkbox("##visible", &visible)) spr.set_visible(visible);
+            ImGui::Text("direction");
+            ImGui::SameLine();
+            float dir = spr.get_direction();
+            if (ImGui::DragFloat("##dir", &dir)) spr.set_direction(dir);
+            ImGui::SameLine();
+            ImGui::Text("  size");
+            ImGui::SameLine();
+            int size = spr.get_size();
+            ImGui::PushItemWidth(40.0f);
+            if (ImGui::DragInt("##size", &size)) spr.set_size(size);
+            ImGui::Text("costume");
+            ImGui::SameLine();
+            std::string selected = spr.costume().name;
+            ImGui::PushItemWidth(150.0f);
+            if (ImGui::BeginCombo(
+                    (std::to_string(spr.get_current_costume() + 1) + " ##costumedropdown").c_str(),
+                    selected.c_str())) {
+                for (ScratchCostume& c : spr.costumes) {
+                    bool is_selected = (c.name == selected);
+                    if (ImGui::Selectable(c.name.c_str(), is_selected)) {
+                        selected = c.name;
+                        for (int i = 0; i < spr.costumes.size(); i++)
+                            if (spr.costumes.at(i).name == c.name) spr.set_current_costume(i);
+                    }
+                    if (is_selected) ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
         }
     }
     ImGui::End();
