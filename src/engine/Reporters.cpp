@@ -140,6 +140,12 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
     case OPCODE::ANSWER: return Value();
     case OPCODE::ARG_STRING_NUM: return get_proc_var_by_name(op.fields["VALUE"][0]).val();
     case OPCODE::OPERATOR_LENGTH: return compute_input(op.inputs["STRING1"], s).get_string().size();
+    case OPCODE::OPERATOR_LETTER_OF:
+        try {
+            return compute_input(op.inputs["STRING"], s)
+                .get_string()
+                .at(compute_input(op.inputs["LETTER"], s).get_number() - 1);
+        } catch (std::out_of_range const& e) { return Value(); }
     default:
         std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
         return Value();  // empty string

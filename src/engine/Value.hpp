@@ -27,6 +27,7 @@ public:
     Value(unsigned int i) : value(static_cast<double>(i)){};
     Value(bool b) : value(b){};
     Value(std::size_t s) : value(static_cast<double>(s)){};
+    Value(char c) : value(std::string(1, c)){};
     Value() : value(""){};
 
     operator std::string() { return get_string(); }
