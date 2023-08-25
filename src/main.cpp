@@ -10,13 +10,16 @@ int main(int argc, char *argv[]) {
 
     std::string resource = "";
     bool headless = false;
+    bool debug_window = false;
     app.add_flag("-l,--headless", headless, "run itch without graphics");
+    app.add_flag("-d,--debugwindow", debug_window, "run with debug window open");
     app.add_option(".sb3/url/folder", resource, ".sb3 file path or scratch.mit.edu URL")
         ->default_val("temp/");
     CLI11_PARSE(app, argc, argv);
 
     Itch itch;
     itch.headless = headless;
+    itch.opendebugwindow = debug_window;
     itch.init();
     if (resource.find("scratch.mit.edu") == std::string::npos) {
         std::filesystem::path filepath = resource;

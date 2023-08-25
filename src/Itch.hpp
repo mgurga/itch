@@ -43,5 +43,6 @@ public:
     bool running = true;
     bool headless = false;  // run without rendering code (engine only)
     bool pause_engine = false;
+    bool opendebugwindow = false;
     const std::filesystem::path temp_dir{"temp"};
 };
