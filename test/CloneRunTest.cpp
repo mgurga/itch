@@ -44,6 +44,10 @@ TEST_F(CloneRunTest, MetaTest) { ASSERT_EQ(project->meta.semver, "3.0.0"); }
 
 TEST_F(CloneRunTest, ChainTest) { ASSERT_EQ(engine->TOTAL_CHAINS, 4); }
 
+TEST_F(CloneRunTest, VariableCheck) {
+    ASSERT_EQ(engine->get_var_by_name("speed").val().get_number(), 0.0);
+}
+
 TEST_F(CloneRunTest, CloneNumberTest) { ASSERT_EQ(engine->clones.size(), 5); }
 
 TEST_F(CloneRunTest, ClonePositionTest) {
@@ -54,4 +58,9 @@ TEST_F(CloneRunTest, ClonePositionTest) {
     ASSERT_EQ(engine->clones.at(2).get_y(), 0);
     ASSERT_EQ(engine->clones.at(3).get_y(), -50);
     ASSERT_EQ(engine->clones.at(4).get_y(), -100);
+}
+
+TEST_F(CloneRunTest, SourceEndPosition) {
+    ASSERT_EQ(project->sprites.at(0).get_x(), -150);
+    ASSERT_EQ(project->sprites.at(0).get_y(), -100);
 }
