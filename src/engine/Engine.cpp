@@ -37,7 +37,12 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     broadcasts = queued_broadcasts;
     queued_broadcasts.clear();
 
-    pi = player_info;
+    if (player_info == nullptr) {
+        EMPTY_PLAYER_INFO(epi)
+        pi = &epi;
+    } else {
+        pi = player_info;
+    }
 
     // delete old messages
     auto cur = std::chrono::high_resolution_clock::now();

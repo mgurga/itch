@@ -34,7 +34,7 @@ public:
         std::chrono::high_resolution_clock::now();
     unsigned long long ticks = 0;
 
-    void tick(PlayerInfo* player_info);
+    void tick(PlayerInfo* player_info = nullptr);
     bool process_chain(Chain& c, ScratchTarget* s, bool force_activate = false);
     void process_link(Link& link, Chain& chain, ScratchTarget* sprite, int& i);
     Value compute_input(LinkInput block, ScratchTarget* sprite);
