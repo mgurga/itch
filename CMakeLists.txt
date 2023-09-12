@@ -14,17 +14,13 @@ if(CCACHE_PROGRAM)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-if(WIN32)
-    message("fetching sfml...")
-    FetchContent_Declare(
-        SFML
-        GIT_REPOSITORY https://github.com/SFML/SFML.git
-        GIT_TAG 2.6.x)
-    FetchContent_MakeAvailable(SFML)
-    message("finished fetching sfml")
-elseif()
-    find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
-endif()
+message("fetching sfml...")
+FetchContent_Declare(
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)
+message("finished fetching sfml")
 
 message("fetching json...")
 FetchContent_Declare(
@@ -63,8 +59,7 @@ message("fetching imgui-sfml...")
 FetchContent_Declare(
     imgui-sfml
     GIT_REPOSITORY https://github.com/SFML/imgui-sfml.git
-    GIT_TAG        master
-)
+    GIT_TAG        v2.6)
 set(IMGUI_DIR ${imgui_SOURCE_DIR})
 option(IMGUI_SFML_FIND_SFML "Use find_package to find SFML" OFF)
 option(IMGUI_SFML_IMGUI_DEMO "Build imgui_demo.cpp" ON)

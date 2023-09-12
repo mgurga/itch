@@ -29,12 +29,9 @@ target_link_libraries(${TEST_PROJECT_NAME} PUBLIC
     sfml-audio
     sfml-graphics
     sfml-window
-    CLI11::CLI11
     zip
-    ImGui-SFML::ImGui-SFML)
-if (BUILD_NETWORK_SUPPORT)
-    target_link_libraries(${TEST_PROJECT_NAME} PUBLIC cpr::cpr)
-endif()
+    ImGui-SFML::ImGui-SFML
+    cpr::cpr)
 
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET ${TEST_PROJECT_NAME} POST_BUILD
