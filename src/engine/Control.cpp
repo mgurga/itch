@@ -1,6 +1,7 @@
 #include "Engine.hpp"
 
 void EngineFunctions::Engine::wait(double duration, Chain& c, int& i) {
+    if (duration == 0.0) return;
     if (!c.continue_at.empty() && c.continue_at.back().end_time.has_value()) {
         if (c.continue_at.back().end_time <= std::chrono::high_resolution_clock::now()) {
             c.continue_at.pop_back();
