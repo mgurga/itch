@@ -26,5 +26,6 @@ ScratchBlock::ScratchBlock(json sb, std::string id) : array_block(ScratchArrayBl
         this->topLevel = sb["topLevel"];
         this->x = sb["x"].is_null() ? 0 : sb["x"].get<int>();
         this->y = sb["y"].is_null() ? 0 : sb["y"].get<int>();
+        if (sb.contains("comment")) this->comment_id = sb["comment"];
     }
 }

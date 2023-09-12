@@ -23,6 +23,7 @@ public:
     std::optional<json> mutations;
     bool shadow, topLevel;
     int x, y;
+    std::optional<std::string> comment_id;
 
     bool is_array_block;
     ScratchArrayBlock array_block;

@@ -3,12 +3,14 @@
 #include <algorithm>
 #include <filesystem>
 #include <nlohmann/json.hpp>
+#include <optional>
 #include <string>
 #include <vector>
 
 #include "../blocks/Chain.hpp"
 #include "../blocks/Link.hpp"
 #include "ScratchBlock.hpp"
+#include "ScratchComment.hpp"
 #include "ScratchCostume.hpp"
 #include "ScratchList.hpp"
 #include "ScratchSound.hpp"
@@ -96,6 +98,7 @@ private:
     unsigned int m_volume;
     int m_layerOrder;
     unsigned int m_currentCostume;
+    std::unordered_map<std::optional<std::string>, ScratchComment> m_comments;
     std::unordered_map<std::string, double> m_effects = {
         {"COLOR", 0},  {"FISHEYE", 0},    {"WHIRL", 0}, {"PIXELATE", 0},
         {"MOSAIC", 0}, {"BRIGHTNESS", 0}, {"GHOST", 0}};
