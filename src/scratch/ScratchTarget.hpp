@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <filesystem>
 #include <nlohmann/json.hpp>
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -66,6 +65,8 @@ public:
                      {"MOSAIC", 0}, {"BRIGHTNESS", 0}, {"GHOST", 0}};
     }
 
+    std::unordered_map<std::string, ScratchComment> get_comments() { return m_comments; }
+
     // sprite variables
     virtual bool get_visible() { return true; }
     virtual void set_visible(bool b) {}
@@ -98,7 +99,7 @@ private:
     unsigned int m_volume;
     int m_layerOrder;
     unsigned int m_currentCostume;
-    std::unordered_map<std::optional<std::string>, ScratchComment> m_comments;
+    std::unordered_map<std::string, ScratchComment> m_comments;
     std::unordered_map<std::string, double> m_effects = {
         {"COLOR", 0},  {"FISHEYE", 0},    {"WHIRL", 0}, {"PIXELATE", 0},
         {"MOSAIC", 0}, {"BRIGHTNESS", 0}, {"GHOST", 0}};
