@@ -64,6 +64,7 @@ enum OPCODE {
     COSTUME_NUM_NAME = 217,       // "looks_costumenumbername"
     BACKDROP_NUM_NAME = 218,      // "looks_backdropnumbername"
     SIZE_VAL = 219,               // "looks_size"
+    COSTUME = 220,                // "looks_costume"
 
     // Variables and Lists
     SET_VARIABLE_TO = 300,     // "data_setvariableto"
@@ -224,6 +225,7 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"looks_costumenumbername", OPCODETYPE(OPCODE::COSTUME_NUM_NAME, OPTYPE::REPORTER)},
     {"looks_backdropnumbername", OPCODETYPE(OPCODE::BACKDROP_NUM_NAME, OPTYPE::REPORTER)},
     {"looks_size", OPCODETYPE(OPCODE::SIZE_VAL, OPTYPE::REPORTER)},
+    {"looks_costume", OPCODETYPE(OPCODE::COSTUME, OPTYPE::SHADOW)},
 
     {"data_setvariableto", OPCODETYPE(OPCODE::SET_VARIABLE_TO, OPTYPE::BLOCK)},
     {"data_changevariableby", OPCODETYPE(OPCODE::CHANGE_VARIABLE_BY, OPTYPE::BLOCK)},

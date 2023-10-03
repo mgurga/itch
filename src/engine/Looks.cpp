@@ -29,8 +29,8 @@ void EngineFunctions::Engine::say_for_sec(Link link, ScratchTarget *s, Chain &c,
 }
 
 void EngineFunctions::Engine::switch_costume_to(Link link, ScratchTarget *s) {
-    Value new_costume = compute_input(link.inputs["COSTUME"], s);
-
+    std::string linkid = link.inputs["COSTUME"][1].sab.str_value;
+    Value new_costume = compute_reporter(get_link_by_id(linkid), s);
     if (new_costume.contains_string()) {
         for (int i = 0; i < s->costumes.size(); i++)
             if (s->costumes.at(i).name == new_costume.get_string()) s->set_current_costume(i);
