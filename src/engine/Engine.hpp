@@ -49,6 +49,7 @@ public:
     std::string variant_str(std::variant<std::string, double> varient);
     Chain& get_chain_by_link_id(std::string id, ScratchTarget* s);
     ScratchTarget& get_target_by_name(std::string name);
+    double get_timer_progress();
 
     std::vector<Variable> variables;
     std::vector<Variable> procedure_variables;

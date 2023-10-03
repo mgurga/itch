@@ -54,3 +54,9 @@ Variable& EngineFunctions::Engine::get_proc_var_by_name(std::string name) {
         if (var.name == name) return var;
     throw std::invalid_argument("procedure variable '" + name + "' not found");
 }
+
+double EngineFunctions::Engine::get_timer_progress() {
+    auto now = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - timer).count();
+    return static_cast<double>(duration) / 1000;
+}

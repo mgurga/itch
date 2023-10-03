@@ -124,11 +124,7 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
     case OPCODE::DIRECTION: return s->get_direction();
     case OPCODE::SIZE_VAL: return s->get_size();
     case OPCODE::LOUDNESS: return -1;
-    case OPCODE::TIMER:
-        return static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
-                                       std::chrono::high_resolution_clock::now() - timer)
-                                       .count()) /
-               1000;
+    case OPCODE::TIMER: return get_timer_progress();
     case OPCODE::BACKDROP_NUM_NAME:
         if (op.fields["NUMBER_NAME"][0] == "number") {
             return prj->stage.get_current_costume() + 1;

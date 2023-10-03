@@ -246,6 +246,15 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
 
     // Events
     case OPCODE::WHEN_FLAG_CLICKED: c.set_activatable(false); break;
+    case OPCODE::WHEN_GREATER_THAN:
+        if (link.fields["WHENGREATERTHANMENU"][0] == "TIMER") {
+            if (get_timer_progress() >= compute_input(link.inputs["VALUE"], s).get_number()) {
+                c.set_activatable(false);
+            } else {
+                i = -1;
+            }
+        }
+        break;
     case OPCODE::WHEN_KEY_PRESSED:
         if (!Utils::contains(pi->pressed, link.fields["KEY_OPTION"][0])) {
             i = -1;
