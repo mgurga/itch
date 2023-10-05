@@ -347,7 +347,7 @@ void Player::paint_list_monitor(ScratchMonitor& monitor) {
     float item_y = 3;
     int index = 1;
     for (std::string s : monitor.values) {
-        if (item_y + monitor.y + 20 > 360) break;
+        if (item_y > monitor.height - 40) break;
 
         sf::RectangleShape item_background;
         item_background.setFillColor(sf::Color(252, 102, 44));
