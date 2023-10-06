@@ -9,6 +9,7 @@
 
 class List {
 public:
+    List() : name(""), sprite_name(""), values(), id(""){};
     List(const ScratchList& sl) : name(sl.name), id(sl.id) {
         for (std::string s : sl.values) { values.push_back(Value(s)); }
     };
