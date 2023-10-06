@@ -7,6 +7,8 @@
 
 class Value {
 public:
+    enum SpecialValue { Infinity, NaN, NegativeInfinity, None };
+
     Value(std::variant<std::string, double> var) {
         if (std::holds_alternative<std::string>(var)) value = std::get<std::string>(var);
         if (std::holds_alternative<double>(var)) value = std::get<double>(var);
@@ -22,11 +24,11 @@ public:
         }
         value = s;
     };
-    Value(double d) : value(d){};
-    Value(int i) : value(static_cast<double>(i)){};
-    Value(unsigned int i) : value(static_cast<double>(i)){};
+    Value(double d) : value(d) { update_special_value(); };
+    Value(int i) : value(static_cast<double>(i)) { update_special_value(); };
+    Value(unsigned int i) : value(static_cast<double>(i)) { update_special_value(); };
     Value(bool b) : value(b){};
-    Value(std::size_t s) : value(static_cast<double>(s)){};
+    Value(std::size_t s) : value(static_cast<double>(s)) { update_special_value(); };
     Value(char c) : value(std::string(1, c)){};
     Value() : value(""){};
 
@@ -53,6 +55,9 @@ public:
     std::string get_string() {
         if (std::holds_alternative<double>(value)) {
             std::string s = std::to_string(std::get<double>(value));
+            if (is_infinity()) return "Infinity";
+            if (is_negative_infinity()) return "-Infinity";
+            if (is_nan()) return "NaN";
             s.erase(s.find_last_not_of('0') + 1, std::string::npos);
             s.erase(s.find_last_not_of('.') + 1, std::string::npos);
             return s;
@@ -69,9 +74,8 @@ public:
         if (std::holds_alternative<double>(value)) {
             return std::get<double>(value);
         } else if (contains_bool()) {
-            // hack to make sure true values are greater than false values
             if (get_bool()) {
-                return 1.0;  // should be 0.000001 or something but 1 feels more proper
+                return 1.0;
             } else {
                 return 0.0;
             }
@@ -88,12 +92,26 @@ public:
         }
     }
 
+    void update_special_value() {
+        if (contains_number()) {
+            if (get_number() <= -std::pow(10, 21)) sv = NegativeInfinity;
+            if (get_number() >= std::pow(10, 21)) sv = Infinity;
+            if (get_number() != get_number()) sv = NaN;
+            if (get_number() >= -std::pow(10, -6) && get_number() <= std::pow(10, -6)) value = 0.0;
+        }
+    }
+
     bool contains_string() const { return std::holds_alternative<std::string>(value); }
     bool contains_number() const { return std::holds_alternative<double>(value); }
     bool contains_bool() const { return std::holds_alternative<bool>(value); }
 
+    bool is_infinity() const { return sv == Infinity; }
+    bool is_negative_infinity() const { return sv == NegativeInfinity; }
+    bool is_nan() const { return sv == NaN; }
+
     Value operator=(Value other) {
         value = other.value;
+        sv = other.sv;
         return *this;
     }
 
@@ -135,4 +153,5 @@ public:
 
 private:
     std::variant<std::string, double, bool> value;
+    SpecialValue sv = None;
 };
