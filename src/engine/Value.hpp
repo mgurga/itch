@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cmath>
 #include <stdexcept>
 #include <string>
 #include <variant>
@@ -9,27 +10,33 @@ class Value {
 public:
     enum SpecialValue { Infinity, NaN, NegativeInfinity, None };
 
-    Value(std::variant<std::string, double> var) {
-        if (std::holds_alternative<std::string>(var)) value = std::get<std::string>(var);
-        if (std::holds_alternative<double>(var)) value = std::get<double>(var);
-    };
-    Value(std::variant<std::string, double, bool> var) : value(var){};
     Value(std::string s) {
-        if (std::all_of(std::begin(s), std::end(s),
-                        [](char c) { return (std::isxdigit(c) || c == '.'); })) {
+        if (s == "true") {
+            value = true;
+            return;
+        }
+        if (s == "false") {
+            value = false;
+            return;
+        }
+        if (std::all_of(std::begin(s), std::end(s), [](char c) {
+                return (std::isdigit(c) || c == '.' || c == '-' || c == ',');
+            })) {
             try {
+                s.erase(std::remove(s.begin(), s.end(), ','), s.end());
                 value = std::stod(s);
             } catch (const std::invalid_argument&) { value = s; }
             return;
         }
         value = s;
     };
+    Value(const char* c) : Value(std::string(c)) {}
     Value(double d) : value(d) { update_special_value(); };
-    Value(int i) : value(static_cast<double>(i)) { update_special_value(); };
-    Value(unsigned int i) : value(static_cast<double>(i)) { update_special_value(); };
+    Value(int i) : Value(static_cast<double>(i)){};
+    Value(unsigned int i) : Value(static_cast<double>(i)){};
+    Value(std::size_t s) : Value(static_cast<double>(s)){};
+    Value(char c) : Value(std::string(1, c)){};
     Value(bool b) : value(b){};
-    Value(std::size_t s) : value(static_cast<double>(s)) { update_special_value(); };
-    Value(char c) : value(std::string(1, c)){};
     Value() : value(""){};
 
     operator std::string() { return get_string(); }
@@ -85,8 +92,24 @@ public:
     }
 
     bool get_bool() {
-        if (std::holds_alternative<bool>(value)) {
+        if (contains_bool()) {
             return std::get<bool>(value);
+        } else if (contains_number()) {
+            if (std::get<double>(value) == 0.0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (contains_string()) {
+            std::string str = std::get<std::string>(value);
+            std::transform(str.begin(), str.end(), str.begin(),
+                           [](unsigned char c) { return std::tolower(c); });
+
+            if (str == "0" || str == "false" || str == "") {
+                return false;
+            } else {
+                return true;
+            }
         } else {
             return false;
         }

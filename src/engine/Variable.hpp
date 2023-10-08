@@ -54,11 +54,6 @@ public:
         return *this;
     }
 
-    Variable operator=(const std::variant<std::string, double>& other) {
-        value = other;
-        return *this;
-    }
-
     Variable operator=(Value other) {
         value = other;
         return *this;
