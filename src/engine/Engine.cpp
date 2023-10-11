@@ -349,6 +349,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
 
     // Sensing
     case OPCODE::RESET_TIMER: timer = std::chrono::high_resolution_clock::now(); break;
+    case OPCODE::SET_DRAG_MODE: s->set_draggable(link.fields["DRAG_MODE"][0] == "draggable"); break;
 
     // Procedures
     case OPCODE::DEFINITION: break;
