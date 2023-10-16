@@ -2,10 +2,10 @@
 
 Value EngineFunctions::Engine::compute_condition(Link op, ScratchTarget* s) {
     if (op.opcode == OPCODE::KEY_PRESSED) {
-        Link& ko = get_link_by_id(op.inputs["KEY_OPTION"][1]);
-        std::string key = ko.fields["KEY_OPTION"][0];
+        Value key = compute_input(LinkInput(op.inputs["KEY_OPTION"][1]), s);
+        if (key.contains_number()) { key = Utils::to_scratch_key(key.get_number()); }
         for (std::string pkey : pi->keys_down)
-            if (pkey == key) return true;
+            if (pkey == key.get_string()) return true;
         return false;
     }
 
