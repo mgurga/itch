@@ -7,8 +7,6 @@ add_compile_definitions(BUILD_NETWORK_SUPPORT=${BUILD_NETWORK_SUPPORT})
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 
-find_program(imagemagick magick REQUIRED) # install with `sudo scoop install imagemagick` on windows
-
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
@@ -66,6 +64,14 @@ option(IMGUI_SFML_IMGUI_DEMO "Build imgui_demo.cpp" ON)
 FetchContent_MakeAvailable(imgui-sfml)
 message("finished fetching imgui-sfml")
 
+message("fetching lunasvg...")
+FetchContent_Declare(
+    lunasvg
+    GIT_REPOSITORY https://github.com/sammycage/lunasvg
+    GIT_TAG v2.3.8)
+FetchContent_MakeAvailable(lunasvg)
+message("finished fetching lunasvg")
+
 if (BUILD_NETWORK_SUPPORT)
     message("fetching cpr...")
     FetchContent_Declare(
@@ -79,14 +85,15 @@ endif()
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
-target_link_libraries(${PROJECT_NAME} 
-    nlohmann_json::nlohmann_json 
-    sfml-system 
-    sfml-audio 
-    sfml-graphics 
-    sfml-window 
+target_link_libraries(${PROJECT_NAME}
+    nlohmann_json::nlohmann_json
+    sfml-system
+    sfml-audio
+    sfml-graphics
+    sfml-window
     CLI11::CLI11 zip
-    ImGui-SFML::ImGui-SFML)
+    ImGui-SFML::ImGui-SFML
+    lunasvg)
 if (BUILD_NETWORK_SUPPORT)
     target_link_libraries(${PROJECT_NAME} cpr::cpr)
 endif()

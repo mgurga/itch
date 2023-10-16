@@ -1,13 +1,16 @@
 #pragma once
 
-#include <string>
-#include <iostream>
-#include <filesystem>
-#include <nlohmann/json.hpp>
+#include <lunasvg.h>
+
 #include <SFML/Graphics.hpp>
+#include <filesystem>
+#include <iostream>
+#include <nlohmann/json.hpp>
+#include <string>
 
 #include "ScratchAsset.hpp"
 
+using namespace lunasvg;
 using json = nlohmann::json;
 
 class ScratchCostume : public ScratchAsset {

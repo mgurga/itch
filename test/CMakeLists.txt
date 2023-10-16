@@ -12,6 +12,7 @@ FetchContent_Declare(
 message("finished fetching googletest")
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+set(BUILD_NETWORK_SUPPORT false)
 
 enable_testing()
 file(GLOB_RECURSE TESTFILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
@@ -31,7 +32,8 @@ target_link_libraries(${TEST_PROJECT_NAME} PUBLIC
     sfml-window
     zip
     ImGui-SFML::ImGui-SFML
-    cpr::cpr)
+    cpr::cpr
+    lunasvg)
 
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET ${TEST_PROJECT_NAME} POST_BUILD

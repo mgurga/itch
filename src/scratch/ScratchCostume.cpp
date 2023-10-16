@@ -9,16 +9,25 @@ ScratchCostume::ScratchCostume(json sc) :
 
 void ScratchCostume::load_image(std::filesystem::path tempdir) {
     if (this->dataFormat == "svg") {
-        std::filesystem::path newfile = tempdir / (this->assetId + ".png");
-        if (!std::filesystem::exists(newfile)) {
-            std::string command = "magick convert -background none " +
-                                  (tempdir / this->md5ext).string() + " " + newfile.string();
-            std::cout << "converting " << this->md5ext << " to png" << std::endl;
-            system(command.c_str());
-        } else {
-            std::cout << newfile << " already exists. not converting..." << std::endl;
+        std::cout << "converting " << this->md5ext << " to png" << std::endl;
+
+        auto doc = Document::loadFromFile((tempdir / this->md5ext).string());
+        if (!doc) {
+            std::cout << "error loading file: " << (tempdir / this->md5ext) << std::endl;
+            return;
         }
-        this->texture.loadFromFile(newfile.string());
+
+        auto bitmap = doc->renderToBitmap(0, 0, 0x00000000);
+        if (!bitmap.valid()) {
+            std::cout << "invalid bitmap created: " << (tempdir / this->md5ext) << std::endl;
+            return;
+        }
+        bitmap.convertToRGBA();
+
+        sf::Image img;
+        img.create(bitmap.width(), bitmap.height(), bitmap.data());
+
+        this->texture.loadFromImage(img);
     } else {
         this->texture.loadFromFile((tempdir / this->md5ext).string());
     }
