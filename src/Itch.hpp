@@ -16,13 +16,14 @@ using json = nlohmann::json;
 
 #include "DebugWindow.hpp"
 #include "FileHandler.hpp"
+#include "ItchOptions.hpp"
 #include "Project.hpp"
 #include "engine/Engine.hpp"
 #include "player/Player.hpp"
 
 class Itch {
 public:
-    Itch(){};
+    Itch(ItchOptions& io);
     ~Itch() {
         delete player;
         delete debug_window;
@@ -40,9 +41,8 @@ public:
     Player* player = nullptr;
     DebugWindow* debug_window = nullptr;
 
-    bool running = true;
-    bool headless = false;  // run without rendering code (engine only)
+    ItchOptions& options;
+
+private:
     bool pause_engine = false;
-    bool opendebugwindow = false;
-    const std::filesystem::path temp_dir{"temp"};
 };

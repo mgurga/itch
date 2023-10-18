@@ -2,6 +2,8 @@
 
 EngineFunctions::Engine::Engine(Project& project) :
     TOTAL_CHAINS(count_chains(project)), prj(&project) {
+    if (options == nullptr) std::cout << "engine has no ItchOptions" << std::endl;
+
     for (ScratchVariable sv : project.stage.variables) variables.push_back(sv);
     for (ScratchList sl : project.stage.lists) lists.push_back(sl);
     for (Link l : project.stage.links) links.push_back(l);
@@ -22,11 +24,11 @@ EngineFunctions::Engine::Engine(Project& project) :
 
     std::cout << "initialized " << variables.size() << " variable(s)" << std::endl;
     for (Variable v : variables) { std::cout << "'" << v.name << "', "; }
-    std::cout << std::endl;
+    if (variables.size() != 0) std::cout << std::endl;
 
     std::cout << "initialized " << lists.size() << " list(s)" << std::endl;
     for (List l : lists) { std::cout << "'" << l.name << "', "; }
-    std::cout << std::endl;
+    if (lists.size() != 0) std::cout << std::endl;
 
     std::cout << "found " << links.size() << " link(s)" << std::endl;
     std::cout << "finished initializing engine" << std::endl;

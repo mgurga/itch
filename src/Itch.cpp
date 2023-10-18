@@ -1,12 +1,15 @@
 #include "Itch.hpp"
 
+Itch::Itch(ItchOptions& io) : options(io) {}
+
 void Itch::init() {
-    if (!headless) player = new Player(running);
+    if (!options.headless) player = new Player(options.running);
     // std::cout << "cleaning up old files" << std::endl;
     // if (std::filesystem::exists(temp_dir)) std::filesystem::remove_all(temp_dir);
-    if (!std::filesystem::exists(temp_dir)) std::filesystem::create_directory(temp_dir);
-    if (opendebugwindow) {
-        debug_window = new DebugWindow(&engine, &project, pause_engine, running);
+    if (!std::filesystem::exists(options.tempdir))
+        std::filesystem::create_directory(options.tempdir);
+    if (options.debugwindow) {
+        debug_window = new DebugWindow(&engine, &project, pause_engine, options.running);
         pause_engine = true;
     }
     std::cout << "initialized itch" << std::endl;
@@ -26,32 +29,32 @@ void Itch::load_from_folder(std::filesystem::path sb3_folder) {
     project = Project(sb3_folder);
     project.load_from_project_json();
 
-    engine = EngineFunctions::Engine(project);
+    engine = EngineFunctions::Engine(options, project);
 }
 
 void Itch::load_from_file(std::filesystem::path sb3_file) {
-    if (std::filesystem::exists(temp_dir)) {
-        std::filesystem::remove_all(temp_dir);
-        std::filesystem::create_directory(temp_dir);
+    if (std::filesystem::exists(options.tempdir)) {
+        std::filesystem::remove_all(options.tempdir);
+        std::filesystem::create_directory(options.tempdir);
     }
     std::cout << "got sb3 file: " << sb3_file << std::endl;
 
-    FileHandler sb3 = FileHandler(sb3_file, temp_dir);
+    FileHandler sb3 = FileHandler(sb3_file, options.tempdir);
     sb3.init([&]() {
         std::cout << "finished unzipping sb3" << std::endl;
 
-        project = Project(temp_dir);
+        project = Project(options.tempdir);
         project.load_from_project_json();
 
-        engine = EngineFunctions::Engine(project);
+        engine = EngineFunctions::Engine(options, project);
     });
 }
 
 void Itch::load_from_url(std::string project_url) {
 #if BUILD_NETWORK_SUPPORT
-    if (std::filesystem::exists(temp_dir)) {
-        std::filesystem::remove_all(temp_dir);
-        std::filesystem::create_directory(temp_dir);
+    if (std::filesystem::exists(options.tempdir)) {
+        std::filesystem::remove_all(options.tempdir);
+        std::filesystem::create_directory(options.tempdir);
     }
 
     std::stringstream urlss(project_url);
@@ -70,7 +73,7 @@ void Itch::load_from_url(std::string project_url) {
     std::cout << "response code is " << pd_res.status_code << std::endl;
     json project_description = json::parse(pd_res.text);
     std::cout << "project token is " << project_description["project_token"] << std::endl;
-    std::ofstream pjdf(temp_dir / "project_description.json");
+    std::ofstream pjdf(options.tempdir / "project_description.json");
     pjdf << pd_res.text;
     pjdf.close();
 
@@ -82,7 +85,7 @@ void Itch::load_from_url(std::string project_url) {
     std::cout << "project json response code: " << pj_res.status_code << std::endl;
     json project_json = json::parse(pj_res.text);
     std::ofstream pjf;
-    pjf.open(temp_dir / "project.json");
+    pjf.open(options.tempdir / "project.json");
     pjf << pj_res.text;
     pjf.close();
 
@@ -96,7 +99,7 @@ void Itch::load_from_url(std::string project_url) {
             cpr::Response c_res = cpr::Get(
                 cpr::Url{scratch_asset_endpoint + cos["md5ext"].get<std::string>() + "/get/"});
             std::ofstream cf;
-            cf.open(temp_dir / cos["md5ext"].get<std::string>());
+            cf.open(options.tempdir / cos["md5ext"].get<std::string>());
             cf << c_res.text;
             cf.close();
         }
@@ -106,16 +109,16 @@ void Itch::load_from_url(std::string project_url) {
             cpr::Response s_res = cpr::Get(
                 cpr::Url{scratch_asset_endpoint + snd["md5ext"].get<std::string>() + "/get/"});
             std::ofstream sf;
-            sf.open(temp_dir / snd["md5ext"].get<std::string>());
+            sf.open(options.tempdir / snd["md5ext"].get<std::string>());
             sf << s_res.text;
             sf.close();
         }
     }
 
-    project = Project(temp_dir);
+    project = Project(options.tempdir);
     project.load_from_project_json();
 
-    engine = EngineFunctions::Engine(project);
+    engine = EngineFunctions::Engine(options, project);
 
 #else
     std::cout << "itch was not built with network support. quitting..." << std::endl;
@@ -124,13 +127,13 @@ void Itch::load_from_url(std::string project_url) {
 }
 
 void Itch::draw() {
-    if (headless) {
+    if (options.headless) {
         EMPTY_PLAYER_INFO(pi)
         engine.tick(&pi);
 
-        if (engine.finished) running = false;
+        if (engine.finished) options.running = false;
     } else {
-        if (opendebugwindow) debug_window->draw();
+        if (options.debugwindow) debug_window->draw();
         PlayerInfo pi = player->get_player_info();
         if (!pause_engine) engine.tick(&pi);
         pi.pressed.clear();

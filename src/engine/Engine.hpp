@@ -9,6 +9,7 @@
 #include <variant>
 #include <vector>
 
+#include "../ItchOptions.hpp"
 #include "../Project.hpp"
 #include "../Utils.hpp"
 #include "../blocks/Link.hpp"
@@ -26,6 +27,7 @@ class Engine {
 public:
     Engine() : TOTAL_CHAINS(0){};
     Engine(Project& project);
+    Engine(ItchOptions& io, Project& project) : Engine(project) { options = &io; }
 
     unsigned int TOTAL_CHAINS;
     bool finished = false;
@@ -61,8 +63,9 @@ public:
     std::vector<ScratchSprite> clones;
     std::vector<GlideProgress> glide_progresses;
 
-    Project* prj;
-    PlayerInfo* pi;
+    Project* prj = nullptr;
+    PlayerInfo* pi = nullptr;
+    ItchOptions* options = nullptr;
 
     // motion helpers
     void move_steps(double steps, ScratchTarget* s);

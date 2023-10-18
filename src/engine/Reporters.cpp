@@ -132,7 +132,7 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
         } else {
             return prj->stage.costume().name;
         }
-    case OPCODE::USERNAME: return Value();  // empty string
+    case OPCODE::USERNAME: return Value(options != nullptr ? options->username : "");
     case OPCODE::VOLUME: return s->get_volume();
     case OPCODE::ANSWER: return Value();
     case OPCODE::ARG_STRING_NUM: return get_proc_var_by_name(op.fields["VALUE"][0]).val();
