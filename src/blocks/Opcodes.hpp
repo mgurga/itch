@@ -158,7 +158,19 @@ enum OPCODE {
     ARG_BOOLEAN = 801,     // "argument_reporter_boolean"
     DEFINITION = 802,      // "procedures_definition"
     PROTOTYPE = 803,       // "procedures_prototype"
-    CALL = 804             // "procedures_call"
+    CALL = 804,            // "procedures_call"
+
+    // Pen Blocks
+    SET_PEN_COLOR_TO = 901,        // "pen_setPenColorParamTo"
+    CHANGE_PEN_COLOR_BY = 902,     // "pen_changePenColorParamBy"
+    SET_PEN_COLOR_TO_COLOR = 903,  // "pen_setPenColorToColor"
+    CHANGE_PEN_SIZE_BY = 904,      // "pen_changePenSizeBy"
+    SET_PEN_SIZE_TO = 905,         // "pen_setPenSizeTo"
+    PEN_STAMP = 906,               // "pen_stamp"
+    PEN_CLEAR = 907,               // "pen_clear"
+    PEN_COLOR_PARAM_MENU = 908,    // "pen_menu_colorParam"
+    PEN_UP = 909,                  // "pen_penUp"
+    PEN_DOWN = 910,                // "pen_penDown"
 };
 
 struct OPCODETYPE {
@@ -314,6 +326,17 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"procedures_definition", OPCODETYPE(OPCODE::DEFINITION, OPTYPE::BLOCK)},
     {"procedures_prototype", OPCODETYPE(OPCODE::PROTOTYPE, OPTYPE::SHADOW)},
     {"procedures_call", OPCODETYPE(OPCODE::CALL, OPTYPE::BLOCK)},
+
+    {"pen_setPenColorParamTo", OPCODETYPE(OPCODE::SET_PEN_COLOR_TO, OPTYPE::BLOCK)},
+    {"pen_changePenColorParamBy", OPCODETYPE(OPCODE::CHANGE_PEN_COLOR_BY, OPTYPE::BLOCK)},
+    {"pen_setPenColorToColor", OPCODETYPE(OPCODE::SET_PEN_COLOR_TO_COLOR, OPTYPE::BLOCK)},
+    {"pen_changePenSizeBy", OPCODETYPE(OPCODE::CHANGE_PEN_SIZE_BY, OPTYPE::BLOCK)},
+    {"pen_setPenSizeTo", OPCODETYPE(OPCODE::SET_PEN_SIZE_TO, OPTYPE::BLOCK)},
+    {"pen_stamp", OPCODETYPE(OPCODE::PEN_STAMP, OPTYPE::BLOCK)},
+    {"pen_clear", OPCODETYPE(OPCODE::PEN_CLEAR, OPTYPE::BLOCK)},
+    {"pen_menu_colorParam", OPCODETYPE(OPCODE::PEN_COLOR_PARAM_MENU, OPTYPE::BLOCK)},
+    {"pen_penUp", OPCODETYPE(OPCODE::PEN_UP, OPTYPE::BLOCK)},
+    {"pen_penDown", OPCODETYPE(OPCODE::PEN_DOWN, OPTYPE::BLOCK)},
 
     {"variable", OPCODETYPE(OPCODE::VARIABLE_REPORTER, OPTYPE::REPORTER)},
     {"list", OPCODETYPE(OPCODE::LIST_REPORTER, OPTYPE::REPORTER)}};
