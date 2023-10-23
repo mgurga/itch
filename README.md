@@ -23,7 +23,6 @@ Options:
 ## How to Build
 Itch is well supported on Windows and Linux and uses the CMake build system.
 The CMakeLists.txt fetches all libraries when configuring, so no need to hunt for dependencies.
-The [ImageMagick](https://github.com/ImageMagick/ImageMagick) command line program is used to rasterize svg files used in Scratch projects and must be accessable via the ```magick``` command.
 
 Run the following commands to checkout and build Itch yourself:
 ```
