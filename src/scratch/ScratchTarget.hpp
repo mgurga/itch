@@ -8,6 +8,7 @@
 
 #include "../blocks/Chain.hpp"
 #include "../blocks/Link.hpp"
+#include "../engine/Pen.hpp"
 #include "ScratchBlock.hpp"
 #include "ScratchComment.hpp"
 #include "ScratchCostume.hpp"
@@ -31,6 +32,7 @@ public:
     std::vector<ScratchSound> sounds;
     std::vector<ScratchBlock> blocks;
     std::vector<Link> links;
+    EngineFunctions::Pen pen;
 
     std::vector<Chain> chains;
 

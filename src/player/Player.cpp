@@ -11,6 +11,7 @@ Player::Player(bool& r) : running(r) {
         std::cout << "font not found" << std::endl;
         exit(1);
     }
+    pen_layer.create(480, 360, sf::Color(255, 255, 255, 0));
 }
 
 void Player::draw() {
@@ -86,24 +87,76 @@ void Player::draw() {
     }
 }
 
-void Player::paint(Project& project) {
+void Player::paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders) {
     ww = window->getSize().x;  // window width
     wh = window->getSize().y;  // window height
     window->clear(sf::Color(255, 255, 255));
 
+    clicked_sprites.clear();
+
     sf::Sprite stagesprite;
-    stagesprite.setTexture(project.stage.costume().texture);
+    stagesprite.setTexture(
+        dynamic_cast<StageDrawOrder*>(draw_orders.at(0).get())->get_stage().costume().texture);
     stagesprite.setPosition(0, 0);
     window->draw(stagesprite);
 
-    clicked_sprites.clear();
+    sf::Texture pentex;
+    pentex.loadFromImage(pen_layer);
+    sf::Sprite penspr;
+    penspr.setPosition(0, 0);
+    penspr.setTexture(pentex, true);
+    window->draw(penspr);
 
-    for (ScratchSprite& sprite : project.clones) paint_sprite(sprite);
-    for (ScratchSprite& sprite : project.sprites) paint_sprite(sprite);
-    for (ScratchMonitor& monitor : project.monitors)
-        if (monitor.visible) paint_monitor(monitor);
+    for (std::unique_ptr<DrawOrder>& dw : draw_orders) {
+        switch (dw->get_type()) {
+        case DrawOrder::DrawObject::NONE: break;
+        case DrawOrder::DrawObject::SPRITE:
+            paint_sprite(dynamic_cast<SpriteDrawOrder*>(dw.get())->get_sprite());
+            break;
+        case DrawOrder::DrawObject::MONITOR:
+            paint_monitor(dynamic_cast<MonitorDrawOrder*>(dw.get())->get_monitor());
+            break;
+        case DrawOrder::DrawObject::PEN_LINE:
+            paint_pen_line(*dynamic_cast<PenDrawOrder*>(dw.get()));
+            break;
+        case DrawOrder::DrawObject::PEN_CLEAR:
+            pen_layer.create(480, 360, sf::Color(255, 255, 255, 0));
+            break;
+        }
+    }
 
     window->display();
+}
+
+void Player::paint_pen_line(PenDrawOrder& dw) {
+    dw.set_x(dw.get_x() + (ww / 2.0));
+    dw.set_y(-dw.get_y() + (wh / 2.0));
+    dw.set_x2(dw.get_x2() + (ww / 2.0));
+    dw.set_y2(-dw.get_y2() + (wh / 2.0));
+
+    double xdiff = dw.get_x2() - dw.get_x();
+    double ydiff = dw.get_y2() - dw.get_y();
+
+    double steps;
+    if (std::abs(xdiff) > std::abs(ydiff)) {
+        steps = std::abs(xdiff);
+    } else {
+        steps = std::abs(ydiff);
+    }
+
+    double xinc = xdiff / steps;
+    double yinc = ydiff / steps;
+    double penx = dw.get_x();
+    double peny = dw.get_y();
+
+    for (int i = 0; i < steps; i++) {
+        penx += xinc;
+        peny += yinc;
+        auto s = dw.get_pen_settings();
+        pen_layer.setPixel(penx, peny,
+                           sf::Color(static_cast<int>(s.pen_rgb.r), static_cast<int>(s.pen_rgb.g),
+                                     static_cast<int>(s.pen_rgb.b)));
+    }
 }
 
 void Player::paint_sprite(ScratchSprite& sprite) {

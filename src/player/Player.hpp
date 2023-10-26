@@ -4,15 +4,19 @@
 #include <string>
 #include <vector>
 
-#include "../Project.hpp"
+#include "DrawOrder.hpp"
+#include "MonitorDrawOrder.hpp"
+#include "PenDrawOrder.hpp"
 #include "PlayerInfo.hpp"
+#include "SpriteDrawOrder.hpp"
+#include "StageDrawOrder.hpp"
 
 class Player {
 public:
     Player(bool& running);
     ~Player() { delete window; }
     void draw();
-    void paint(Project& project);
+    void paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders);
     PlayerInfo get_player_info() {
         return {pressed,     keys_down,  clicked_sprites, mouse_pos.x,
                 mouse_pos.y, mouse_down, mouse_pressed};
@@ -27,6 +31,7 @@ private:
     void paint_large_monitor(ScratchMonitor& monitor);
     void paint_slider_monitor(ScratchMonitor& monitor);
     void paint_list_monitor(ScratchMonitor& monitor);
+    void paint_pen_line(PenDrawOrder& dw);
 
     unsigned int ww, wh;
 
@@ -39,4 +44,5 @@ private:
     bool mouse_down = false;
     bool mouse_pressed = false;
     sf::RenderWindow* window;
+    sf::Image pen_layer;
 };

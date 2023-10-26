@@ -2,7 +2,7 @@
 
 EngineFunctions::Engine::Engine(Project& project) :
     TOTAL_CHAINS(count_chains(project)), prj(&project) {
-    if (options == nullptr) std::cout << "engine has no ItchOptions" << std::endl;
+    options = new ItchOptions();
 
     for (ScratchVariable sv : project.stage.variables) variables.push_back(sv);
     for (ScratchList sl : project.stage.lists) lists.push_back(sl);
@@ -34,10 +34,16 @@ EngineFunctions::Engine::Engine(Project& project) :
     std::cout << "finished initializing engine" << std::endl;
 }
 
-void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
-    if (finished) return;
+std::vector<std::unique_ptr<DrawOrder>> EngineFunctions::Engine::tick(PlayerInfo* player_info) {
+    if (finished) return create_draw_order_list();
+
     broadcasts = queued_broadcasts;
     queued_broadcasts.clear();
+
+    if (options == nullptr) {
+        std::cout << "options nullptr" << std::endl;
+        exit(1);
+    }
 
     if (player_info == nullptr) {
         EMPTY_PLAYER_INFO(epi)
@@ -63,6 +69,7 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
         for (Chain& chain : sprite.chains) {
             if (process_chain(chain, &sprite)) { processed_chains++; }
         }
+        sprite.pen.update(sprite.get_x(), sprite.get_y());
     }
 
     // loop through clones and run their chains
@@ -173,6 +180,29 @@ void EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     }
 
     ticks++;
+
+    return create_draw_order_list();
+}
+
+std::vector<std::unique_ptr<DrawOrder>> EngineFunctions::Engine::create_draw_order_list() {
+    std::vector<std::unique_ptr<DrawOrder>> out;
+    out.push_back(std::make_unique<StageDrawOrder>(prj->stage));
+
+    for (ScratchSprite& s : prj->clones) out.push_back(std::make_unique<SpriteDrawOrder>(s));
+    for (ScratchSprite& s : prj->sprites) {
+        out.push_back(std::make_unique<SpriteDrawOrder>(s));
+        auto po = s.pen.get_pen_orders();
+        for (PenDrawOrder& pdo : po) { out.push_back(std::make_unique<PenDrawOrder>(pdo)); }
+        s.pen.get_pen_orders().clear();
+    }
+    for (ScratchMonitor& m : prj->monitors) out.push_back(std::make_unique<MonitorDrawOrder>(m));
+
+    if (clear_pen) {
+        out.push_back(std::make_unique<ClearDrawOrder>());
+        clear_pen = false;
+    }
+
+    return out;
 }
 
 Value EngineFunctions::Engine::compute_input(LinkInput input, ScratchTarget* sprite) {
@@ -352,6 +382,11 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     // Sensing
     case OPCODE::RESET_TIMER: timer = std::chrono::high_resolution_clock::now(); break;
     case OPCODE::SET_DRAG_MODE: s->set_draggable(link.fields["DRAG_MODE"][0] == "draggable"); break;
+
+    // Pen
+    case OPCODE::PEN_DOWN: s->pen.pen_down(); break;
+    case OPCODE::PEN_UP: s->pen.pen_up(); break;
+    case OPCODE::PEN_CLEAR: clear_pen = true; break;
 
     // Procedures
     case OPCODE::DEFINITION: break;

@@ -9,4 +9,6 @@ struct ItchOptions {
     bool running = true;
     std::string username = "";
     std::filesystem::path tempdir = "temp/";
+    int width = 480;
+    int height = 360;
 };
