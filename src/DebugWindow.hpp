@@ -18,7 +18,9 @@ public:
         eng = e;
         prj = p;
         window.create(sf::VideoMode(300, 500), "Itch Debug");
-        ImGui::SFML::Init(window, true);
+        if (!ImGui::SFML::Init(window, true)) {
+            std::cout << "Error initializing sfml imgui window" << std::endl;
+        }
         ImGui::GetIO().IniFilename = NULL;
     }
     void draw();
