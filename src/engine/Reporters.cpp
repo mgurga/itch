@@ -9,7 +9,7 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
     if (op.opcode == OPTYPE::CONDITIONAL) return compute_condition(op, s);
 
     // basic math operations: add, subtract, multiple, divide, modulo
-    if ((op.opcode.opcode >= 400 && op.opcode.opcode <= 403) ||
+    if ((static_cast<int>(op.opcode.opcode) >= 400 && static_cast<int>(op.opcode.opcode) <= 403) ||
         op.opcode.opcode == OPCODE::OPERATOR_MOD) {
         Value num1, num2;
         num1 = compute_input(op.inputs["NUM1"], s);
@@ -17,11 +17,11 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
 
         if (num1.contains_number() && num2.contains_number()) {
             switch (op.opcode.opcode) {
-            case OPERATOR_ADD: return num1.get_number() + num2.get_number();
-            case OPERATOR_SUBTRACT: return num1.get_number() - num2.get_number();
-            case OPERATOR_MULTIPLY: return num1.get_number() * num2.get_number();
-            case OPERATOR_DIVIDE: return num1.get_number() / num2.get_number();
-            case OPERATOR_MOD: return std::fmod(num1.get_number(), num2.get_number());
+            case OPCODE::OPERATOR_ADD: return num1.get_number() + num2.get_number();
+            case OPCODE::OPERATOR_SUBTRACT: return num1.get_number() - num2.get_number();
+            case OPCODE::OPERATOR_MULTIPLY: return num1.get_number() * num2.get_number();
+            case OPCODE::OPERATOR_DIVIDE: return num1.get_number() / num2.get_number();
+            case OPCODE::OPERATOR_MOD: return std::fmod(num1.get_number(), num2.get_number());
             default: break;
             }
         } else if (num1.contains_number()) {

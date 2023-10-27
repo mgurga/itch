@@ -8,7 +8,7 @@
 
 class Value {
 public:
-    enum SpecialValue { Infinity, NaN, NegativeInfinity, None };
+    enum class SpecialValue { Infinity, NaN, NegativeInfinity, None };
 
     Value(std::string s) {
         if (s == "true") {
@@ -117,9 +117,9 @@ public:
 
     void update_special_value() {
         if (contains_number()) {
-            if (get_number() <= -std::pow(10, 21)) sv = NegativeInfinity;
-            if (get_number() >= std::pow(10, 21)) sv = Infinity;
-            if (get_number() != get_number()) sv = NaN;
+            if (get_number() <= -std::pow(10, 21)) sv = SpecialValue::NegativeInfinity;
+            if (get_number() >= std::pow(10, 21)) sv = SpecialValue::Infinity;
+            if (get_number() != get_number()) sv = SpecialValue::NaN;
             if (get_number() >= -std::pow(10, -6) && get_number() <= std::pow(10, -6)) value = 0.0;
         }
     }
@@ -128,9 +128,9 @@ public:
     bool contains_number() const { return std::holds_alternative<double>(value); }
     bool contains_bool() const { return std::holds_alternative<bool>(value); }
 
-    bool is_infinity() const { return sv == Infinity; }
-    bool is_negative_infinity() const { return sv == NegativeInfinity; }
-    bool is_nan() const { return sv == NaN; }
+    bool is_infinity() const { return sv == SpecialValue::Infinity; }
+    bool is_negative_infinity() const { return sv == SpecialValue::NegativeInfinity; }
+    bool is_nan() const { return sv == SpecialValue::NaN; }
 
     Value operator=(Value other) {
         value = other.value;
@@ -176,5 +176,5 @@ public:
 
 private:
     std::variant<std::string, double, bool> value;
-    SpecialValue sv = None;
+    SpecialValue sv = SpecialValue::None;
 };

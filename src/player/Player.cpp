@@ -137,12 +137,7 @@ void Player::paint_pen_line(PenDrawOrder& dw) {
     double xdiff = dw.get_x2() - dw.get_x();
     double ydiff = dw.get_y2() - dw.get_y();
 
-    double steps;
-    if (std::abs(xdiff) > std::abs(ydiff)) {
-        steps = std::abs(xdiff);
-    } else {
-        steps = std::abs(ydiff);
-    }
+    double steps = std::max(std::abs(xdiff), std::abs(ydiff));
 
     double xinc = xdiff / steps;
     double yinc = ydiff / steps;

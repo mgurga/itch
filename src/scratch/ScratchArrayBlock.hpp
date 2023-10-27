@@ -6,7 +6,7 @@
 
 using json = nlohmann::json;
 
-enum BlockType {
+enum class BlockType {
     Uninitialized = 0,
     Number = 4,
     Positive_Number = 5,
@@ -22,27 +22,27 @@ enum BlockType {
 
 class ScratchArrayBlock {
 public:
-    ScratchArrayBlock() { type = Uninitialized; }
+    ScratchArrayBlock() { type = BlockType::Uninitialized; }
     ScratchArrayBlock(json sb, std::string id = "") {
         type = static_cast<BlockType>(sb[0]);
         block_id = id;
 
         switch (type) {
-        case Number:
-        case Positive_Integer:
-        case Positive_Number:
-        case Integer:
-        case Angle:
+        case BlockType::Number:
+        case BlockType::Positive_Integer:
+        case BlockType::Positive_Number:
+        case BlockType::Integer:
+        case BlockType::Angle:
             if (!(sb[1].get<std::string>() == "")) num_val = std::stod(sb[1].get<std::string>());
             break;
-        case Color:
-        case String: str_value = sb[1]; break;
-        case Broadcast:
+        case BlockType::Color:
+        case BlockType::String: str_value = sb[1]; break;
+        case BlockType::Broadcast:
             str_value = sb[1];
             element_id = sb[2];
             break;
-        case VariableType:
-        case ListType:
+        case BlockType::VariableType:
+        case BlockType::ListType:
             str_value = sb[1];
             element_id = sb[2];
             // reporters do not have x and y variables

@@ -12,7 +12,7 @@ struct ShadowArrayBlock {
 
     friend std::ostream& operator<<(std::ostream& os, ShadowArrayBlock sab) {
         os << "ShadowArrayBlock { shadow: " << sab.shadow
-           << ", ScratchArrayBlock: { blocktype: " << sab.sab.type
+           << ", ScratchArrayBlock: { blocktype: " << static_cast<int>(sab.sab.type)
            << ", num_val: " << sab.sab.num_val << ", str_val: " << sab.sab.str_value << " }";
         return os;
     }

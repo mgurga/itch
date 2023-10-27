@@ -6,7 +6,7 @@
 class PenDrawOrder : public DrawOrder {
 public:
     PenDrawOrder(double x, double y, double x2, double y2, EngineFunctions::PenSettings s) :
-        DrawOrder(x, y, DrawOrder::PEN_LINE), x2(x2), y2(y2), settings(s) {}
+        DrawOrder(x, y, DrawObject::PEN_LINE), x2(x2), y2(y2), settings(s) {}
 
     double get_x2() const { return x2; }
     double get_y2() const { return y2; }

@@ -222,8 +222,8 @@ bool EngineFunctions::Engine::process_chain(Chain& chain, ScratchTarget* s, bool
     if ((chain.is_activatable() || !chain.continue_at.empty()) || force_activate) {
         // used to interrupt continue_at if WHEN_KEY_CLICKED, BROADCAST_RECIEVED, or other special
         // events activate
-        if (chain.get_header().opcode >= WHEN_FLAG_CLICKED &&
-            chain.get_header().opcode <= BROADCAST_AND_WAIT) {
+        if (chain.get_header().opcode >= OPCODE::WHEN_FLAG_CLICKED &&
+            chain.get_header().opcode <= OPCODE::BROADCAST_AND_WAIT) {
             int init_link = 0;
             process_link(chain.get_header(), chain, s, init_link);
         }

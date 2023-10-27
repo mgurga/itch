@@ -5,7 +5,7 @@
 
 class MonitorDrawOrder : public DrawOrder {
 public:
-    MonitorDrawOrder(ScratchMonitor& m) : DrawOrder(m.x, m.y, DrawOrder::MONITOR), monitor(m) {}
+    MonitorDrawOrder(ScratchMonitor& m) : DrawOrder(m.x, m.y, DrawObject::MONITOR), monitor(m) {}
 
     ScratchMonitor& get_monitor() const { return monitor; }
 

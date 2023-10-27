@@ -7,7 +7,7 @@
 
 using json = nlohmann::json;
 
-enum MonitorMode { DEFAULT, LARGE, SLIDER, LIST };
+enum class MonitorMode { DEFAULT, LARGE, SLIDER, LIST };
 
 class ScratchMonitor {
 public:

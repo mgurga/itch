@@ -21,20 +21,20 @@ ScratchMonitor::ScratchMonitor(json sm) :
     }
 
     if (sm["mode"] == "default") {
-        mode = DEFAULT;
+        mode = MonitorMode::DEFAULT;
     } else if (sm["mode"] == "large") {
-        mode = LARGE;
+        mode = MonitorMode::LARGE;
     } else if (sm["mode"] == "slider") {
-        mode = SLIDER;
+        mode = MonitorMode::SLIDER;
     } else if (sm["mode"] == "list") {
-        mode = LIST;
+        mode = MonitorMode::LIST;
     } else {
-        mode = DEFAULT;
+        mode = MonitorMode::DEFAULT;
     }
 
     for (auto p : sm["params"].items()) params[p.key()] = p.value();
 
-    if (mode != LIST) {
+    if (mode != MonitorMode::LIST) {
         sliderMin = sm["sliderMin"];
         sliderMax = sm["sliderMax"];
         isDiscrete = sm["isDiscrete"];

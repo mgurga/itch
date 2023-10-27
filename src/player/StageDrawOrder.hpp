@@ -5,7 +5,8 @@
 
 class StageDrawOrder : public DrawOrder {
 public:
-    StageDrawOrder(ScratchStage& s) : DrawOrder(s.get_x(), s.get_y(), DrawOrder::STAGE), stage(s) {}
+    StageDrawOrder(ScratchStage& s) :
+        DrawOrder(s.get_x(), s.get_y(), DrawObject::STAGE), stage(s) {}
 
     ScratchStage& get_stage() const { return stage; }
 

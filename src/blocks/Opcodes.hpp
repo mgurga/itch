@@ -4,9 +4,9 @@
 #include <string>
 #include <unordered_map>
 
-enum OPTYPE { BLOCK, REPORTER, CONDITIONAL, SHADOW };
+enum class OPTYPE { BLOCK, REPORTER, CONDITIONAL, SHADOW };
 
-enum OPCODE {
+enum class OPCODE {
     LIST_REPORTER = -3,
     VARIABLE_REPORTER = -2,
     UNKNOWN = -1,

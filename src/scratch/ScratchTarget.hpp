@@ -18,8 +18,8 @@
 
 using json = nlohmann::json;
 
-enum RotationStyle { ALL_AROUND, LEFT_RIGHT, DONT_ROTATE };
-enum VideoState { ON, OFF, ON_FLIPPED };
+enum class RotationStyle { ALL_AROUND, LEFT_RIGHT, DONT_ROTATE };
+enum class VideoState { ON, OFF, ON_FLIPPED };
 
 class ScratchTarget {
 public:

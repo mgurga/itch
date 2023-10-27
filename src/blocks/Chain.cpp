@@ -15,24 +15,25 @@ std::vector<Chain> Chain::create_chains(std::vector<ScratchBlock> blocks) {
         OPCODE bop = Opcodes::opcode_to_enum(b.opcode);
         bool createchain = false;
 
-        if (bop == DEFINITION) start_ids.push_back(b.id);
-        if ((WHEN_FLAG_CLICKED <= bop && bop <= WHEN_BROADCAST_RECEIVED) || bop == START_AS_CLONE)
+        if (bop == OPCODE::DEFINITION) start_ids.push_back(b.id);
+        if ((OPCODE::WHEN_FLAG_CLICKED <= bop && bop <= OPCODE::WHEN_BROADCAST_RECEIVED) ||
+            bop == OPCODE::START_AS_CLONE)
             start_ids.push_back(b.id);
-        if (bop == FOREVER && !b.inputs.empty() && !b.inputs["SUBSTACK"][1].is_null())
+        if (bop == OPCODE::FOREVER && !b.inputs.empty() && !b.inputs["SUBSTACK"][1].is_null())
             start_ids.push_back(b.inputs["SUBSTACK"][1]);
-        if (bop == IF && !b.inputs.empty()) {
+        if (bop == OPCODE::IF && !b.inputs.empty()) {
             if (b.inputs.contains("CONDITION")) start_ids.push_back(b.inputs["CONDITION"][1]);
             if (b.inputs.contains("SUBSTACK") && !b.inputs["SUBSTACK"][1].is_null())
                 start_ids.push_back(b.inputs["SUBSTACK"][1]);
         }
-        if (bop == IF_ELSE && !b.inputs.empty()) {
+        if (bop == OPCODE::IF_ELSE && !b.inputs.empty()) {
             if (b.inputs.contains("CONDITION")) start_ids.push_back(b.inputs["CONDITION"][1]);
             if (b.inputs.contains("SUBSTACK") && !b.inputs["SUBSTACK"][1].is_null())
                 start_ids.push_back(b.inputs["SUBSTACK"][1]);
             if (b.inputs.contains("SUBSTACK2") && !b.inputs["SUBSTACK2"][1].is_null())
                 start_ids.push_back(b.inputs["SUBSTACK2"][1]);
         }
-        if (bop == REPEAT && !b.inputs.empty()) {
+        if (bop == OPCODE::REPEAT && !b.inputs.empty()) {
             if (b.inputs.contains("SUBSTACK") && !b.inputs["SUBSTACK"][1].is_null())
                 start_ids.push_back(b.inputs["SUBSTACK"][1]);
         }
@@ -44,9 +45,9 @@ std::vector<Chain> Chain::create_chains(std::vector<ScratchBlock> blocks) {
         tempchain = new Chain();
         Link l = Link(b);
         tempchain->add_link(l);
-        tempchain->activatable =
-            (WHEN_FLAG_CLICKED <= l.opcode && l.opcode <= WHEN_BROADCAST_RECEIVED) ||
-            l.opcode == START_AS_CLONE;
+        tempchain->activatable = (OPCODE::WHEN_FLAG_CLICKED <= l.opcode &&
+                                  l.opcode <= OPCODE::WHEN_BROADCAST_RECEIVED) ||
+                                 l.opcode == OPCODE::START_AS_CLONE;
 
         ScratchBlock curBlock = b;
         while (curBlock.next != "") {
