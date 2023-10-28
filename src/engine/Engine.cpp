@@ -384,9 +384,16 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     case OPCODE::SET_DRAG_MODE: s->set_draggable(link.fields["DRAG_MODE"][0] == "draggable"); break;
 
     // Pen
-    case OPCODE::PEN_DOWN: s->pen.pen_down(); break;
+    case OPCODE::PEN_DOWN: s->pen.pen_down(s->get_x(), s->get_y()); break;
     case OPCODE::PEN_UP: s->pen.pen_up(); break;
     case OPCODE::PEN_CLEAR: clear_pen = true; break;
+    case OPCODE::SET_PEN_SIZE_TO:
+        s->pen.set_pen_size(compute_input(link.inputs["SIZE"], s).get_number());
+        break;
+    case OPCODE::CHANGE_PEN_SIZE_BY:
+        s->pen.set_pen_size(s->pen.get_pen_size() +
+                            compute_input(link.inputs["SIZE"], s).get_number());
+        break;
 
     // Procedures
     case OPCODE::DEFINITION: break;

@@ -17,7 +17,10 @@ class Pen {
 public:
     Pen() { settings.pen_rgb = scratch_color_to_rgb(settings.pen_color); };
 
-    void pen_down() { pen_active = true; }
+    void pen_down(double x, double y) {
+        pen_active = true;
+        pen_orders.push_back(PenDrawOrder(x, y, x, y, settings));
+    }
     void pen_up() { pen_active = false; }
 
     void update(double x, double y);

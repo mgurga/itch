@@ -134,6 +134,12 @@ void Player::paint_pen_line(PenDrawOrder& dw) {
     dw.set_x2(dw.get_x2() + (ww / 2.0));
     dw.set_y2(-dw.get_y2() + (wh / 2.0));
 
+    if (dw.get_x() == dw.get_x2() && dw.get_y() == dw.get_y2()) {
+        auto s = dw.get_pen_settings();
+        paint_pen_point(dw.get_x(), dw.get_y(), s);
+        return;
+    }
+
     double xdiff = dw.get_x2() - dw.get_x();
     double ydiff = dw.get_y2() - dw.get_y();
 
@@ -144,13 +150,35 @@ void Player::paint_pen_line(PenDrawOrder& dw) {
     double penx = dw.get_x();
     double peny = dw.get_y();
 
+    auto s = dw.get_pen_settings();
     for (int i = 0; i < steps; i++) {
         penx += xinc;
         peny += yinc;
-        auto s = dw.get_pen_settings();
-        pen_layer.setPixel(penx, peny,
-                           sf::Color(static_cast<int>(s.pen_rgb.r), static_cast<int>(s.pen_rgb.g),
-                                     static_cast<int>(s.pen_rgb.b)));
+        paint_pen_point(penx, peny, s);
+    }
+}
+
+void Player::paint_pen_point(double x, double y, EngineFunctions::PenSettings& s) {
+    sf::Color c = sf::Color(static_cast<int>(s.pen_rgb.r), static_cast<int>(s.pen_rgb.g),
+                            static_cast<int>(s.pen_rgb.b));
+
+    if (s.pen_size == 1) {
+        pen_layer.setPixel(x, y, c);
+        return;
+    }
+
+    double radius = s.pen_size / 2.0;
+    double radius_sqr = radius * radius;
+    for (int cx = -radius; cx < radius; cx++) {
+        int hh = (int)std::sqrt(radius_sqr - cx * cx);
+        int rx = x + cx;
+        int ph = y + hh;
+
+        for (int cy = y - hh; cy < ph; cy++) {
+            if (rx <= 0 || rx >= ww) continue;
+            if (cy <= 0 || cy >= wh) continue;
+            pen_layer.setPixel(rx, cy, c);
+        }
     }
 }
 
