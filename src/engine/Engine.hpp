@@ -102,6 +102,10 @@ public:
     // procedure helper
     void call_procedure(Link link, ScratchTarget* s);
 
+    // pen helpers
+    void set_pen_param(Link& link, ScratchTarget* s);
+    void change_pen_param(Link& link, ScratchTarget* s);
+
 private:
     static unsigned int count_chains(Project& project);
 };

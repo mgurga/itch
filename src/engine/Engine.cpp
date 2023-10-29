@@ -394,6 +394,8 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
         s->pen.set_pen_size(s->pen.get_pen_size() +
                             compute_input(link.inputs["SIZE"], s).get_number());
         break;
+    case OPCODE::SET_PEN_COLOR_TO: set_pen_param(link, s); break;
+    case OPCODE::CHANGE_PEN_COLOR_BY: change_pen_param(link, s); break;
 
     // Procedures
     case OPCODE::DEFINITION: break;

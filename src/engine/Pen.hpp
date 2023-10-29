@@ -28,8 +28,14 @@ public:
     void set_pen_size(double s) { settings.pen_size = s; }
     double get_pen_size() const { return settings.pen_size; }
     void set_pen_color(double c) {
-        settings.pen_rgb = scratch_color_to_rgb(c);
-        settings.pen_color = c;
+        if (settings.pen_color >= 100.0) {
+            settings.pen_color = std::fmod(c, 100);
+        } else if (settings.pen_color <= 0.0) {
+            settings.pen_color = 100 - std::fmod(c, 100);
+        } else {
+            settings.pen_color = std::clamp(c, 0.0, 100.0);
+        }
+        settings.pen_rgb = scratch_color_to_rgb(settings.pen_color);
     }
     double get_pen_color() const { return settings.pen_color; }
     void set_pen_saturation(double s) { settings.pen_saturation = s; }
