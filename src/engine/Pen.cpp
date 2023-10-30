@@ -21,37 +21,52 @@ void EngineFunctions::Pen::draw_line(double x1, double y1, double x2, double y2)
 EngineFunctions::RGB EngineFunctions::Pen::scratch_color_to_rgb(double color) {
     RGB out = RGB();
 
-    double H = std::clamp(color, 0.0, 100.0) * 360 / 100;
-    double S = settings.pen_saturation;
-    double V = settings.pen_brightness;
+    double h = std::clamp(color * 360 / 100, 0.0, 359.0);
+    double s = settings.pen_saturation / 100;
+    double v = settings.pen_brightness / 100;
 
-    // std::cout << "getting rgb of hsv: " << H << " " << S << " " << V << std::endl;
+    const float hex = h / 60.0;
+    const unsigned char primary = (int)hex;
+    const float secondary = hex - primary;
 
-    float s = S / 100;
-    float v = V / 100;
-    float C = s * v;
-    float X = C * (1 - abs(fmod(H / 60.0, 2) - 1));
-    float m = v - C;
-    float r, g, b;
-    if (H >= 0 && H < 60) {
-        r = C, g = X, b = 0;
-    } else if (H >= 60 && H < 120) {
-        r = X, g = C, b = 0;
-    } else if (H >= 120 && H < 180) {
-        r = 0, g = C, b = X;
-    } else if (H >= 180 && H < 240) {
-        r = 0, g = X, b = C;
-    } else if (H >= 240 && H < 300) {
-        r = X, g = 0, b = C;
-    } else {
-        r = C, g = 0, b = X;
+    const float x = (1.0 - s) * v;
+    const float y = (1.0 - (s * secondary)) * v;
+    const float z = (1.0 - (s * (1.0 - secondary))) * v;
+
+    auto mult = [](float i) -> float { return (i * 255.0) + 0.5; };
+
+    switch (primary) {
+    case 0:
+        out.r = mult(v);
+        out.g = mult(z);
+        out.b = mult(x);
+        break;
+    case 1:
+        out.r = mult(y);
+        out.g = mult(v);
+        out.b = mult(x);
+        break;
+    case 2:
+        out.r = mult(x);
+        out.g = mult(v);
+        out.b = mult(z);
+        break;
+    case 3:
+        out.r = mult(x);
+        out.g = mult(y);
+        out.b = mult(v);
+        break;
+    case 4:
+        out.r = mult(z);
+        out.g = mult(x);
+        out.b = mult(v);
+        break;
+    case 5:
+        out.r = mult(v);
+        out.g = mult(x);
+        out.b = mult(y);
+        break;
     }
-
-    out.r = (r + m) * 255;
-    out.g = (g + m) * 255;
-    out.b = (b + m) * 255;
-
-    // std::cout << "output rgb: " << out.r << " " << out.g << " " << out.b << std::endl;
 
     return out;
 }

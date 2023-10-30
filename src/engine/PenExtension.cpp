@@ -24,7 +24,6 @@ void EngineFunctions::Engine::change_pen_param(Link& link, ScratchTarget* s) {
 
     if (param == "color") {
         s->pen.set_pen_color(s->pen.get_pen_color() + val.get_number());
-        std::cout << s->pen.get_pen_color() << std::endl;
     } else if (param == "saturation") {
         s->pen.set_pen_saturation(s->pen.get_pen_saturation() + val.get_number());
     } else if (param == "brightness") {
