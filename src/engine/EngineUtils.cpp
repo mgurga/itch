@@ -55,6 +55,13 @@ Variable& EngineFunctions::Engine::get_proc_var_by_name(std::string name) {
     throw std::invalid_argument("procedure variable '" + name + "' not found");
 }
 
+ScratchMonitor& EngineFunctions::Engine::get_monitor_by_var_name(std::string varname) {
+    for (ScratchMonitor& m : prj->monitors) {
+        if (m.params.count("VARIABLE") && m.params["VARIABLE"] == varname) return m;
+    }
+    throw std::invalid_argument("monitor name '" + varname + "' not found");
+}
+
 double EngineFunctions::Engine::get_timer_progress() {
     auto now = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - timer).count();

@@ -98,8 +98,8 @@ std::vector<std::unique_ptr<DrawOrder>> EngineFunctions::Engine::tick(PlayerInfo
         ScratchTarget* target =
             monitor.spriteName == "" ? nullptr : &get_target_by_name(monitor.spriteName);
         if (monitor.opcode == "data_variable") {
-            monitor.values.push_back(
-                get_var_by_name(monitor.params["VARIABLE"]).val().get_string());
+            auto v = get_var_by_name(monitor.params["VARIABLE"]);
+            monitor.values.push_back(v.val().get_string());
             monitor.display_name = monitor.params["VARIABLE"];
         } else if (monitor.opcode == "data_listcontents") {
             for (Value v : get_list_by_name(monitor.params["LIST"]).values)
@@ -274,6 +274,12 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
         get_list_by_name(link.fields["LIST"][0])
             .insert_at(static_cast<int>(compute_input(link.inputs["INDEX"], s).get_number()),
                        compute_input(link.inputs["ITEM"], s));
+        break;
+    case OPCODE::SHOW_VARIABLE:
+        get_monitor_by_var_name(link.fields["VARIABLE"][0]).visible = true;
+        break;
+    case OPCODE::HIDE_VARIABLE:
+        get_monitor_by_var_name(link.fields["VARIABLE"][0]).visible = false;
         break;
 
     // Events

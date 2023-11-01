@@ -220,6 +220,7 @@ void Player::paint_sprite(ScratchSprite& sprite) {
 }
 
 void Player::paint_monitor(ScratchMonitor& monitor) {
+    if (!monitor.visible) return;
     switch (monitor.mode) {
     case MonitorMode::DEFAULT: paint_default_monitor(monitor); return;
     case MonitorMode::LARGE: paint_large_monitor(monitor); return;
