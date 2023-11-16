@@ -10,7 +10,8 @@ public:
         SAY_CLOUD,
         THINK_CLOUD,
         MONITOR,
-        PEN_CLEAR
+        PEN_CLEAR,
+        PEN_STAMP
     };
 
     DrawOrder(double x, double y, DrawObject t) : x(x), y(y), type(t){};

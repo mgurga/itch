@@ -10,6 +10,7 @@
 #include "PlayerInfo.hpp"
 #include "SpriteDrawOrder.hpp"
 #include "StageDrawOrder.hpp"
+#include "StampDrawOrder.hpp"
 
 class Player {
 public:
@@ -33,6 +34,7 @@ private:
     void paint_list_monitor(ScratchMonitor& monitor);
     void paint_pen_line(PenDrawOrder& dw);
     void paint_pen_point(double x, double y, EngineFunctions::PenSettings& s);
+    void paint_pen_stamp(StampDrawOrder& dw);
 
     unsigned int ww, wh;
 

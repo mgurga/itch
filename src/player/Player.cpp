@@ -122,10 +122,45 @@ void Player::paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders) {
         case DrawOrder::DrawObject::PEN_CLEAR:
             pen_layer.create(480, 360, sf::Color(255, 255, 255, 0));
             break;
+        case DrawOrder::DrawObject::PEN_STAMP:
+            paint_pen_stamp(*dynamic_cast<StampDrawOrder*>(dw.get()));
+            break;
         }
     }
 
     window->display();
+}
+
+void Player::paint_pen_stamp(StampDrawOrder& dw) {
+    sf::RenderTexture rt;
+    rt.create(pen_layer.getSize().x, pen_layer.getSize().y);
+
+    sf::Sprite bg;
+    sf::Texture bgtex;
+    auto plf = pen_layer;
+    plf.flipVertically();
+    bgtex.loadFromImage(plf);
+    bgtex.setSmooth(true);
+    bg.setTexture(bgtex);
+    bg.setPosition(0, 0);
+    rt.draw(bg);
+
+    sf::Sprite ss;
+    sf::Texture sstex;
+    auto ssimg = dw.get_costume().texture.copyToImage();
+    ssimg.flipVertically();
+    sstex.loadFromImage(ssimg);
+    sstex.setSmooth(true);
+    ss.setTexture(sstex);
+    ss.setPosition(float(dw.get_x()) + (ww / 2.0), float(dw.get_y()) + (wh / 2.0));
+    ss.setOrigin(dw.get_costume().rotationCenterX, dw.get_costume().rotationCenterY);
+    rt.draw(ss);
+
+    rt.display();
+
+    auto rtimg = rt.getTexture().copyToImage();
+    rtimg.flipVertically();
+    pen_layer = rtimg;
 }
 
 void Player::paint_pen_line(PenDrawOrder& dw) {
