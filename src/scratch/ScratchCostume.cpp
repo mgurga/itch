@@ -5,6 +5,7 @@ ScratchCostume::ScratchCostume(json sc) :
     rotationCenterX(sc["rotationCenterX"]),
     rotationCenterY(sc["rotationCenterY"]) {
     bitmapResolution = sc.contains("bitmapResolution") ? int(sc["bitmapResolution"]) : 1;
+    texture.setSmooth(false);
 }
 
 void ScratchCostume::load_image(std::filesystem::path tempdir) {

@@ -95,8 +95,8 @@ void Player::paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders) {
     clicked_sprites.clear();
 
     sf::Sprite stagesprite;
-    stagesprite.setTexture(
-        dynamic_cast<StageDrawOrder*>(draw_orders.at(0).get())->get_stage().costume().texture);
+    auto stage_cos = dynamic_cast<StageDrawOrder*>(draw_orders.at(0).get())->get_stage().costume();
+    stagesprite.setTexture(stage_cos.get_texture());
     stagesprite.setPosition(0, 0);
     window->draw(stagesprite);
 
@@ -147,13 +147,13 @@ void Player::paint_pen_stamp(StampDrawOrder& dw) {
 
     sf::Sprite ss;
     sf::Texture sstex;
-    auto ssimg = dw.get_costume().texture.copyToImage();
+    auto ssimg = dw.get_costume().get_texture().copyToImage();
     ssimg.flipVertically();
     sstex.loadFromImage(ssimg);
     sstex.setSmooth(true);
     ss.setTexture(sstex);
     ss.setPosition(float(dw.get_x()) + (ww / 2.0), float(dw.get_y()) + (wh / 2.0));
-    ss.setOrigin(dw.get_costume().rotationCenterX, dw.get_costume().rotationCenterY);
+    ss.setOrigin(dw.get_costume().get_rot_center_x(), dw.get_costume().get_rot_center_y());
     rt.draw(ss);
 
     rt.display();
@@ -220,13 +220,13 @@ void Player::paint_pen_point(double x, double y, EngineFunctions::PenSettings& s
 void Player::paint_sprite(ScratchSprite& sprite) {
     if (sprite.get_visible() && sprite.get_effect("GHOST") != 100.0) {
         sf::Sprite out;
-        sf::Texture& st = sprite.costume().texture;
+        sf::Texture& st = sprite.costume().get_texture();
         // sf::Vector2u ss = st.getSize(); // sprite size
 
         // draw sprite
         out.setTexture(st, true);
         out.setPosition(float(sprite.get_x()) + (ww / 2.0), float(-sprite.get_y()) + (wh / 2.0));
-        out.setOrigin(sprite.costume().rotationCenterX, sprite.costume().rotationCenterY);
+        out.setOrigin(sprite.costume().get_rot_center_x(), sprite.costume().get_rot_center_y());
         out.setRotation(sprite.get_direction() - 90.0f);
 
         // check if mouse is over the sprite and clicked
@@ -242,8 +242,8 @@ void Player::paint_sprite(ScratchSprite& sprite) {
         // apply size
         out.setScale(static_cast<float>(sprite.get_size()) / 100,
                      static_cast<float>(sprite.get_size()) / 100);
-        out.setScale(out.getScale().x / sprite.costume().bitmapResolution,
-                     out.getScale().y / sprite.costume().bitmapResolution);
+        out.setScale(out.getScale().x / sprite.costume().get_bitmap_res(),
+                     out.getScale().y / sprite.costume().get_bitmap_res());
         window->draw(out);
 
         // draw dot at center the center of sprite
