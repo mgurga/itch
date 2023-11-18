@@ -60,11 +60,12 @@ TEST_F(BasicMovementTest, ChainTest) {
     ASSERT_EQ(project->sprites[0].chains[2].is_activatable(), true);
     ASSERT_EQ(project->sprites[0].chains[3].is_activatable(), true);
 
-    ASSERT_EQ(project->sprites[0].chains[0].get_header().opcode.opcode, WHEN_KEY_PRESSED);
+    ASSERT_EQ(project->sprites[0].chains[0].get_header().opcode.opcode, OPCODE::WHEN_KEY_PRESSED);
     ASSERT_THAT(project->sprites[0].chains[0].get_link(1).opcode.opcode,
-                AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
+                AnyOf(OPCODE::CHANGE_Y_BY, OPCODE::POINT_IN_DIRECTION));
 
-    ASSERT_EQ(project->sprites[0].chains[1].get_header().opcode.opcode, WHEN_KEY_PRESSED);
-    ASSERT_THAT(project->sprites[0].chains[1].get_link(1).opcode.opcode,
-                AnyOf(CHANGE_Y_BY, POINT_IN_DIRECTION));
+    ASSERT_EQ(project->sprites[0].chains[1].get_header().opcode.opcode, OPCODE::WHEN_KEY_PRESSED);
+    ASSERT_THAT(
+        static_cast<int>(project->sprites[0].chains[1].get_link(1).opcode.opcode),
+        AnyOf(static_cast<int>(OPCODE::CHANGE_Y_BY), static_cast<int>(OPCODE::POINT_IN_DIRECTION)));
 }
