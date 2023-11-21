@@ -2,17 +2,17 @@
 
 #include <string>
 
-#include "../scratch/ScratchCostume.hpp"
+#include "../scratch/ScratchSprite.hpp"
 #include "DrawOrder.hpp"
 
 class StampDrawOrder : public DrawOrder {
 public:
-    StampDrawOrder(double x, double y, ScratchCostume& sc) :
-        DrawOrder(x, y, DrawObject::PEN_STAMP), costume(sc) {}
+    StampDrawOrder(double x, double y, ScratchSprite& ss) :
+        DrawOrder(x, y, DrawObject::PEN_STAMP), sprite(ss) {}
 
-    ScratchCostume& get_costume() const { return costume; }
+    ScratchSprite& get_sprite() const { return sprite; }
 
 private:
     double x, y;
-    ScratchCostume& costume;
+    ScratchSprite& sprite;
 };

@@ -111,7 +111,7 @@ void Player::paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders) {
         switch (dw->get_type()) {
         case DrawOrder::DrawObject::NONE: break;
         case DrawOrder::DrawObject::SPRITE:
-            paint_sprite(dynamic_cast<SpriteDrawOrder*>(dw.get())->get_sprite());
+            paint_sprite(*window, dynamic_cast<SpriteDrawOrder*>(dw.get())->get_sprite());
             break;
         case DrawOrder::DrawObject::MONITOR:
             paint_monitor(dynamic_cast<MonitorDrawOrder*>(dw.get())->get_monitor());
@@ -140,20 +140,21 @@ void Player::paint_pen_stamp(StampDrawOrder& dw) {
     auto plf = pen_layer;
     plf.flipVertically();
     bgtex.loadFromImage(plf);
-    bgtex.setSmooth(true);
+    bgtex.setSmooth(false);
     bg.setTexture(bgtex);
     bg.setPosition(0, 0);
     rt.draw(bg);
 
     sf::Sprite ss;
     sf::Texture sstex;
-    auto ssimg = dw.get_costume().get_texture().copyToImage();
+    auto ssimg = dw.get_sprite().costume().get_texture().copyToImage();
     ssimg.flipVertically();
     sstex.loadFromImage(ssimg);
     sstex.setSmooth(true);
     ss.setTexture(sstex);
     ss.setPosition(float(dw.get_x()) + (ww / 2.0), float(dw.get_y()) + (wh / 2.0));
-    ss.setOrigin(dw.get_costume().get_rot_center_x(), dw.get_costume().get_rot_center_y());
+    ss.setOrigin(dw.get_sprite().costume().get_rot_center_x(),
+                 dw.get_sprite().costume().get_rot_center_y());
     rt.draw(ss);
 
     rt.display();
@@ -217,7 +218,7 @@ void Player::paint_pen_point(double x, double y, EngineFunctions::PenSettings& s
     }
 }
 
-void Player::paint_sprite(ScratchSprite& sprite) {
+void Player::paint_sprite(sf::RenderTarget& rt, ScratchSprite& sprite) {
     if (sprite.get_visible() && sprite.get_effect("GHOST") != 100.0) {
         sf::Sprite out;
         sf::Texture& st = sprite.costume().get_texture();
@@ -244,7 +245,7 @@ void Player::paint_sprite(ScratchSprite& sprite) {
                      static_cast<float>(sprite.get_size()) / 100);
         out.setScale(out.getScale().x / sprite.costume().get_bitmap_res(),
                      out.getScale().y / sprite.costume().get_bitmap_res());
-        window->draw(out);
+        rt.draw(out);
 
         // draw dot at center the center of sprite
         // sf::CircleShape cs(3);

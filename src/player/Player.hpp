@@ -26,7 +26,7 @@ public:
     bool& running;
 
 private:
-    void paint_sprite(ScratchSprite& sprite);
+    void paint_sprite(sf::RenderTarget& rt, ScratchSprite& sprite);
     void paint_monitor(ScratchMonitor& monitor);
     void paint_default_monitor(ScratchMonitor& monitor);
     void paint_large_monitor(ScratchMonitor& monitor);

@@ -20,6 +20,7 @@
 #include "../player/PlayerInfo.hpp"
 #include "../player/SpriteDrawOrder.hpp"
 #include "../player/StageDrawOrder.hpp"
+#include "../player/StampDrawOrder.hpp"
 #include "GlideProgress.hpp"
 #include "List.hpp"
 #include "Pen.hpp"

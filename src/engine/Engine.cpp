@@ -195,7 +195,7 @@ std::vector<std::unique_ptr<DrawOrder>> EngineFunctions::Engine::create_draw_ord
         for (PenDrawOrder& pdo : po) { out.push_back(std::make_unique<PenDrawOrder>(pdo)); }
         po.clear();
         if (s.pen.stamp_sprite)
-            out.push_back(std::make_unique<StampDrawOrder>(s.get_x(), s.get_y(), s.costume()));
+            out.push_back(std::make_unique<StampDrawOrder>(s.get_x(), s.get_y(), s));
         s.pen.stamp_sprite = false;
     }
     for (ScratchMonitor& m : prj->monitors) out.push_back(std::make_unique<MonitorDrawOrder>(m));

@@ -10,7 +10,6 @@
 
 #include "../player/DrawOrder.hpp"
 #include "../player/PenDrawOrder.hpp"
-#include "../player/StampDrawOrder.hpp"
 #include "../scratch/ScratchCostume.hpp"
 #include "PenSettings.hpp"
 
@@ -25,6 +24,7 @@ public:
         pen_orders.push_back(PenDrawOrder(x, y, x, y, settings));
     }
     void pen_up() { pen_active = false; }
+
     void stamp() { stamp_sprite = true; }
     bool stamp_sprite = false;
 
