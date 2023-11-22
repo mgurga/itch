@@ -94,11 +94,7 @@ void Player::paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders) {
 
     clicked_sprites.clear();
 
-    sf::Sprite stagesprite;
-    auto stage_cos = dynamic_cast<StageDrawOrder*>(draw_orders.at(0).get())->get_stage().costume();
-    stagesprite.setTexture(stage_cos.get_texture());
-    stagesprite.setPosition(0, 0);
-    window->draw(stagesprite);
+    paint_stage(*window, dynamic_cast<StageDrawOrder*>(draw_orders.at(0).get())->get_stage());
 
     sf::Texture pentex;
     pentex.loadFromImage(pen_layer);
@@ -216,6 +212,27 @@ void Player::paint_pen_point(double x, double y, EngineFunctions::PenSettings& s
             pen_layer.setPixel(rx, cy, c);
         }
     }
+}
+
+void Player::paint_stage(sf::RenderTarget& rt, ScratchStage& stage) {
+    sf::Sprite out;
+    sf::Texture& st = stage.costume().get_texture();
+
+    out.setTexture(st, true);
+    out.setPosition(stage.get_x(), stage.get_y());
+
+    // apply effects
+    double ghost = stage.get_effect("GHOST");
+    if (ghost < 0) ghost = 0;
+    out.setColor(sf::Color(255, 255, 255, floor(std::abs(100 - ghost)) * 2.55));
+
+    // apply size
+    out.setScale(static_cast<float>(stage.get_size()) / 100,
+                 static_cast<float>(stage.get_size()) / 100);
+    out.setScale(out.getScale().x / stage.costume().get_bitmap_res(),
+                 out.getScale().y / stage.costume().get_bitmap_res());
+
+    rt.draw(out);
 }
 
 void Player::paint_sprite(sf::RenderTarget& rt, ScratchSprite& sprite) {
