@@ -128,8 +128,7 @@ void Itch::load_from_url(std::string project_url) {
 
 void Itch::draw() {
     if (options.headless) {
-        EMPTY_PLAYER_INFO(pi)
-        engine.tick(&pi);
+        engine.tick();
 
         if (engine.finished) options.running = false;
     } else {

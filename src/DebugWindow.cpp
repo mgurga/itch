@@ -30,15 +30,10 @@ void DebugWindow::draw_imgui() {
     if (ImGui::Button(pause_engine ? "Resume Engine" : "Pause Engine"))
         pause_engine = !pause_engine;
     ImGui::SameLine();
-    if (ImGui::Button("Run 1 Tick")) {
-        EMPTY_PLAYER_INFO(pi);
-        eng->tick(&pi);
-    }
+    if (ImGui::Button("Run 1 Tick")) eng->tick();
     ImGui::SameLine();
-    if (ImGui::Button("Run 10 Ticks")) {
-        EMPTY_PLAYER_INFO(pi);
-        for (int i = 0; i < 10; i++) eng->tick(&pi);
-    }
+    if (ImGui::Button("Run 10 Ticks"))
+        for (int i = 0; i < 10; i++) eng->tick();
     if (tps_clock.getElapsedTime().asSeconds() >= 1) {
         tps = eng->ticks - ticks_delta;
         tps_clock.restart();
