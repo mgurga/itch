@@ -8,7 +8,9 @@ void DebugWindow::draw() {
 
             if (event.type == sf::Event::Closed) {
                 window.close();
+                ImGui::SFML::Shutdown();
                 running = false;
+                exit(1);
             }
         }
 
