@@ -4,9 +4,9 @@
 #include <iostream>
 #include <filesystem>
 #include <nlohmann/json.hpp>
-#include <SFML/Audio.hpp>
 
 #include "ScratchAsset.hpp"
+#include "../player/SoundResource.hpp"
 
 using json = nlohmann::json;
 
@@ -18,5 +18,5 @@ public:
     double rate;
     double sampleCount;
 
-    sf::SoundBuffer sound;
+    SoundResource sound;
 };
