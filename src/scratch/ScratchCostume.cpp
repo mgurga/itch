@@ -5,7 +5,6 @@ ScratchCostume::ScratchCostume(json sc) :
     rotationCenterX(sc["rotationCenterX"]),
     rotationCenterY(sc["rotationCenterY"]) {
     bitmapResolution = sc.contains("bitmapResolution") ? int(sc["bitmapResolution"]) : 1;
-    texture.setSmooth(false);
 }
 
 void ScratchCostume::load_image(std::filesystem::path tempdir) {
@@ -25,11 +24,8 @@ void ScratchCostume::load_image(std::filesystem::path tempdir) {
         }
         bitmap.convertToRGBA();
 
-        sf::Image img;
-        img.create(bitmap.width(), bitmap.height(), bitmap.data());
-
-        this->texture.loadFromImage(img);
+        this->texture.load_from_rgba_data(bitmap.data(), bitmap.width(), bitmap.height());
     } else {
-        this->texture.loadFromFile((tempdir / this->md5ext).string());
+        this->texture.load_from_file(tempdir / this->md5ext);
     }
 }

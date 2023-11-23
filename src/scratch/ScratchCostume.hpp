@@ -2,12 +2,12 @@
 
 #include <lunasvg.h>
 
-#include <SFML/Graphics.hpp>
 #include <filesystem>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
 
+#include "../player/ImageResource.hpp"
 #include "ScratchAsset.hpp"
 
 using namespace lunasvg;
@@ -18,7 +18,7 @@ public:
     ScratchCostume(json sc);
     void load_image(std::filesystem::path tempdir);
 
-    sf::Texture& get_texture() { return texture; }
+    ImageResource& get_image_resource() { return texture; }
     float get_rot_center_x() { return rotationCenterX; }
     float get_rot_center_y() { return rotationCenterY; }
     int get_bitmap_res() { return bitmapResolution; }
@@ -32,5 +32,5 @@ private:
     float rotationCenterX;
     float rotationCenterY;
 
-    sf::Texture texture;
+    ImageResource texture;
 };

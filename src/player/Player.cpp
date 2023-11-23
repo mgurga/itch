@@ -143,7 +143,7 @@ void Player::paint_pen_stamp(StampDrawOrder& dw) {
 
     sf::Sprite ss;
     sf::Texture sstex;
-    auto ssimg = dw.get_sprite().costume().get_texture().copyToImage();
+    auto ssimg = dw.get_sprite().costume().get_image_resource().get_texture().copyToImage();
     ssimg.flipVertically();
     sstex.loadFromImage(ssimg);
     sstex.setSmooth(true);
@@ -216,7 +216,7 @@ void Player::paint_pen_point(double x, double y, EngineFunctions::PenSettings& s
 
 void Player::paint_stage(sf::RenderTarget& rt, ScratchStage& stage) {
     sf::Sprite out;
-    sf::Texture& st = stage.costume().get_texture();
+    sf::Texture& st = stage.costume().get_image_resource().get_texture();
 
     out.setTexture(st, true);
     out.setPosition(stage.get_x(), stage.get_y());
@@ -238,7 +238,7 @@ void Player::paint_stage(sf::RenderTarget& rt, ScratchStage& stage) {
 void Player::paint_sprite(sf::RenderTarget& rt, ScratchSprite& sprite) {
     if (sprite.get_visible() && sprite.get_effect("GHOST") != 100.0) {
         sf::Sprite out;
-        sf::Texture& st = sprite.costume().get_texture();
+        sf::Texture& st = sprite.costume().get_image_resource().get_texture();
         // sf::Vector2u ss = st.getSize(); // sprite size
 
         // draw sprite
