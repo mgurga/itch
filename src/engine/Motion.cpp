@@ -7,8 +7,11 @@ void EngineFunctions::Engine::move_steps(double steps, ScratchTarget* s) {
 }
 
 void EngineFunctions::Engine::go_to_menu(Link link, ScratchTarget* s) {
-    Link& sb = get_link_by_id(link.inputs["TO"].sab.sab.str_value);
-    std::string target = sb.fields["TO"].at(0);
+    std::string target;
+    try {
+        Link& sb = get_link_by_id(link.inputs["TO"].sab.sab.str_value);
+        target = sb.fields["TO"].at(0);
+    } catch (const std::exception& e) { target = link.inputs["TO"].sab.sab.str_value; }
 
     if (target == "_random_") {
         std::random_device dev;
