@@ -1,11 +1,13 @@
 #include "Engine.hpp"
 
 Value EngineFunctions::Engine::compute_condition(Link op, ScratchTarget* s) {
-    if (op.opcode == OPCODE::KEY_PRESSED) {
-        Value key = compute_input(LinkInput(op.inputs["KEY_OPTION"][1]), s);
-        if (key.contains_number()) { key = Utils::to_scratch_key(key.get_number()); }
+    if (op.opcode == OPCODE::KEY_PRESSED)
+        return compute_input(LinkInput(op.inputs["KEY_OPTION"][1]), s);
+
+    if (op.opcode == OPCODE::KEY_OPTIONS) {
+        std::string key = op.fields["KEY_OPTION"][0];
         for (std::string pkey : pi->keys_down)
-            if (pkey == key.get_string()) return true;
+            if (pkey == key) return true;
         return false;
     }
 
