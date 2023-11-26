@@ -31,6 +31,18 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
         }
     }
 
+    if (op.opcode == OPCODE::DISTANCE_TO_MENU) {
+        std::string target = op.fields["DISTANCETOMENU"][0];
+        if (target == "_mouse_") {
+            return std::sqrt(std::pow(s->get_x() - pi->mouse_x, 2.0) +
+                             std::pow(s->get_y() - pi->mouse_y, 2.0));
+        } else {
+            auto& target_sprite = get_target_by_name(target);
+            return std::sqrt(std::pow(s->get_x() - target_sprite.get_x(), 2.0) +
+                             std::pow(s->get_y() - target_sprite.get_y(), 2.0));
+        }
+    }
+
     if (op.opcode == OPCODE::OPERATOR_RANDOM) {
         std::random_device dev;
         std::mt19937 rng(dev());
@@ -143,6 +155,7 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
                 .get_string()
                 .at(compute_input(op.inputs["LETTER"], s).get_number() - 1);
         } catch (std::out_of_range const& e) { return Value(); }
+    case OPCODE::DISTANCE_TO: return compute_input(LinkInput(op.inputs["DISTANCETOMENU"][1]), s);
     default:
         std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
         return Value();  // empty string
