@@ -9,8 +9,12 @@ void EngineFunctions::Engine::move_steps(double steps, ScratchTarget* s) {
 void EngineFunctions::Engine::go_to_menu(Link link, ScratchTarget* s) {
     std::string target;
     try {
-        Link& sb = get_link_by_id(link.inputs["TO"].sab.sab.str_value);
-        target = sb.fields["TO"].at(0);
+        if (link.inputs["TO"].sab.shadow == 3) {
+            target = compute_input(link.inputs["TO"], s).get_string();
+        } else {
+            Link& sb = get_link_by_id(link.inputs["TO"].sab.sab.str_value);
+            target = sb.fields["TO"].at(0);
+        }
     } catch (const std::exception& e) { target = link.inputs["TO"].sab.sab.str_value; }
 
     if (target == "_random_") {
