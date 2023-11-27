@@ -383,7 +383,9 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     case OPCODE::CLEAR_GRAPHIC_EFFECTS: s->reset_effects(); break;
     case OPCODE::GO_TO_LAYER: go_to_layer(link.fields["FRONT_BACK"][0], s); break;
     case OPCODE::CHANGE_LAYER_BY: change_layer_by(link, s); break;
-    case OPCODE::SET_SIZE_TO: s->set_size(compute_input(link.inputs["SIZE"], s)); break;
+    case OPCODE::SET_SIZE_TO:
+        s->set_size(compute_input(link.inputs["SIZE"], s).get_number());
+        break;
     case OPCODE::CHANGE_SIZE_BY:
         s->set_size(s->get_size() + compute_input(link.inputs["CHANGE"], s).get_number());
         break;
