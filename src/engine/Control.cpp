@@ -120,6 +120,7 @@ void EngineFunctions::Engine::repeat_loop(Link link, Chain& c, ScratchTarget* s,
 }
 
 void EngineFunctions::Engine::create_clone_of(Link link, ScratchTarget* s) {
+    if (clones.size() >= 302) return;  // clone limit
     std::string clone_target =
         get_link_by_id(link.inputs["CLONE_OPTION"][1]).fields["CLONE_OPTION"][0];
 
