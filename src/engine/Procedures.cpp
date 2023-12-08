@@ -43,18 +43,9 @@ void EngineFunctions::Engine::call_procedure(Link link, ScratchTarget* s) {
     }
 
     if (link.mutations["warp"][0] == "true" && !pauses_flow) {
-        int start_link = 1;  // skip the definition block by starting at the next link
+        process_chain(proc_definition, s, true);
 
-        for (int i = start_link; i < proc_definition.size(); i++) {
-            int pre_process = i;
-            process_link(proc_definition.get_link(i), proc_definition, s, i);
-            if (i == -1) {
-                std::cout << "link in warp procedure tried changing control flow. link opcode: "
-                          << proc_definition.get_link(i).string_opcode << ". skipping..."
-                          << std::endl;
-                i = pre_process;
-            }
-        }
+        while (!proc_definition.continue_at.empty()) process_chain(proc_definition, s, true);
     } else {
         process_chain(proc_definition, s, true);
     }
