@@ -27,11 +27,12 @@ public:
     LinkInput() {}
     LinkInput(std::string rid) { reporter_id = rid; }
     LinkInput(int s, ScratchArrayBlock sab) : sab({s, sab}) {
-        if ((s == 3 || s == 2) && sab.type == BlockType::Uninitialized)
+        if (sab.type == BlockType::Uninitialized)
             reporter_id = sab.str_value;
         else
             reporter_id = {};
     }
+    LinkInput(ShadowArrayBlock sab) : LinkInput(sab.shadow, sab.sab) {}
 
     ShadowArrayBlock sab;
     std::optional<std::string> reporter_id;

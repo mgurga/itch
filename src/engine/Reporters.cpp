@@ -117,6 +117,7 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
 
     switch (op.opcode.opcode) {
     case OPCODE::COSTUME: return op.fields["COSTUME"][0];
+    case OPCODE::BACKDROPS: return op.fields["BACKDROP"][0];
     case OPCODE::COSTUME_NUM_NAME:
         if (op.fields["NUMBER_NAME"][0] == "number") {
             return s->get_current_costume() + 1;
