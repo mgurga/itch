@@ -63,6 +63,7 @@ public:
     ScratchTarget& get_target_by_name(std::string name);
     ScratchMonitor& get_monitor_by_var_name(std::string varname);
     double get_timer_progress();
+    void queue_broadcast(std::string broadcast);
 
     std::vector<Variable> variables;
     std::vector<Variable> procedure_variables;

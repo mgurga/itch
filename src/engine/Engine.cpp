@@ -311,7 +311,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
         }
         break;
     case OPCODE::BROADCAST:
-        queued_broadcasts.push_back(compute_input(link.inputs["BROADCAST_INPUT"], s).get_string());
+        queue_broadcast(compute_input(link.inputs["BROADCAST_INPUT"], s).get_string());
         break;
     case OPCODE::WHEN_THIS_SPRITE_CLICKED:
         if (!Utils::contains(pi->clicked_sprites, s->get_name())) i = -1;
@@ -370,7 +370,9 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     case OPCODE::SAY: say(link, s); break;
     case OPCODE::SHOW: s->set_visible(true); break;
     case OPCODE::HIDE: s->set_visible(false); break;
+    case OPCODE::SWITCH_TO_BACKDROP:
     case OPCODE::SWITCH_TO_COSTUME: switch_costume_to(link, s); break;
+    case OPCODE::NEXT_BACKDROP:
     case OPCODE::NEXT_COSTUME: next_costume(s); break;
     case OPCODE::SET_EFFECT_TO:
         s->set_effect(link.fields["EFFECT"][0], compute_input(link.inputs["VALUE"], s));

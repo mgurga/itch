@@ -67,3 +67,7 @@ double EngineFunctions::Engine::get_timer_progress() {
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - timer).count();
     return static_cast<double>(duration) / 1000;
 }
+
+void EngineFunctions::Engine::queue_broadcast(std::string broadcast) {
+    if (!Utils::contains(queued_broadcasts, broadcast)) queued_broadcasts.push_back(broadcast);
+}
