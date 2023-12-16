@@ -43,6 +43,9 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
         }
     }
 
+    if (op.opcode == OPCODE::OPERATOR_ROUND)
+        return std::round(compute_input(op.inputs["NUM"], s).get_number());
+
     if (op.opcode == OPCODE::OPERATOR_RANDOM) {
         std::random_device dev;
         std::mt19937 rng(dev());
