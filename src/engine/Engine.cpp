@@ -392,6 +392,11 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
         s->set_size(s->get_size() + compute_input(link.inputs["CHANGE"], s).get_number());
         break;
 
+    // Sound
+    case OPCODE::SET_VOLUME_TO:
+        s->set_volume(compute_input(link.inputs["VOLUME"], s).get_number());
+        break;
+
     // Sensing
     case OPCODE::RESET_TIMER: timer = std::chrono::high_resolution_clock::now(); break;
     case OPCODE::SET_DRAG_MODE: s->set_draggable(link.fields["DRAG_MODE"][0] == "draggable"); break;
