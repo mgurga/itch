@@ -296,7 +296,7 @@ void Player::paint_default_monitor(ScratchMonitor& monitor) {
     monitor_width += 10;
 
     sf::Text value_text;
-    value_text.setString(monitor.values.at(0));
+    value_text.setString(monitor.values.at(0).get_string());
     value_text.setFont(font);
     value_text.setCharacterSize(MONITOR_FONT_SIZE);
     value_text.setFillColor(sf::Color::White);
@@ -340,7 +340,7 @@ void Player::paint_default_monitor(ScratchMonitor& monitor) {
 
 void Player::paint_large_monitor(ScratchMonitor& monitor) {
     sf::Text value_text;
-    value_text.setString(monitor.values.at(0));
+    value_text.setString(monitor.values.at(0).get_string());
     value_text.setFont(font);
     value_text.setCharacterSize(MONITOR_FONT_SIZE + 2);
     value_text.setFillColor(sf::Color::White);
@@ -383,7 +383,7 @@ void Player::paint_slider_monitor(ScratchMonitor& monitor) {
     monitor_width += 10;
 
     sf::Text value_text;
-    value_text.setString(monitor.values.at(0));
+    value_text.setString(monitor.values.at(0).get_string());
     value_text.setFont(font);
     value_text.setCharacterSize(MONITOR_FONT_SIZE);
     value_text.setFillColor(sf::Color::White);
@@ -426,7 +426,7 @@ void Player::paint_slider_monitor(ScratchMonitor& monitor) {
 
     sf::RectangleShape slider_handle;
     float handle_x = 0;
-    handle_x += (std::stof(monitor.values.at(0))) * ((monitor_width - 20)) /
+    handle_x += (monitor.values.at(0).get_number() * (monitor_width - 20)) /
                 (monitor.sliderMax - monitor.sliderMin);
     handle_x = std::max(0.0f, handle_x);
     handle_x = std::min(handle_x, (monitor_width - 20));

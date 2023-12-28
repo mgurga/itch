@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "../engine/Value.hpp"
+
 using json = nlohmann::json;
 
 enum class MonitorMode { DEFAULT, LARGE, SLIDER, LIST };
@@ -23,7 +25,7 @@ public:
     std::map<std::string, std::string> params;
 
     std::string display_name;
-    std::vector<std::string> values;
+    std::vector<Value> values;
 
     // monitors that are NOT lists have these variables
     int sliderMin, sliderMax;

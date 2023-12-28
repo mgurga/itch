@@ -99,67 +99,67 @@ std::vector<std::unique_ptr<DrawOrder>> EngineFunctions::Engine::tick(PlayerInfo
             monitor.spriteName == "" ? nullptr : &get_target_by_name(monitor.spriteName);
         if (monitor.opcode == "data_variable") {
             auto v = get_var_by_name(monitor.params["VARIABLE"]);
-            monitor.values.push_back(v.val().get_string());
+            monitor.values.push_back(v.val());
             monitor.display_name = monitor.params["VARIABLE"];
         } else if (monitor.opcode == "data_listcontents") {
             for (Value v : get_list_by_name(monitor.params["LIST"]).values)
                 monitor.values.push_back(v);
             monitor.display_name = monitor.params["LIST"];
         } else if (monitor.opcode == "sensing_timer") {
-            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target));
             monitor.display_name = "timer";
         } else if (monitor.opcode == "motion_xposition") {
-            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target));
             monitor.display_name = monitor.spriteName + ": x position";
         } else if (monitor.opcode == "motion_yposition") {
-            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target));
             monitor.display_name = monitor.spriteName + ": y position";
         } else if (monitor.opcode == "motion_direction") {
-            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target));
             monitor.display_name = monitor.spriteName + ": direction";
         } else if (monitor.opcode == "sound_volume") {
-            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target));
             monitor.display_name = monitor.spriteName + ": volume";
         } else if (monitor.opcode == "looks_size") {
-            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target));
             monitor.display_name = monitor.spriteName + ": size";
         } else if (monitor.opcode == "sensing_username") {
-            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target));
             monitor.display_name = "username";
         } else if (monitor.opcode == "sensing_loudness") {
-            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target));
             monitor.display_name = "loudness";
         } else if (monitor.opcode == "sensing_answer") {
-            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target).get_string());
+            monitor.values.push_back(compute_reporter(Link(monitor.opcode), target));
             monitor.display_name = "answer";
         } else if (monitor.opcode == "looks_costumenumbername") {
             if (monitor.params["NUMBER_NAME"] == "number") {
                 Link l(monitor.opcode);
                 l.fields["NUMBER_NAME"].push_back("number");
-                monitor.values.push_back(compute_reporter(l, target).get_string());
+                monitor.values.push_back(compute_reporter(l, target));
                 monitor.display_name = monitor.spriteName + ": costume number";
             } else {
                 Link l(monitor.opcode);
                 l.fields["NUMBER_NAME"].push_back("name");
-                monitor.values.push_back(compute_reporter(l, target).get_string());
+                monitor.values.push_back(compute_reporter(l, target));
                 monitor.display_name = monitor.spriteName + ": costume name";
             }
         } else if (monitor.opcode == "looks_backdropnumbername") {
             if (monitor.params["NUMBER_NAME"] == "number") {
                 Link l(monitor.opcode);
                 l.fields["NUMBER_NAME"].push_back("number");
-                monitor.values.push_back(compute_reporter(l, target).get_string());
+                monitor.values.push_back(compute_reporter(l, target));
                 monitor.display_name = "backdrop number";
             } else {
                 Link l(monitor.opcode);
                 l.fields["NUMBER_NAME"].push_back("name");
-                monitor.values.push_back(compute_reporter(l, target).get_string());
+                monitor.values.push_back(compute_reporter(l, target));
                 monitor.display_name = "backdrop name";
             }
         } else if (monitor.opcode == "sensing_current") {
             Link l(monitor.opcode);
             l.fields["CURRENTMENU"].push_back(monitor.params["CURRENTMENU"]);
-            monitor.values.push_back(compute_reporter(l, target).get_string());
+            monitor.values.push_back(compute_reporter(l, target));
             if (monitor.params["CURRENTMENU"] == "YEAR") monitor.display_name = "year";
             if (monitor.params["CURRENTMENU"] == "MONTH") monitor.display_name = "month";
             if (monitor.params["CURRENTMENU"] == "DAYOFWEEK") monitor.display_name = "day of week";
