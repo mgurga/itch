@@ -151,6 +151,7 @@ void Player::paint_pen_stamp(StampDrawOrder& dw) {
     ss.setPosition(float(dw.get_x()) + (ww / 2.0), float(dw.get_y()) + (wh / 2.0));
     ss.setOrigin(dw.get_sprite().costume().get_rot_center_x(),
                  dw.get_sprite().costume().get_rot_center_y());
+    ss.setRotation(360.0f - (dw.get_sprite().get_direction() - 90.0f));
     rt.draw(ss);
 
     rt.display();
