@@ -7,6 +7,7 @@ struct PlayerInfo {
     std::vector<std::string>& pressed;
     std::vector<std::string>& keys_down;
     std::vector<std::string>& clicked_sprites;
+    std::vector<std::string>& hovered_sprites;
     int mouse_x;
     int mouse_y;
     bool mouse_down;
@@ -19,4 +20,5 @@ struct PlayerInfo {
     std::vector<std::string> inputs;          \
     std::vector<std::string> keys_down;       \
     std::vector<std::string> clicked_sprites; \
-    PlayerInfo VARNAME = {inputs, keys_down, clicked_sprites, 0, 0, false, false};
+    std::vector<std::string> hovered_sprites; \
+    PlayerInfo VARNAME = {inputs, keys_down, clicked_sprites, hovered_sprites, 0, 0, false, false};

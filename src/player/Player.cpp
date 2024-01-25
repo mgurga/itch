@@ -93,6 +93,7 @@ void Player::paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders) {
     window->clear(sf::Color(255, 255, 255));
 
     clicked_sprites.clear();
+    hovered_sprites.clear();
 
     paint_stage(*window, dynamic_cast<StageDrawOrder*>(draw_orders.at(0).get())->get_stage());
 
@@ -248,8 +249,10 @@ void Player::paint_sprite(sf::RenderTarget& rt, ScratchSprite& sprite) {
         out.setOrigin(sprite.costume().get_rot_center_x(), sprite.costume().get_rot_center_y());
         out.setRotation(sprite.get_direction() - 90.0f);
 
-        // check if mouse is over the sprite and clicked
+        // check if mouse is over a sprite and if clicked
         sf::Vector2i mousevec = sf::Mouse::getPosition(*window);
+        if (out.getGlobalBounds().contains(mousevec.x, mousevec.y))
+            hovered_sprites.push_back(sprite.get_name());
         if (out.getGlobalBounds().contains(mousevec.x, mousevec.y) && mouse_pressed)
             clicked_sprites.push_back(sprite.get_name());
 

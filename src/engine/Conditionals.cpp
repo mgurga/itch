@@ -11,6 +11,16 @@ Value EngineFunctions::Engine::compute_condition(Link op, ScratchTarget* s) {
         return false;
     }
 
+    if (op.opcode == OPCODE::TOUCHING_OBJECT_MENU) {
+        std::string target = op.fields["TOUCHINGOBJECTMENU"][0];
+        if (target == "_mouse_") {
+            if (Utils::contains(pi->hovered_sprites, s->get_name())) return true;
+        } else {
+            // TODO: Support sprite touching sprite
+        }
+        return false;
+    }
+
     switch (op.opcode.opcode) {
     case OPCODE::MOUSE_DOWN: return pi->mouse_down;
     case OPCODE::OPERATOR_AND:
@@ -41,6 +51,8 @@ Value EngineFunctions::Engine::compute_condition(Link op, ScratchTarget* s) {
     case OPCODE::LIST_CONTAINS:
         return get_list_by_name(op.fields["LIST"][0]).contains(compute_input(op.inputs["ITEM"], s));
     case OPCODE::ARG_BOOLEAN: return get_proc_var_by_name(op.fields["VALUE"][0]).val().get_bool();
+    case OPCODE::TOUCHING_OBJECT:
+        return compute_input(LinkInput(op.inputs["TOUCHINGOBJECTMENU"][1]), s);
     default: break;
     }
 

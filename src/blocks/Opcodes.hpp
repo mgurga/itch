@@ -290,7 +290,7 @@ const std::unordered_map<std::string, OPCODETYPE> opcodeenum{
     {"control_delete_this_clone", OPCODETYPE(OPCODE::DELETE_THIS_CLONE, OPTYPE::BLOCK)},
 
     {"sensing_touchingobject", OPCODETYPE(OPCODE::TOUCHING_OBJECT, OPTYPE::CONDITIONAL)},
-    {"sensing_touchingobjectmenu", OPCODETYPE(OPCODE::TOUCHING_OBJECT_MENU, OPTYPE::SHADOW)},
+    {"sensing_touchingobjectmenu", OPCODETYPE(OPCODE::TOUCHING_OBJECT_MENU, OPTYPE::CONDITIONAL)},
     {"sensing_touchingcolor", OPCODETYPE(OPCODE::TOUCHING_COLOR, OPTYPE::CONDITIONAL)},
     {"sensing_coloristouchingcolor", OPCODETYPE(OPCODE::COLOR_TOUCHING_COLOR, OPTYPE::CONDITIONAL)},
     {"sensing_distanceto", OPCODETYPE(OPCODE::DISTANCE_TO, OPTYPE::REPORTER)},
