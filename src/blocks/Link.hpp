@@ -41,7 +41,15 @@ public:
                     mutations[in.key()].push_back(in.value());
                 } else {
                     json arr = json::parse(in.value().get<std::string>());
-                    for (auto i : arr) mutations[in.key()].push_back(i);
+                    for (auto i : arr) {
+                        try {
+                            mutations[in.key()].push_back(i);
+                        } catch (std::exception e) {
+                            std::string mutval = i.dump();
+                            mutval.erase(0, mutval.find_first_not_of(" \t\n\r\f\v"));
+                            mutations[in.key()].push_back(mutval);
+                        }
+                    }
                 }
             }
         }
