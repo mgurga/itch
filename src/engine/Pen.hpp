@@ -42,6 +42,7 @@ public:
         }
         settings.pen_rgb = scratch_color_to_rgb(settings.pen_color);
     }
+    void set_pen_color(RGB rgb) { settings.pen_rgb = rgb; }
     double get_pen_color() const { return settings.pen_color; }
     void set_pen_saturation(double s) { settings.pen_saturation = s; }
     double get_pen_saturation() const { return settings.pen_saturation; }
@@ -51,6 +52,7 @@ public:
     double get_pen_transparency() const { return settings.pen_transparency; }
 
     std::vector<PenDrawOrder>& get_pen_orders() { return pen_orders; }
+    void clear_pen_orders() { pen_orders.clear(); }
 
 private:
     PenSettings settings = {};

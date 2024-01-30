@@ -34,3 +34,20 @@ void EngineFunctions::Engine::change_pen_param(Link& link, ScratchTarget* s) {
         std::cout << "unknown pen parameter: " << param << std::endl;
     }
 }
+
+void EngineFunctions::Engine::set_pen_color_to_color(Link& link, ScratchTarget* s) {
+    std::string hexcolor = compute_input(link.inputs["COLOR"], s);
+    unsigned int color;
+
+    std::stringstream ss;
+    hexcolor.erase(0, 1);
+    ss << std::hex << hexcolor;
+    ss >> color;
+
+    RGB c;
+    c.r = ((color >> 16) & 0xFF);
+    c.g = ((color >> 8) & 0xFF);
+    c.b = ((color) & 0xFF);
+
+    s->pen.set_pen_color(c);
+}

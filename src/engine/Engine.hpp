@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <random>
+#include <sstream>
 #include <string>
 #include <variant>
 #include <vector>
@@ -108,6 +109,7 @@ public:
     // pen helpers
     void set_pen_param(Link& link, ScratchTarget* s);
     void change_pen_param(Link& link, ScratchTarget* s);
+    void set_pen_color_to_color(Link& link, ScratchTarget* s);
 
 private:
     static unsigned int count_chains(Project& project);

@@ -188,22 +188,22 @@ std::vector<std::unique_ptr<DrawOrder>> EngineFunctions::Engine::create_draw_ord
     std::vector<std::unique_ptr<DrawOrder>> out;
     out.push_back(std::make_unique<StageDrawOrder>(prj->stage));
 
+    if (clear_pen) {
+        out.push_back(std::make_unique<ClearDrawOrder>());
+        clear_pen = false;
+    }
+
     for (ScratchSprite& s : prj->clones) out.push_back(std::make_unique<SpriteDrawOrder>(s));
     for (ScratchSprite& s : prj->sprites) {
         out.push_back(std::make_unique<SpriteDrawOrder>(s));
         auto po = s.pen.get_pen_orders();
         for (PenDrawOrder& pdo : po) { out.push_back(std::make_unique<PenDrawOrder>(pdo)); }
-        po.clear();
+        s.pen.clear_pen_orders();
         if (s.pen.stamp_sprite)
             out.push_back(std::make_unique<StampDrawOrder>(s.get_x(), s.get_y(), s));
         s.pen.stamp_sprite = false;
     }
     for (ScratchMonitor& m : prj->monitors) out.push_back(std::make_unique<MonitorDrawOrder>(m));
-
-    if (clear_pen) {
-        out.push_back(std::make_unique<ClearDrawOrder>());
-        clear_pen = false;
-    }
 
     return out;
 }
@@ -415,6 +415,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     case OPCODE::SET_PEN_COLOR_TO: set_pen_param(link, s); break;
     case OPCODE::CHANGE_PEN_COLOR_BY: change_pen_param(link, s); break;
     case OPCODE::PEN_STAMP: s->pen.stamp(); break;
+    case OPCODE::SET_PEN_COLOR_TO_COLOR: set_pen_color_to_color(link, s); break;
 
     // Procedures
     case OPCODE::DEFINITION: break;
@@ -425,4 +426,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
                   << std::endl;
         break;
     }
+
+    if (100 >= static_cast<int>(link.opcode.opcode) && static_cast<int>(link.opcode.opcode) < 200)
+        s->pen.update(s->get_x(), s->get_y());
 }
