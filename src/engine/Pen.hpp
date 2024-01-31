@@ -22,6 +22,7 @@ public:
     void pen_down(double x, double y) {
         pen_active = true;
         pen_orders.push_back(PenDrawOrder(x, y, x, y, settings));
+        update(x, y);
     }
     void pen_up() { pen_active = false; }
 

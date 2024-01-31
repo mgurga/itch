@@ -20,6 +20,7 @@ EngineFunctions::Engine::Engine(Project& project) :
             lists.push_back(newlist);
         }
         for (Link l : sprite.links) links.push_back(l);
+        sprite.pen.update(sprite.get_x(), sprite.get_y());
     }
 
     std::cout << "initialized " << variables.size() << " variable(s)" << std::endl;
@@ -427,6 +428,6 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
         break;
     }
 
-    if (100 >= static_cast<int>(link.opcode.opcode) && static_cast<int>(link.opcode.opcode) < 200)
+    if (static_cast<int>(link.opcode.opcode) >= 100 && 200 > static_cast<int>(link.opcode.opcode))
         s->pen.update(s->get_x(), s->get_y());
 }
