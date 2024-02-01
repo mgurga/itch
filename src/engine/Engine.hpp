@@ -22,6 +22,7 @@
 #include "../player/SpriteDrawOrder.hpp"
 #include "../player/StageDrawOrder.hpp"
 #include "../player/StampDrawOrder.hpp"
+#include "ActiveSound.hpp"
 #include "GlideProgress.hpp"
 #include "List.hpp"
 #include "Pen.hpp"
@@ -75,6 +76,7 @@ public:
     std::vector<SpriteMessage> say_logs;
     std::vector<ScratchSprite> clones;
     std::vector<GlideProgress> glide_progresses;
+    std::vector<ActiveSound> active_sounds;
 
     Project* prj = nullptr;
     PlayerInfo* pi = nullptr;
@@ -102,6 +104,10 @@ public:
     void next_costume(ScratchTarget* s);
     void go_to_layer(std::string fb, ScratchTarget* s);
     void change_layer_by(Link link, ScratchTarget* s);
+
+    // sound helpers
+    void play_sound(Link link, ScratchTarget* s);
+    void play_sound_until_done(Link link, Chain& c, ScratchTarget* s, int& i);
 
     // procedure helper
     void call_procedure(Link link, ScratchTarget* s);

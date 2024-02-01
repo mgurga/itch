@@ -160,6 +160,7 @@ Value EngineFunctions::Engine::compute_reporter(Link op, ScratchTarget* s) {
                 .at(compute_input(op.inputs["LETTER"], s).get_number() - 1);
         } catch (std::out_of_range const& e) { return Value(); }
     case OPCODE::DISTANCE_TO: return compute_input(LinkInput(op.inputs["DISTANCETOMENU"][1]), s);
+    case OPCODE::SOUNDS_MENU: return op.fields["SOUND_MENU"][0];
     default:
         std::cout << "unknown reporter: '" + op.string_opcode + "'" << std::endl;
         return Value();  // empty string

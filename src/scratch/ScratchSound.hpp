@@ -1,12 +1,12 @@
 #pragma once
 
-#include <string>
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 #include <nlohmann/json.hpp>
+#include <string>
 
-#include "ScratchAsset.hpp"
 #include "../player/SoundResource.hpp"
+#include "ScratchAsset.hpp"
 
 using json = nlohmann::json;
 

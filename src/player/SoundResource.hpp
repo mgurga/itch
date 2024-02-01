@@ -13,6 +13,7 @@ public:
     }
 
     sf::SoundBuffer& get_sound() { return sound; };
+    float get_length() { return sound.getDuration().asSeconds(); }
 
 private:
     sf::SoundBuffer sound;

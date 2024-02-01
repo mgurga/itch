@@ -394,6 +394,9 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
         break;
 
     // Sound
+    case OPCODE::PLAY: play_sound(link, s); break;
+    case OPCODE::PLAY_UNTIL_DONE: play_sound_until_done(link, c, s, i); break;
+    case OPCODE::STOP_ALL_SOUNDS: active_sounds.clear(); break;
     case OPCODE::SET_VOLUME_TO:
         s->set_volume(compute_input(link.inputs["VOLUME"], s).get_number());
         break;
