@@ -14,14 +14,8 @@
 #include "../Project.hpp"
 #include "../Utils.hpp"
 #include "../blocks/Link.hpp"
-#include "../player/ClearDrawOrder.hpp"
-#include "../player/DrawOrder.hpp"
-#include "../player/MonitorDrawOrder.hpp"
-#include "../player/PenDrawOrder.hpp"
+#include "../common/DrawOrderList.hpp"
 #include "../player/PlayerInfo.hpp"
-#include "../player/SpriteDrawOrder.hpp"
-#include "../player/StageDrawOrder.hpp"
-#include "../player/StampDrawOrder.hpp"
 #include "ActiveSound.hpp"
 #include "GlideProgress.hpp"
 #include "List.hpp"
@@ -47,8 +41,8 @@ public:
     unsigned long long ticks = 0;
     bool clear_pen = false;
 
-    std::vector<std::unique_ptr<DrawOrder>> tick(PlayerInfo* player_info = nullptr);
-    std::vector<std::unique_ptr<DrawOrder>> create_draw_order_list();
+    DrawOrderList tick(PlayerInfo* player_info = nullptr);
+    DrawOrderList create_draw_order_list();
     bool process_chain(Chain& c, ScratchTarget* s, bool force_activate = false);
     void process_link(Link& link, Chain& chain, ScratchTarget* sprite, int& i);
     Value compute_input(LinkInput block, ScratchTarget* sprite);

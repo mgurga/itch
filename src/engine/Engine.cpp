@@ -35,7 +35,7 @@ EngineFunctions::Engine::Engine(Project& project) :
     std::cout << "finished initializing engine" << std::endl;
 }
 
-std::vector<std::unique_ptr<DrawOrder>> EngineFunctions::Engine::tick(PlayerInfo* player_info) {
+DrawOrderList EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     if (finished) return create_draw_order_list();
 
     broadcasts = queued_broadcasts;
@@ -185,26 +185,27 @@ std::vector<std::unique_ptr<DrawOrder>> EngineFunctions::Engine::tick(PlayerInfo
     return create_draw_order_list();
 }
 
-std::vector<std::unique_ptr<DrawOrder>> EngineFunctions::Engine::create_draw_order_list() {
-    std::vector<std::unique_ptr<DrawOrder>> out;
-    out.push_back(std::make_unique<StageDrawOrder>(prj->stage));
+DrawOrderList EngineFunctions::Engine::create_draw_order_list() {
+    DrawOrderList out;
+    out.add_draw_order(std::make_unique<StageDrawOrder>(prj->stage));
 
     if (clear_pen) {
-        out.push_back(std::make_unique<ClearDrawOrder>());
+        out.add_draw_order(std::make_unique<ClearDrawOrder>());
         clear_pen = false;
     }
 
-    for (ScratchSprite& s : prj->clones) out.push_back(std::make_unique<SpriteDrawOrder>(s));
+    for (ScratchSprite& s : prj->clones) out.add_draw_order(std::make_unique<SpriteDrawOrder>(s));
     for (ScratchSprite& s : prj->sprites) {
-        out.push_back(std::make_unique<SpriteDrawOrder>(s));
+        out.add_draw_order(std::make_unique<SpriteDrawOrder>(s));
         auto po = s.pen.get_pen_orders();
-        for (PenDrawOrder& pdo : po) { out.push_back(std::make_unique<PenDrawOrder>(pdo)); }
+        for (PenDrawOrder& pdo : po) { out.add_draw_order(std::make_unique<PenDrawOrder>(pdo)); }
         s.pen.clear_pen_orders();
         if (s.pen.stamp_sprite)
-            out.push_back(std::make_unique<StampDrawOrder>(s.get_x(), s.get_y(), s));
+            out.add_draw_order(std::make_unique<StampDrawOrder>(s.get_x(), s.get_y(), s));
         s.pen.stamp_sprite = false;
     }
-    for (ScratchMonitor& m : prj->monitors) out.push_back(std::make_unique<MonitorDrawOrder>(m));
+    for (ScratchMonitor& m : prj->monitors)
+        out.add_draw_order(std::make_unique<MonitorDrawOrder>(m));
 
     return out;
 }

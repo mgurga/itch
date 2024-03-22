@@ -87,7 +87,7 @@ void Player::draw() {
     }
 }
 
-void Player::paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders) {
+void Player::paint(DrawOrderList& draw_orders) {
     ww = window->getSize().x;  // window width
     wh = window->getSize().y;  // window height
     window->clear(sf::Color(255, 255, 255));
@@ -95,7 +95,9 @@ void Player::paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders) {
     clicked_sprites.clear();
     hovered_sprites.clear();
 
-    paint_stage(*window, dynamic_cast<StageDrawOrder*>(draw_orders.at(0).get())->get_stage());
+    paint_stage(
+        *window,
+        dynamic_cast<StageDrawOrder*>(draw_orders.get_draw_order_list().at(0).get())->get_stage());
 
     sf::Texture pentex;
     pentex.loadFromImage(pen_layer);
@@ -104,7 +106,7 @@ void Player::paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders) {
     penspr.setTexture(pentex, true);
     window->draw(penspr);
 
-    for (std::unique_ptr<DrawOrder>& dw : draw_orders) {
+    for (std::unique_ptr<DrawOrder>& dw : draw_orders.get_draw_order_list()) {
         switch (dw->get_type()) {
         case DrawOrder::DrawObject::NONE: break;
         case DrawOrder::DrawObject::SPRITE:

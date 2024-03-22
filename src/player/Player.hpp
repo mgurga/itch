@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "../common/DrawOrderList.hpp"
 #include "DrawOrder.hpp"
 #include "MonitorDrawOrder.hpp"
 #include "PenDrawOrder.hpp"
@@ -17,7 +18,7 @@ public:
     Player(bool& running);
     ~Player() { delete window; }
     void draw();
-    void paint(std::vector<std::unique_ptr<DrawOrder>>& draw_orders);
+    void paint(DrawOrderList& draw_orders);
     PlayerInfo get_player_info() {
         return {pressed,     keys_down,   clicked_sprites, hovered_sprites,
                 mouse_pos.x, mouse_pos.y, mouse_down,      mouse_pressed};

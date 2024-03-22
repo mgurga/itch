@@ -134,7 +134,7 @@ void Itch::draw() {
     } else {
         if (options.debugwindow) debug_window->draw();
         PlayerInfo pi = player->get_player_info();
-        std::vector<std::unique_ptr<DrawOrder>> draw_orders = {};
+        DrawOrderList draw_orders;
         if (!pause_engine) {
             draw_orders = engine.tick(&pi);
         } else {
