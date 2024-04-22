@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "../src/FileHandler.hpp"
-#include "../src/Project.hpp"
-#include "../src/engine/Engine.hpp"
+#include "../../src/FileHandler.hpp"
+#include "../../src/Project.hpp"
+#include "../../src/engine/Engine.hpp"
 
 class OpsPerSecTest : public ::testing::Test {
 protected:

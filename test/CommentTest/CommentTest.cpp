@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "../src/FileHandler.hpp"
-#include "../src/Project.hpp"
+#include "../../src/FileHandler.hpp"
+#include "../../src/Project.hpp"
 
 class CommentTest : public ::testing::Test {
 protected:

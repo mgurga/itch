@@ -1,9 +1,9 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "../src/FileHandler.hpp"
-#include "../src/Project.hpp"
-#include "../src/blocks/Opcodes.hpp"
+#include "../../src/FileHandler.hpp"
+#include "../../src/Project.hpp"
+#include "../../src/engine/Engine.hpp"
 
 using ::testing::AnyOf;
 
