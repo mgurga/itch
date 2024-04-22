@@ -48,6 +48,7 @@ public:
     Value compute_input(LinkInput block, ScratchTarget* sprite);
     Value compute_reporter(Link op, ScratchTarget* sprite = nullptr);
     Value compute_condition(Link op, ScratchTarget* sprite);
+    void update_monitors(std::vector<ScratchMonitor>& monitors);
 
     // utility functions
     Variable& get_var_by_name(std::string name);

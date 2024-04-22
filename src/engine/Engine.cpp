@@ -93,7 +93,21 @@ DrawOrderList EngineFunctions::Engine::tick(PlayerInfo* player_info) {
     });
 
     // update monitor values
-    for (ScratchMonitor& monitor : prj->monitors) {
+    update_monitors(prj->monitors);
+
+    // check if all chains have completely stopped running
+    if (processed_chains == 0) {
+        std::cout << "project is finished running" << std::endl;
+        finished = true;
+    }
+
+    ticks++;
+
+    return create_draw_order_list();
+}
+
+void EngineFunctions::Engine::update_monitors(std::vector<ScratchMonitor>& monitors) {
+    for (ScratchMonitor& monitor : monitors) {
         if (!monitor.visible) continue;
         monitor.values.clear();
         ScratchTarget* target =
@@ -173,16 +187,6 @@ DrawOrderList EngineFunctions::Engine::tick(PlayerInfo* player_info) {
             monitor.display_name = monitor.opcode;
         }
     }
-
-    // check if all chains have completely stopped running
-    if (processed_chains == 0) {
-        std::cout << "project is finished running" << std::endl;
-        finished = true;
-    }
-
-    ticks++;
-
-    return create_draw_order_list();
 }
 
 DrawOrderList EngineFunctions::Engine::create_draw_order_list() {
