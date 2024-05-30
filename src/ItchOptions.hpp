@@ -11,4 +11,5 @@ struct ItchOptions {
     std::filesystem::path tempdir = "temp/";
     int width = 480;
     int height = 360;
+    float scale = 1;
 };

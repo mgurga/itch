@@ -12,9 +12,11 @@ int main(int argc, char *argv[]) {
     std::string username = "";
     bool headless = false;
     bool debugwindow = false;
+    float scale = 1;
     app.add_flag("-l,--headless", headless, "run itch without graphics");
     app.add_flag("-d,--debugwindow", debugwindow, "run with debug window open");
     app.add_option("-u,--username", username, "username when running project")->default_str("");
+    app.add_option("-s, --scale", scale, "how large to scale the window")->default_val(1);
     app.add_option(".sb3/url/folder", resource, ".sb3 file path or scratch.mit.edu URL")
         ->default_val("temp/");
     CLI11_PARSE(app, argc, argv);
@@ -23,6 +25,7 @@ int main(int argc, char *argv[]) {
     io.headless = headless;
     io.debugwindow = debugwindow;
     io.username = username;
+    io.scale = scale;
 
     Itch itch(io);
     itch.init();
