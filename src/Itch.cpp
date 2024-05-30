@@ -3,8 +3,11 @@
 Itch::Itch(ItchOptions& io) : options(io) {}
 
 void Itch::init() {
-    if (!options.headless) player = new Player(options.running);
-    player->set_scale(options.scale);
+    if (!options.headless) {
+        player = new Player(options.running);
+        player->set_scale(options.scale);
+    }
+
     // std::cout << "cleaning up old files" << std::endl;
     // if (std::filesystem::exists(temp_dir)) std::filesystem::remove_all(temp_dir);
     if (!std::filesystem::exists(options.tempdir))
