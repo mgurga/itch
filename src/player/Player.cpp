@@ -14,6 +14,19 @@ Player::Player(bool& r) : running(r) {
     pen_layer.create(480, 360, sf::Color(255, 255, 255, 0));
 }
 
+sf::Vector2i Player::get_raw_mouse_pos() {
+    // ensures mouse position is always 0 <= x <= 480 and 0 <= y <= 360
+    sf::Vector2i mp = sf::Mouse::getPosition(*window);
+    mp.x /= scale;
+    mp.y /= scale;
+    return mp;
+}
+
+void Player::set_scale(float s) {
+    window->setSize(sf::Vector2u(480 * s, 360 * s));
+    scale = s;
+}
+
 void Player::draw() {
     if (window->isOpen()) {
         sf::Event event;
@@ -80,16 +93,16 @@ void Player::draw() {
             if (event.type == sf::Event::MouseButtonReleased)
                 if (event.mouseButton.button == sf::Mouse::Left) mouse_down = false;
 
-            mouse_pos = sf::Mouse::getPosition(*window);
-            mouse_pos.x -= 240;
-            mouse_pos.y = -mouse_pos.y + 180;
+            mouse_pos = get_raw_mouse_pos();
+            mouse_pos.x -= ww / 2.0;
+            mouse_pos.y = -mouse_pos.y + (wh / 2.0);
         }
     }
 }
 
 void Player::paint(DrawOrderList& draw_orders) {
-    ww = window->getSize().x;  // window width
-    wh = window->getSize().y;  // window height
+    ww = 480;  // window width
+    wh = 360;  // window height
     window->clear(sf::Color(255, 255, 255));
 
     clicked_sprites.clear();
@@ -252,7 +265,7 @@ void Player::paint_sprite(sf::RenderTarget& rt, ScratchSprite& sprite) {
         out.setRotation(sprite.get_direction() - 90.0f);
 
         // check if mouse is over a sprite and if clicked
-        sf::Vector2i mousevec = sf::Mouse::getPosition(*window);
+        sf::Vector2i mousevec = get_raw_mouse_pos();
         if (out.getGlobalBounds().contains(mousevec.x, mousevec.y))
             hovered_sprites.push_back(sprite.get_name());
         if (out.getGlobalBounds().contains(mousevec.x, mousevec.y) && mouse_pressed)

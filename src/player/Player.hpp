@@ -23,8 +23,7 @@ public:
         return {pressed,     keys_down,   clicked_sprites, hovered_sprites,
                 mouse_pos.x, mouse_pos.y, mouse_down,      mouse_pressed};
     }
-
-    bool& running;
+    void set_scale(float s);
 
 private:
     void paint_sprite(sf::RenderTarget& rt, ScratchSprite& sprite);
@@ -38,7 +37,11 @@ private:
     void paint_pen_point(double x, double y, EngineFunctions::PenSettings& s);
     void paint_pen_stamp(StampDrawOrder& dw);
 
+    sf::Vector2i get_raw_mouse_pos();  // sfml mouse position
+
     unsigned int ww, wh;
+    float scale = 1;
+    bool& running;
 
     sf::Font font;
     const unsigned MONITOR_FONT_SIZE = 11;
@@ -46,7 +49,7 @@ private:
     std::vector<std::string> keys_down;
     std::vector<std::string> clicked_sprites;
     std::vector<std::string> hovered_sprites;
-    sf::Vector2i mouse_pos;
+    sf::Vector2i mouse_pos;  // scratch mouse position
     bool mouse_down = false;
     bool mouse_pressed = false;
     sf::RenderWindow* window;
