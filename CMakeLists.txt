@@ -41,7 +41,7 @@ message("fetching zip...")
 FetchContent_Declare(
     zip
     GIT_REPOSITORY https://github.com/kuba--/zip
-    GIT_TAG v0.2.6)
+    GIT_TAG 687b542)
 FetchContent_MakeAvailable(zip)
 message("finished fetching zip")
 
