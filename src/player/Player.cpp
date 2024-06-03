@@ -1,7 +1,8 @@
 #include "Player.hpp"
 
 Player::Player(bool& r) : running(r) {
-    window = new sf::RenderWindow(sf::VideoMode(480, 360), "Itch");
+    window = new sf::RenderWindow(sf::VideoMode(480, 360), "Itch",
+                                  sf::Style::Titlebar | sf::Style::Close);
     window->setKeyRepeatEnabled(false);
     // sf::View v = sf::View();
     // v.setCenter(float(window->getSize().x) / 2.0, float(window->getSize().y) / 2.0);
@@ -92,6 +93,23 @@ void Player::draw() {
 
             if (event.type == sf::Event::MouseButtonReleased)
                 if (event.mouseButton.button == sf::Mouse::Left) mouse_down = false;
+
+            if (event.type == sf::Event::KeyPressed) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
+                    sf::Keyboard::isKeyPressed(sf::Keyboard::Equal))
+                    set_scale(scale + 0.5);
+
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
+                    sf::Keyboard::isKeyPressed(sf::Keyboard::Hyphen))
+                    if (scale > 1) set_scale(scale - 0.5);
+            }
+            // results in window flickering and not preserving aspect ratio
+            if (event.type == sf::Event::Resized) {
+                int new_width = event.size.width;
+
+                float new_scale = floor((new_width / 480.0) * 100 + 0.5) / 100;
+                set_scale(new_scale);
+            }
 
             mouse_pos = get_raw_mouse_pos();
             mouse_pos.x -= ww / 2.0;
