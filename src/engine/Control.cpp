@@ -1,5 +1,22 @@
 #include "Engine.hpp"
 
+void EngineFunctions::Engine::wait_until(Link link, Chain& c, ScratchTarget* s, int& i) {
+    if (!c.continue_at.empty() && !c.continue_at.back().end_time.has_value()) {
+        if (compute_input(link.inputs["CONDITION"], s)) {
+            c.continue_at.pop_back();
+        } else {
+            i = -1;
+        }
+    } else {
+        ResumePoint rp;
+        rp.link_num = i;
+        rp.start_time = std::chrono::high_resolution_clock::now();
+        rp.end_time = {};
+        c.continue_at.push_back(rp);
+        i = -1;
+    }
+}
+
 void EngineFunctions::Engine::wait(double duration, Chain& c, int& i) {
     if (duration == 0.0) return;
     if (!c.continue_at.empty() && c.continue_at.back().end_time.has_value()) {

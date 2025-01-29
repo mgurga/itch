@@ -29,7 +29,7 @@ static const double PI = std::acos(-1);  // TODO: Use std::numbers::pi in C++20
 
 class Engine {
 public:
-    Engine() : TOTAL_CHAINS(0){};
+    Engine() : TOTAL_CHAINS(0) {};
     Engine(Project& project);
     Engine(ItchOptions& io, Project& project) : Engine(project) { options = &io; }
 
@@ -85,6 +85,7 @@ public:
 
     // control helpers
     void wait(double duration, Chain& c, int& i);
+    void wait_until(Link link, Chain& c, ScratchTarget* s, int& i);
     void forever_loop(Link link, Chain& c, ScratchTarget* s, int& i);
     void stop_menu(Link link, Chain& c, ScratchTarget* s, int& i);
     void if_statement(Link link, ScratchTarget* s);

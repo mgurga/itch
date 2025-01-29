@@ -353,6 +353,7 @@ void EngineFunctions::Engine::process_link(Link& link, Chain& c, ScratchTarget* 
     case OPCODE::GLIDE_TO_XY: glide_for_secs(link, s, c, i); break;
 
     // Control
+    case OPCODE::WAIT_UNTIL: wait_until(link, c, s, i); break;
     case OPCODE::WAIT: wait(compute_input(link.inputs["DURATION"], s).get_number(), c, i); break;
     case OPCODE::FOREVER: forever_loop(link, c, s, i); break;
     case OPCODE::STOP: stop_menu(link, c, s, i); break;
