@@ -6,8 +6,7 @@ include(FetchContent)
 cmake_policy(SET CMP0135 NEW)
 FetchContent_Declare(
     googletest
-    # v 1.11.0
-    URL https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.zip
+    URL https://github.com/google/googletest/releases/download/v1.17.0/googletest-1.17.0.tar.gz
 )
 message("finished fetching googletest")
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -28,7 +27,6 @@ set_target_properties(${TEST_PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 target_link_libraries(${TEST_PROJECT_NAME} PUBLIC 
     gtest_main
     gmock_main
-    nlohmann_json::nlohmann_json
     sfml-system
     sfml-audio
     sfml-graphics

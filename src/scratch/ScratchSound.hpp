@@ -2,7 +2,7 @@
 
 #include <filesystem>
 #include <iostream>
-#include <nlohmann/json.hpp>
+#include "../lib/json.hpp"
 #include <string>
 
 #include "../player/SoundResource.hpp"

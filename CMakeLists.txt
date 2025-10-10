@@ -20,23 +20,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SFML)
 message("finished fetching sfml")
 
-message("fetching json...")
-FetchContent_Declare(
-    json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG v3.11.2)
-FetchContent_MakeAvailable(json)
-set_target_properties(nlohmann_json PROPERTIES INTERFACE_COMPILE_DEFINITIONS "JSON_DIAGNOSTICS=1;JSON_USE_IMPLICIT_CONVERSIONS=1")
-message("finished fetching json")
-
-message("fetching cli11...")
-FetchContent_Declare(
-    cli11
-    GIT_REPOSITORY https://github.com/CLIUtils/CLI11
-    GIT_TAG v2.2.0)
-FetchContent_MakeAvailable(cli11)
-message("finished fetching cli11")
-
 message("fetching zip...")
 FetchContent_Declare(
     zip
@@ -68,7 +51,7 @@ message("fetching lunasvg...")
 FetchContent_Declare(
     lunasvg
     GIT_REPOSITORY https://github.com/sammycage/lunasvg
-    GIT_TAG v2.3.8)
+    GIT_TAG v3.5.0)
 FetchContent_MakeAvailable(lunasvg)
 message("finished fetching lunasvg")
 
@@ -85,13 +68,13 @@ endif()
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.*pp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
+include_directories(lib)
 target_link_libraries(${PROJECT_NAME}
-    nlohmann_json::nlohmann_json
     sfml-system
     sfml-audio
     sfml-graphics
     sfml-window
-    CLI11::CLI11 zip
+    zip
     ImGui-SFML::ImGui-SFML
     lunasvg)
 if (BUILD_NETWORK_SUPPORT)
